@@ -3,6 +3,7 @@ package com.lyra.caps.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lyra.caps.dto.PacienteDto;
 import com.lyra.caps.model.Paciente;
 import com.lyra.caps.service.PacienteService;
 
@@ -23,14 +24,14 @@ public class PacienteController {
     private PacienteService pacienteService;
 
     // @PostMapping
-    // public ResponseEntity<Paciente> criarPaciente(@RequestBody Paciente pacienteDto) {
+    // public ResponseEntity<PacienteDto> criarPaciente(@RequestBody PacienteDto pacienteDto) {
     //     Paciente  novoPaciente = pacienteService.criarPaciente(pacienteDto);
     //     return ResponseEntity.created(URI.create("/api/paciente/" + pacienteDto.getId())).body(pacienteDto);
     // }
 
 
     // @GetMapping("/{id}")
-    // public ResponseEntity<Paciente> buscarPorId(@PathVariable Long id) {
+    // public ResponseEntity<PacienteDto> buscarPorId(@PathVariable Long id) {
     //     return ResponseEntity.ok(pacienteService.buscarPorId(id));
     // }
     
