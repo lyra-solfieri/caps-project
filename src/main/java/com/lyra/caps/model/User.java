@@ -1,10 +1,15 @@
 package com.lyra.caps.model;
 
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.lyra.caps.model.enums.Role;
 
@@ -18,7 +23,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "_user")
-public class User  {
+public class User implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +31,7 @@ public class User  {
 
   private String email;
   private String password;
+  private String nome;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -43,5 +49,23 @@ public class User  {
 
   @ColumnDefault(value = "0")
 	private Boolean bloqueado;
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    if (this.role == Role.ADMIN) {
+      return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
+       new SimpleGrantedAuthority("ROLE_USER"),
+       new SimpleGrantedAuthority("ROLE_MODERATOR"),
+       new SimpleGrantedAuthority("ROLE_EDITOR"));
+      
+    } else{
+      return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+  }
+
+  @Override
+  public String getUsername() {
+    return this.nome;
+  }
 
 }

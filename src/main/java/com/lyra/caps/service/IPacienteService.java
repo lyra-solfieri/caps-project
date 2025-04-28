@@ -1,12 +1,14 @@
 package com.lyra.caps.service;
 
-import com.lyra.caps.model.Paciente;
+import java.util.List;
+
+import com.lyra.caps.dto.PacienteDto;
+import com.lyra.caps.dto.PacienteResponseDto;
 
 public interface IPacienteService {
-
-    void criarPaciente(Paciente paciente);
-    void delete(Long id);
-    void update(Paciente paciente);
-    // Iterable<Paciente> findAll();
-
+    PacienteResponseDto criarPaciente(PacienteDto pacienteDto);
+    PacienteResponseDto buscarPorId(Long id);
+    List<PacienteResponseDto> listarTodos();
+    void atualizarPaciente(Long id, PacienteDto pacienteDto);
+    void deletarPaciente(Long id);
 }

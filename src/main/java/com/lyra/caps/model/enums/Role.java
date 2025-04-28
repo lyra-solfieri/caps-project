@@ -1,14 +1,19 @@
 package com.lyra.caps.model.enums;
 
 public enum Role {
-    USER,          // Usuário comum
-    ADMIN,         // Administrador com todos os privilégios
-    MODERATOR,     // Moderador com privilégios limitados
-    EDITOR,        // Editor de conteúdo (se aplicável)
-    GUEST;         // Convidado (acesso limitado)
+    USER("ROLE_USER"),
+    ADMIN("ROLE_ADMIN"),
+    MODERATOR("ROLE_MODERATOR"),
+    EDITOR("ROLE_EDITOR"),
+    GUEST("ROLE_GUEST");
 
-    // Você pode adicionar métodos úteis se necessário
+    private final String authority;
+
+    Role(String authority) {
+        this.authority = authority;
+    }
+
     public String getAuthority() {
-        return "ROLE_" + this.name();
+        return authority;
     }
 }
