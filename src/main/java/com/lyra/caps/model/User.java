@@ -20,7 +20,8 @@ import lombok.*;
 @Data
 @Getter
 @Setter
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "_user")
 public class User implements UserDetails {
@@ -50,6 +51,12 @@ public class User implements UserDetails {
   @ColumnDefault(value = "0")
 	private Boolean bloqueado;
 
+  public User(String email, String password, Role role) {
+    this.email = email;
+    this.password = password;
+    this.role = role;
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     if (this.role == Role.ADMIN) {
@@ -65,7 +72,7 @@ public class User implements UserDetails {
 
   @Override
   public String getUsername() {
-    return this.nome;
+    return this.email;
   }
 
 }

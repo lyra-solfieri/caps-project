@@ -7,13 +7,13 @@ public enum Role {
     EDITOR("ROLE_EDITOR"),
     GUEST("ROLE_GUEST");
 
-    private final String authority;
+    private String role;
 
-    Role(String authority) {
-        this.authority = authority;
+    Role(String role) {
+        this.role = role;
     }
 
     public String getAuthority() {
-        return authority;
+        return role;
     }
 }

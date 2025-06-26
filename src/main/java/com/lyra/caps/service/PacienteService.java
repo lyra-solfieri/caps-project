@@ -22,6 +22,8 @@ public class PacienteService implements IPacienteService {
     @Override
     @Transactional
     public PacienteResponseDto criarPaciente(PacienteDto pacienteDto) {
+        // adicionar funcionalidade de duplicidade de cpf
+        
         Paciente paciente = pacienteMapper.toEntity(pacienteDto);
         Paciente pacienteSalvo = pacienteRepository.save(paciente);
         return pacienteMapper.toResponseDto(pacienteSalvo);

@@ -1,20 +1,48 @@
 package com.lyra.caps.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lyra.caps.dto.AuthenticationDto;
+import com.lyra.caps.dto.RegisterDto;
+import com.lyra.caps.model.User;
+import com.lyra.caps.repository.UserRepository;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserRepository userRepository;
+    
     @PostMapping("/login")
-    public ResponseEntity login(@ResquestBody AuthenticationDto authenticationDto) {
-        var userEmailPassword = new UsernamePasswordAuthenticationToken(authenticationDto.email(), authenticationDto.password());
+    public ResponseEntity login(@RequestBody AuthenticationDto authentication) {
+
+        var userEmailPassword = new UsernamePasswordAuthenticationToken(authentication.email(), authentication.password());
+        var auth = this.authenticationManager.authenticate(userEmailPassword);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity register(@RequestBody RegisterDto register) {
+        if(this.userRepository.findByEmail(register.email()) != null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        String encryptedPassword = new BCryptPasswordEncoder().encode(register.password());
+        User user = new User(register.email(), encryptedPassword, register.role());
+        this.userRepository.save(user);
 
         return ResponseEntity.ok().build();
     }
