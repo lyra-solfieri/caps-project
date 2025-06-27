@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lyra.caps.dto.AuthenticationDto;
+import com.lyra.caps.dto.LoginResponseDto;
 import com.lyra.caps.dto.RegisterDto;
+import com.lyra.caps.infra.security.TokenService;
 import com.lyra.caps.model.User;
 import com.lyra.caps.repository.UserRepository;
 
@@ -24,6 +26,9 @@ public class AuthenticationController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TokenService tokenService;
     
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationDto authentication) {
@@ -31,7 +36,9 @@ public class AuthenticationController {
         var userEmailPassword = new UsernamePasswordAuthenticationToken(authentication.email(), authentication.password());
         var auth = this.authenticationManager.authenticate(userEmailPassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDto(token));
     }
 
     @PostMapping("/register")
