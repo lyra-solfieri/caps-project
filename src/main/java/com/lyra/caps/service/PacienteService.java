@@ -22,7 +22,9 @@ public class PacienteService implements IPacienteService {
     @Override
     @Transactional
     public PacienteResponseDto criarPaciente(PacienteDto pacienteDto) {
-        // adicionar funcionalidade de duplicidade de cpf
+        if( pacienteRepository.existsByCpf(pacienteDto.getCpf())) {
+            throw new RuntimeException("CPF ja cadastrado");
+        }
         
         Paciente paciente = pacienteMapper.toEntity(pacienteDto);
         Paciente pacienteSalvo = pacienteRepository.save(paciente);
@@ -31,6 +33,11 @@ public class PacienteService implements IPacienteService {
 
     @Override
     public PacienteResponseDto buscarPorId(Long id) {
+
+        if(!pacienteRepository.existsById(id)) {
+            throw new RuntimeException("Paciente nao encontrado");
+        }
+
         Paciente paciente = pacienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
         return pacienteMapper.toResponseDto(paciente);
@@ -55,6 +62,11 @@ public class PacienteService implements IPacienteService {
     @Override
     @Transactional
     public void deletarPaciente(Long id) {
+
+        if(!pacienteRepository.existsById(id)) {
+            throw new RuntimeException("Paciente nao encontrado");
+        }
+        
         pacienteRepository.deleteById(id);
     }
 }

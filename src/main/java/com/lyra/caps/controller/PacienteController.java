@@ -3,6 +3,9 @@ package com.lyra.caps.controller;
 import com.lyra.caps.dto.PacienteDto;
 import com.lyra.caps.dto.PacienteResponseDto;
 import com.lyra.caps.service.IPacienteService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,7 +24,7 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<PacienteResponseDto> criarPaciente(@RequestBody PacienteDto pacienteDto) {
+    public ResponseEntity<PacienteResponseDto> criarPaciente(@Valid @RequestBody PacienteDto pacienteDto) {
         PacienteResponseDto response = pacienteService.criarPaciente(pacienteDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

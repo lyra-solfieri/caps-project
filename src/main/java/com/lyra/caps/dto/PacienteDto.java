@@ -1,5 +1,7 @@
 package com.lyra.caps.dto;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import com.lyra.caps.model.enums.Genero;
 import com.lyra.caps.model.enums.Raca;
 import lombok.Data;
@@ -10,7 +12,10 @@ public class PacienteDto {
     private String nome;
     private String email;
     private String telefone;
+
+    @CPF(message = "CPF inválido")
     private String cpf;
+
     private EnderecoDto endereco;
     private AtendimentoDto atendimento;
     private Genero genero;
