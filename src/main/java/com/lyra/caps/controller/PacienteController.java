@@ -1,38 +1,59 @@
 package com.lyra.caps.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.lyra.caps.dto.PacienteDto;
+import com.lyra.caps.dto.PacienteResponseDto;
+import com.lyra.caps.service.IPacienteService;
 
-import com.lyra.caps.model.Paciente;
-import com.lyra.caps.service.PacienteService;
-
-import java.net.URI;
+import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-
+import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/paciente")
+@RequestMapping("/api/pacientes")
 public class PacienteController {
 
-    private PacienteService pacienteService;
+    private final IPacienteService pacienteService;
 
-    // @PostMapping
-    // public ResponseEntity<Paciente> criarPaciente(@RequestBody Paciente pacienteDto) {
-    //     Paciente  novoPaciente = pacienteService.criarPaciente(pacienteDto);
-    //     return ResponseEntity.created(URI.create("/api/paciente/" + pacienteDto.getId())).body(pacienteDto);
-    // }
+    public PacienteController(IPacienteService pacienteService) {
+        this.pacienteService = pacienteService;
+    }
 
+    @PostMapping
+    public ResponseEntity<PacienteResponseDto> criarPaciente(@Valid @RequestBody PacienteDto pacienteDto) {
+        PacienteResponseDto response = pacienteService.criarPaciente(pacienteDto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(response.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(response);
+    }
 
-    // @GetMapping("/{id}")
-    // public ResponseEntity<Paciente> buscarPorId(@PathVariable Long id) {
-    //     return ResponseEntity.ok(pacienteService.buscarPorId(id));
-    // }
-    
+    @GetMapping("/{id}")
+    public ResponseEntity<PacienteResponseDto> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(pacienteService.buscarPorId(id));
+    }
 
+    @GetMapping
+    public ResponseEntity<List<PacienteResponseDto>> listarTodos() {
+        return ResponseEntity.ok(pacienteService.listarTodos());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizarPaciente(
+            @PathVariable Long id,
+            @RequestBody  PacienteDto pacienteDto) {
+        pacienteService.atualizarPaciente(id, pacienteDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarPaciente(@PathVariable Long id) {
+        pacienteService.deletarPaciente(id);
+        return ResponseEntity.noContent().build();
+    }
 }
