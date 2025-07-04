@@ -41,11 +41,12 @@ public class Agendamento {
     private TipoComunicacao tipoComunicacao;
 
     @Column(nullable = false)
-    private LocalDateTime dataAgendamento;
+    private LocalDateTime dataHoraEnvio;
 
     @Enumerated(EnumType.STRING)
     private StatusAgendamento statusAgendamento;
 
-
+    @Column(nullable = false)
+    private LocalDateTime createAt;
 
 }

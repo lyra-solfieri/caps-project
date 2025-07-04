@@ -12,7 +12,7 @@ import com.lyra.caps.service.IDocumentExtractor;
 
 @RestController
 @RequestMapping("/api/ocr")
-public class DocumentExtratorOCR {
+public class DocumentExtratorOCRController {
 
     @Autowired
     private IDocumentExtractor documentExtractor;
