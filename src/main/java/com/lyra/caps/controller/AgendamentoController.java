@@ -1,6 +1,5 @@
 package com.lyra.caps.controller;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +19,13 @@ public class AgendamentoController {
 
     @PostMapping
     public ResponseEntity agendar(AgendamentoRequestDto agendamentoRequest) {
-        agendamentoService.agendar(agendamentoRequest);
-        return ResponseEntity.ok().build();
+        try {
+            agendamentoService.agendar(agendamentoRequest);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok("Agendamento realizado com sucesso");
     }
 
 }
