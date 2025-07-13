@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
  * 
  * Saida Esperada :
  * 
- *  [CAPS-SYSTEM] - 2025-07-06T13:00:01.123 - INFO - com.lyra.caps.service.DocumentoService#processarDocumento():10 - Iniciando o processamento do documento
- *  [CAPS-SYSTEM] - 2025-07-06T13:00:01.234 - INFO - com.lyra.caps.service.DocumentoService#processarDocumento():13 - Processamento concluído com sucesso
+ *  [CAPS-SYSTEM] - 2025-07-06T13:00:01.123 - INFO - com.lyra.caps.service.DocumentoService# processarDocumento():10 - Iniciando o processamento do documento
+ *  [CAPS-SYSTEM] - 2025-07-06T13:00:01.234 - INFO - com.lyra.caps.service.DocumentoService# processarDocumento():13 - Processamento concluído com sucesso
  * 
  * 
  * 
@@ -60,7 +60,7 @@ public class LogPersonalizado {
         String nomeMetodo = caller != null ? caller.getMethodName() : "MetodoDesconhecido";
         int linha = caller != null ? caller.getLineNumber() : -1;
 
-        return String.format("[CAPS-SYSTEM] - %s - %s - %s#%s():%d - %s",
+        return String.format("[CAPS-SYSTEM] - %s - %s - %s# %s():%d - %s",
                 LocalDateTime.now(),
                 tipo,
                 nomeClasse,
