@@ -5,7 +5,10 @@ import com.lyra.caps.dto.PacienteResponseDto;
 import com.lyra.caps.mapper.PacienteMapper;
 import com.lyra.caps.model.Paciente;
 import com.lyra.caps.repository.PacienteRepository;
+import com.lyra.caps.util.LogPersonalizado;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,7 @@ public class PacienteService implements IPacienteService {
 
     private final PacienteRepository pacienteRepository;
     private final PacienteMapper pacienteMapper;
+    private final LogPersonalizado logPersonalizado = LogPersonalizado.getLogger(this.getClass());
 
     @Override
     @Transactional
@@ -28,6 +32,7 @@ public class PacienteService implements IPacienteService {
         
         Paciente paciente = pacienteMapper.toEntity(pacienteDto);
         Paciente pacienteSalvo = pacienteRepository.save(paciente);
+        logPersonalizado.info("Paciente criado com sucesso" + pacienteSalvo);
         return pacienteMapper.toResponseDto(pacienteSalvo);
     }
 
@@ -62,6 +67,7 @@ public class PacienteService implements IPacienteService {
     @Override
     @Transactional
     public void deletarPaciente(Long id) {
+
 
         if(!pacienteRepository.existsById(id)) {
             throw new RuntimeException("Paciente nao encontrado");
