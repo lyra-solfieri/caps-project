@@ -1,4 +1,4 @@
--- INSERT INTO _user (email, password, nome, role, bloqueado)
--- SELECT 'admin@lyra.com', '$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq4H3dHi6fZ2.QZ7YI2NehQ6g2QyW6', 
---        'Administrador do Sistema', 'ADMIN', false
--- WHERE NOT EXISTS (SELECT 1 FROM _user WHERE email = 'admin@lyra.com');
+INSERT INTO _user (email, password, nome, role, bloqueado)
+SELECT 'admin@caps.com', 'Caps@2025', 
+       'Administrador do Sistema', 'ADMIN', false
+WHERE NOT EXISTS (SELECT 1 FROM _user WHERE email = 'admin@caps.com');
