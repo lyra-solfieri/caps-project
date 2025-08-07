@@ -40,7 +40,14 @@ public class PacienteController {
 
     @GetMapping
     public ResponseEntity<List<PacienteResponseDto>> listarTodos() {
-        return ResponseEntity.ok(pacienteService.listarTodos());
+        
+        try {
+            return ResponseEntity.ok(pacienteService.listarTodos());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+            
     }
 
     @PutMapping("/{id}")
