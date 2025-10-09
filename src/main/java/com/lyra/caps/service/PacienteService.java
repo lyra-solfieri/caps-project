@@ -39,10 +39,6 @@ public class PacienteService implements IPacienteService {
     @Override
     public PacienteResponseDto buscarPorId(Long id) {
 
-        if(!pacienteRepository.existsById(id)) {
-            throw new RuntimeException("Paciente nao encontrado");
-        }
-
         Paciente paciente = pacienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
         return pacienteMapper.toResponseDto(paciente);

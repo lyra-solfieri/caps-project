@@ -3,6 +3,7 @@ package com.lyra.caps.controller;
 import com.lyra.caps.dto.PacienteDto;
 import com.lyra.caps.dto.PacienteResponseDto;
 import com.lyra.caps.service.IPacienteService;
+import com.lyra.caps.util.LogPersonalizado;
 
 import jakarta.validation.Valid;
 
@@ -25,12 +26,32 @@ public class PacienteController {
 
     @PostMapping
     public ResponseEntity<PacienteResponseDto> criarPaciente(@Valid @RequestBody PacienteDto pacienteDto) {
-        PacienteResponseDto response = pacienteService.criarPaciente(pacienteDto);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(response.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(response);
+        try{
+            PacienteResponseDto response = pacienteService.criarPaciente(pacienteDto);
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(response.getId())
+                    .toUri();
+            return ResponseEntity.created(location).body(response);
+        } 
+        catch (Exception e) {
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao cadastrar paciente", e);
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    public ResponseEntity<PacienteResponseDto> cadastrarComOCR(@Valid @RequestBody PacienteDto pacienteDto) {
+        try {
+            /*
+             * Aqui voce pode fazer o OCR e preencher os dados do pacienteDto
+             */
+            return ResponseEntity.ok(pacienteService.criarPaciente(pacienteDto));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+        
     }
 
     @GetMapping("/{id}")
@@ -51,11 +72,16 @@ public class PacienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizarPaciente(
-            @PathVariable Long id,
-            @RequestBody  PacienteDto pacienteDto) {
-        pacienteService.atualizarPaciente(id, pacienteDto);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> atualizarPaciente(@PathVariable Long id, @RequestBody  PacienteDto pacienteDto) {
+        try {
+            pacienteService.atualizarPaciente(id, pacienteDto);
+            return ResponseEntity.noContent().build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao atualizar paciente", e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @DeleteMapping("/{id}")
