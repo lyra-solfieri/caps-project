@@ -63,7 +63,9 @@ public class PacienteController {
     public ResponseEntity<List<PacienteResponseDto>> listarTodos() {
         
         try {
-            return ResponseEntity.ok(pacienteService.listarTodos());
+            List<PacienteResponseDto> pacientes = pacienteService.listarTodos();
+            return ResponseEntity.ok(pacientes);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();

@@ -46,18 +46,33 @@ public class PacienteService implements IPacienteService {
 
     @Override
     public List<PacienteResponseDto> listarTodos() {
-        return pacienteRepository.findAll().stream()
-                .map(pacienteMapper::toResponseDto)
-                .collect(Collectors.toList());
+        try {
+            return pacienteRepository.findAll().stream()
+                    .map(pacienteMapper::toResponseDto)
+                    .collect(Collectors.toList());
+        }
+        catch (Exception e) {
+            logPersonalizado.error("Erro ao listar pacientes", e);
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao listar pacientes");
+        }
     }
 
     @Override
     @Transactional
     public void atualizarPaciente(Long id, PacienteDto pacienteDto) {
-        Paciente paciente = pacienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
-        pacienteMapper.updateEntityFromDto(pacienteDto, paciente);
-        pacienteRepository.save(paciente);
+        
+        try{
+            Paciente paciente = pacienteRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+            pacienteMapper.updateEntityFromDto(pacienteDto, paciente);
+            pacienteRepository.save(paciente);
+        }
+        catch (Exception e) {
+            logPersonalizado.error("Erro ao atualizar paciente", e);
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao atualizar paciente");
+        }
     }
 
     @Override
