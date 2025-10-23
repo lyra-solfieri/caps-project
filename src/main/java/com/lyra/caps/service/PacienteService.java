@@ -26,22 +26,38 @@ public class PacienteService implements IPacienteService {
     @Override
     @Transactional
     public PacienteResponseDto criarPaciente(PacienteDto pacienteDto) {
-        if( pacienteRepository.existsByCpf(pacienteDto.getCpf())) {
-            throw new RuntimeException("CPF ja cadastrado");
+         try {   
+            if( pacienteRepository.existsByCpf(pacienteDto.getCpf())) {
+                throw new RuntimeException("CPF ja cadastrado");
+            }
+            
+            Paciente paciente = pacienteMapper.toEntity(pacienteDto);
+            Paciente pacienteSalvo = pacienteRepository.save(paciente);
+            logPersonalizado.info("Paciente criado com sucesso" + pacienteSalvo);
+            return pacienteMapper.toResponseDto(pacienteSalvo);
         }
-        
-        Paciente paciente = pacienteMapper.toEntity(pacienteDto);
-        Paciente pacienteSalvo = pacienteRepository.save(paciente);
-        logPersonalizado.info("Paciente criado com sucesso" + pacienteSalvo);
-        return pacienteMapper.toResponseDto(pacienteSalvo);
+        catch (Exception e) {
+            logPersonalizado.error("Erro ao cadastrar paciente", e);
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao cadastrar paciente");
+        }
     }
 
     @Override
     public PacienteResponseDto buscarPorId(Long id) {
-
-        Paciente paciente = pacienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
-        return pacienteMapper.toResponseDto(paciente);
+        try {
+            if (!pacienteRepository.existsById(id)) {
+                throw new RuntimeException("Paciente nao encontrado");
+            }
+            Paciente paciente = pacienteRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+            return pacienteMapper.toResponseDto(paciente);
+        }
+        catch (Exception e) {
+            logPersonalizado.error("Erro ao buscar paciente", e);
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar paciente");
+        }
     }
 
     @Override
@@ -79,11 +95,20 @@ public class PacienteService implements IPacienteService {
     @Transactional
     public void deletarPaciente(Long id) {
 
+        try { 
+                       
+            if (!pacienteRepository.existsById(id)) {
+                throw new RuntimeException("Paciente nao encontrado");
+            }
 
-        if(!pacienteRepository.existsById(id)) {
-            throw new RuntimeException("Paciente nao encontrado");
+            pacienteRepository.deleteById(id);
         }
-        
-        pacienteRepository.deleteById(id);
+        catch (Exception e) {
+            logPersonalizado.error("Erro ao deletar paciente", e);
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao deletar paciente");
+        }
+
     }
+   
 }

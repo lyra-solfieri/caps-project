@@ -41,18 +41,6 @@ public class PacienteController {
         }
     }
 
-    public ResponseEntity<PacienteResponseDto> cadastrarComOCR(@Valid @RequestBody PacienteDto pacienteDto) {
-        try {
-            /*
-             * Aqui voce pode fazer o OCR e preencher os dados do pacienteDto
-             */
-            return ResponseEntity.ok(pacienteService.criarPaciente(pacienteDto));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-        
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<PacienteResponseDto> buscarPorId(@PathVariable Long id) {
