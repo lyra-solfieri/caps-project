@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-@Service
+@Transactional
 @RequiredArgsConstructor
+@Service
 public class PacienteService implements IPacienteService {
 
     private final PacienteRepository pacienteRepository;
@@ -24,7 +24,6 @@ public class PacienteService implements IPacienteService {
     private final LogPersonalizado logPersonalizado = LogPersonalizado.getLogger(this.getClass());
 
     @Override
-    @Transactional
     public PacienteResponseDto criarPaciente(PacienteDto pacienteDto) {
          try {   
             if( pacienteRepository.existsByCpf(pacienteDto.getCpf())) {
@@ -74,8 +73,7 @@ public class PacienteService implements IPacienteService {
         }
     }
 
-    @Override
-    @Transactional
+    @Override    
     public void atualizarPaciente(Long id, PacienteDto pacienteDto) {
         
         try{
@@ -92,9 +90,7 @@ public class PacienteService implements IPacienteService {
     }
 
     @Override
-    @Transactional
     public void deletarPaciente(Long id) {
-
         try { 
                        
             if (!pacienteRepository.existsById(id)) {

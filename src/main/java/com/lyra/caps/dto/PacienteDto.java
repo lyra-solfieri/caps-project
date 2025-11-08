@@ -17,13 +17,12 @@ public class PacienteDto {
     private String cpf;
 
     private EnderecoDto endereco;
-    private AtendimentoDto atendimento;
     private Genero genero;
     private String dataNascimento;
     private String nomeMae;
     private String nomePai;
     private String profissao;
-    private String numeroCartaoSUS;
+    private Long numeroCartaoSUS;
     private Raca raca;
     private Long numeroProntuario;
     private boolean infantojuvenil;

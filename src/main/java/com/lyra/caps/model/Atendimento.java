@@ -40,6 +40,7 @@ public class Atendimento {
     private String observacao;
     private String encaminhamento;
     private Long numeroDaAutorizacao;
+    private boolean usuarioDrogas;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paciente_id", nullable = false)

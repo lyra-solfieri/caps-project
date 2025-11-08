@@ -34,7 +34,7 @@ public class Paciente {
     private String telefone;
     private String cpf;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
