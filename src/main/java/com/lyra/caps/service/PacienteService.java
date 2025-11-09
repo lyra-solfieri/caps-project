@@ -30,13 +30,13 @@ public class PacienteService implements IPacienteService {
                 throw new RuntimeException("CPF ja cadastrado");
             }
             
-            Paciente paciente = pacienteMapper.toEntity(pacienteDto);
+            Paciente paciente = Paciente.fromDto(pacienteDto);
             Paciente pacienteSalvo = pacienteRepository.save(paciente);
             logPersonalizado.info("Paciente criado com sucesso" + pacienteSalvo);
             return pacienteMapper.toResponseDto(pacienteSalvo);
         }
         catch (Exception e) {
-            logPersonalizado.error("Erro ao cadastrar paciente", e);
+            logPersonalizado.error(e.getMessage(), e);
             e.printStackTrace();
             throw new RuntimeException("Erro ao cadastrar paciente");
         }

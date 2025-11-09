@@ -3,6 +3,9 @@ package com.lyra.caps.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.validator.constraints.br.CPF;
+
+import com.lyra.caps.dto.PacienteDto;
 import com.lyra.caps.model.enums.Genero;
 import com.lyra.caps.model.enums.Raca;
 
@@ -15,6 +18,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,21 +35,36 @@ public class Paciente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(min = 3, max = 100)
     private String nome;
+
+    @Email
     private String email;
+
+    @Size(min = 3, max = 100)
     private String telefone;
+
+    @CPF
     private String cpf;
 
-    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
     private Genero genero;
     private String dataNascimento;
+
+    @Size(min = 3, max = 100)
     private String nomeMae;
+
+    @Size(min = 3, max = 100)
     private String nomePai;
+
+    @Size(min = 3, max = 100)
     private String profissao;
-    private String numeroCartaoSUS;
+
+    private Long numeroCartaoSUS;
     private Raca raca;
     private Long numeroProntuario;
     private boolean infantojuvenil;
@@ -63,6 +84,43 @@ public class Paciente {
     public int hashCode() {
         return getClass().hashCode();
     }
-    
 
+    public static Paciente fromDto(PacienteDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        Paciente paciente = new Paciente();
+        paciente.setId(dto.getId());
+        paciente.setNome(dto.getNome());
+        paciente.setEmail(dto.getEmail());
+        paciente.setTelefone(dto.getTelefone());
+        paciente.setCpf(dto.getCpf());
+        paciente.setGenero(dto.getGenero());
+        paciente.setDataNascimento(dto.getDataNascimento());
+        paciente.setNomeMae(dto.getNomeMae());
+        paciente.setNomePai(dto.getNomePai());
+        paciente.setProfissao(dto.getProfissao());
+        paciente.setNumeroCartaoSUS(dto.getNumeroCartaoSUS());
+        paciente.setRaca(dto.getRaca());
+        paciente.setNumeroProntuario(dto.getNumeroProntuario());
+        paciente.setInfantojuvenil(dto.isInfantojuvenil());
+        paciente.setEmSituacaoSocioeconomica(dto.isEmSituacaoSocioeconomica());
+
+        if (dto.getEndereco() != null) {
+            Endereco endereco = new Endereco();
+            endereco.setCep(dto.getEndereco().getCep());
+            endereco.setLogradouro(dto.getEndereco().getLogradouro());
+            endereco.setNumero(dto.getEndereco().getNumero());
+            endereco.setComplemento(dto.getEndereco().getComplemento());
+            endereco.setBairro(dto.getEndereco().getBairro());
+            endereco.setCidade(dto.getEndereco().getCidade());
+            endereco.setEstado(dto.getEndereco().getEstado());
+            endereco.setPais(dto.getEndereco().getPais());
+            paciente.setEndereco(endereco);
+        }
+
+        return paciente;
+    }
+    
 }

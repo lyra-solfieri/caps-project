@@ -1,5 +1,6 @@
 package com.lyra.caps.controller;
 
+import com.lyra.caps.mapper.ApiResponse;
 import com.lyra.caps.dto.PacienteDto;
 import com.lyra.caps.dto.PacienteResponseDto;
 import com.lyra.caps.service.IPacienteService;
@@ -7,11 +8,10 @@ import com.lyra.caps.util.LogPersonalizado;
 
 import jakarta.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,20 +24,31 @@ public class PacienteController {
         this.pacienteService = pacienteService;
     }
 
+    
     @PostMapping
-    public ResponseEntity<PacienteResponseDto> criarPaciente(@Valid @RequestBody PacienteDto pacienteDto) {
-        try{
-            PacienteResponseDto response = pacienteService.criarPaciente(pacienteDto);
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(response.getId())
-                    .toUri();
-            return ResponseEntity.created(location).body(response);
-        } 
-        catch (Exception e) {
-            LogPersonalizado.getLogger(this.getClass()).error("Erro ao cadastrar paciente", e);
+    public ResponseEntity<ApiResponse<?>> criarPaciente(@Valid @RequestBody PacienteDto pacienteDto) {
+        try {
+            pacienteService.criarPaciente(pacienteDto);
+
+            ApiResponse<Void> response = ApiResponse.sucesso(
+                    "Paciente cadastrado com sucesso",
+                    HttpStatus.CREATED,
+                    null
+            );
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        } catch (Exception e) {
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao cadastrar paciente: " + e.getMessage(), e);
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+
+            ApiResponse<Object> erro = ApiResponse.erro(
+                    "Erro ao cadastrar paciente",
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+                    
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+
         }
     }
 

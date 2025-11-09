@@ -12,7 +12,7 @@
 	<artifactId>caps</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>caps</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Projeto Caps</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -59,7 +59,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -77,6 +76,12 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
@@ -108,7 +113,6 @@
 			<version>1.18.36</version>
 			<scope>provided</scope>
 		</dependency>
-
 		
 		<dependency>
 	    	<groupId>org.flywaydb</groupId>
@@ -119,8 +123,6 @@
   			<groupId>org.flywaydb</groupId>
   			<artifactId>flyway-mysql</artifactId>
 		</dependency>
-
-
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
