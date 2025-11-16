@@ -54,8 +54,15 @@ public class PacienteController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<PacienteResponseDto> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(pacienteService.buscarPorId(id));
+    public ResponseEntity<PacienteResponseDto> buscarPacientePorId(@PathVariable Long id) {
+
+        try {
+            return ResponseEntity.ok(pacienteService.buscarPorId(id));
+        } catch (Exception e) {
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao buscar paciente", e);
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping
@@ -87,7 +94,15 @@ public class PacienteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarPaciente(@PathVariable Long id) {
-        pacienteService.deletarPaciente(id);
-        return ResponseEntity.noContent().build();
+        try{
+            pacienteService.deletarPaciente(id);
+            return ResponseEntity.noContent().build();
+
+        } catch(Exception e) {
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao deletar Paciente");
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+
+        }
     }
 }
