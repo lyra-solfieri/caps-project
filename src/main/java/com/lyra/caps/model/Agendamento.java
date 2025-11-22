@@ -12,6 +12,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,7 +42,7 @@ public class Agendamento {
     @Enumerated(EnumType.STRING)
     private TipoComunicacao tipoComunicacao;
 
-    @Column(nullable = false)
+    @Column(nullable = false) 
     private LocalDateTime dataHoraEnvio;
 
     @Enumerated(EnumType.STRING)
@@ -48,5 +50,13 @@ public class Agendamento {
 
     @Column(nullable = false)
     private LocalDateTime createAt;
+
+    @ManyToOne
+    @JoinColumn(name = "paciente_id", nullable = false)
+    private Paciente paciente;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 }
