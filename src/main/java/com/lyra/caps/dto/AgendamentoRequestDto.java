@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class AgendamentoRequestDto {
 
-    @NotBlank(message = "O destinatario não pode ser vazio")
+
     private String destinatario;
 
     @NotBlank(message = "O message não pode ser vazio")
@@ -24,5 +24,11 @@ public class AgendamentoRequestDto {
     @NotBlank(message = "O dataHoraEnvio não pode ser vazio")
     @Future(message = "A dataHoraEnvio deve ser futura")
     private LocalDateTime dataHoraEnvio;
+
+    @NotBlank(message = "O usuario não pode ser vazio")
+    private Long idUser;
+
+    @NotBlank(message = "O paciente não pode ser vazio")
+    private Long idPaciente;
 
 }
