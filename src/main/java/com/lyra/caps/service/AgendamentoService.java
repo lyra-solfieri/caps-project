@@ -30,7 +30,10 @@ public class AgendamentoService implements IAgendamentoService {
     public AgendamentoResponseDto agendar(AgendamentoRequestDto agendamentoRequest) {
 
         try {
-
+            /* Verificar qual usuario esta logado
+             * e vincular ao agendamento
+             * Verificar o tipo de agendamento
+             */
             User usuarioLogado = null;
 
             usuarioLogado = userService.getCurrentUser();

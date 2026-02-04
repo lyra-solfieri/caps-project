@@ -15,13 +15,12 @@ public class AgendamentoRequestDto {
 
     private String destinatario;
 
-    @NotBlank(message = "O message não pode ser vazio")
     private String message;
 
     @NotNull(message = "O tipoComunicacao não pode ser vazio")
     private TipoComunicacao tipoComunicacao;
 
-    @NotNull(message = "O dataHoraAtendimento não pode ser vazio")    
+    @NotNull(message = "O dataHoraAtendimento não pode ser vazio")
     private LocalDateTime dataHoraAtendimento;
 
     

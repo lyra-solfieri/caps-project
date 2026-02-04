@@ -9,11 +9,11 @@ import com.lyra.caps.util.LogPersonalizado;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -26,7 +26,7 @@ public class PacienteService implements IPacienteService {
     @Override
     public PacienteResponseDto criarPaciente(PacienteDto pacienteDto) {
          try {   
-            if( pacienteRepository.existsByCpf(pacienteDto.getCpf())) {
+            if(pacienteRepository.existsByCpf(pacienteDto.getCpf())) {
                 throw new RuntimeException("CPF ja cadastrado");
             }
             
@@ -60,11 +60,13 @@ public class PacienteService implements IPacienteService {
     }
 
     @Override
-    public List<PacienteResponseDto> listarTodos() {
+    public Page<PacienteResponseDto> listarTodos(int pageNo, int pagesize) {
         try {
-            return pacienteRepository.findAll().stream()
-                    .map(PacienteResponseDto::fromEntity)
-                    .collect(Collectors.toList());
+            Page <Paciente> pacienPage = pacienteRepository.findAll(PageRequest.of(pageNo, pagesize)); 
+            return pacienPage.map(paciente ->{
+                PacienteResponseDto pacienteResponseDto = PacienteResponseDto.fromEntity(paciente);
+                return pacienteResponseDto;
+            });
         }
         catch (Exception e) {
             logPersonalizado.error("Erro ao listar pacientes", e);
@@ -105,6 +107,23 @@ public class PacienteService implements IPacienteService {
             throw new RuntimeException("Erro ao deletar paciente");
         }
 
+    }
+
+    @Override
+    public Page<PacienteResponseDto> filtrar(int pageNo, int pageSize, String sortBy, String direction, String nome,
+            String cpf) {
+        try {
+            Page <Paciente> pacientes = pacienteRepository.filtrar(nome, cpf, PageRequest.of(pageNo, pageSize));
+            return pacientes.map(paciente ->{
+                PacienteResponseDto pacienteResponseDto = PacienteResponseDto.fromEntity(paciente);
+                return pacienteResponseDto;
+            });
+        }
+        catch (Exception e) {
+            logPersonalizado.error("Erro ao filtrar pacientes", e);
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao filtrar pacientes");
+        }
     }
    
 }

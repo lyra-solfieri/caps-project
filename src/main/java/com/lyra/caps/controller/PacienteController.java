@@ -8,11 +8,14 @@ import com.lyra.caps.util.LogPersonalizado;
 
 import jakarta.validation.Valid;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/pacientes")
@@ -66,10 +69,14 @@ public class PacienteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PacienteResponseDto>> listarTodos() {
+    public ResponseEntity<Page<PacienteResponseDto>> listarTodos(
+         @RequestParam(defaultValue = "0") int pageNo,
+         @RequestParam(defaultValue = "10") int pageSize, 
+         @RequestParam(defaultValue = "id") String sortBy,
+         @RequestParam(defaultValue = "asc") String direction) {
         
         try {
-            List<PacienteResponseDto> pacientes = pacienteService.listarTodos();            
+            Page<PacienteResponseDto> pacientes = pacienteService.listarTodos(pageNo, pageSize);            
             return ResponseEntity.ok(pacientes);
 
         } catch (Exception e) {
@@ -104,5 +111,25 @@ public class PacienteController {
             return ResponseEntity.internalServerError().build();
 
         }
+    }
+
+    @GetMapping("/filtrar")
+    public ResponseEntity<Page<PacienteResponseDto>> filtrar(
+        @RequestParam (defaultValue = "0") int pageNo,
+        @RequestParam (defaultValue = "10") int pageSize,
+        @RequestParam (defaultValue = "id") String sortBy,
+        @RequestParam (defaultValue = "asc") String direction,
+        @RequestParam(required = false) String nome,
+        @RequestParam(required = false) String cpf
+        ) {
+        try {
+            Page<PacienteResponseDto> pacientes = pacienteService.filtrar(pageNo, pageSize, sortBy, direction, nome, cpf);
+            return ResponseEntity.ok(pacientes);
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    
     }
 }
