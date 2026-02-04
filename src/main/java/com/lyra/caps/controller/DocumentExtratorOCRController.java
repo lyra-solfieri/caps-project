@@ -21,8 +21,9 @@ public class DocumentExtratorOCRController {
     public ResponseEntity<String> extrairTexto(@RequestPart MultipartFile file) {
         try {
             Thread.sleep(3000);
-            String text = documentExtractor.extrair(file);
+            // String text = documentExtractor.extrair(file);
             // adiconar ao banco de dados o texto extraído
+            // Usar um microserviço para isso com python 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

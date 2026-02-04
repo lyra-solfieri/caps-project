@@ -43,7 +43,7 @@ public class Agendamento {
     private TipoComunicacao tipoComunicacao;
 
     @Column(nullable = false) 
-    private LocalDateTime dataHoraEnvio;
+    private LocalDateTime dataHoraAtendimento;
 
     @Enumerated(EnumType.STRING)
     private StatusAgendamento statusAgendamento;

@@ -14,11 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AgendamentoResponseDto {
 
-    Long id;
     String destinatario;
     String message;
     TipoComunicacao tipoComunicacao;
-    LocalDateTime dataHoraEnvio;
+    LocalDateTime dataHoraAtendimento;
     StatusAgendamento statusAgendamento;
     LocalDateTime createAt;
     PacienteDto paciente;

@@ -2,7 +2,6 @@ package com.lyra.caps.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,6 @@ import com.lyra.caps.model.User;
 import com.lyra.caps.model.enums.StatusAgendamento;
 import com.lyra.caps.repository.AgendamentoRepository;
 import com.lyra.caps.repository.PacienteRepository;
-import com.lyra.caps.repository.UserRepository;
 import com.lyra.caps.util.LogPersonalizado;
 
 import lombok.RequiredArgsConstructor;
@@ -26,25 +24,31 @@ import lombok.RequiredArgsConstructor;
 public class AgendamentoService implements IAgendamentoService {
 
     private final AgendamentoRepository agendamentoRepository;
-    private final UserRepository userRepository;
     private final PacienteRepository pacienteService;
+    private final UserService userService;
 
     public AgendamentoResponseDto agendar(AgendamentoRequestDto agendamentoRequest) {
 
         try {
+
+            User usuarioLogado = null;
+
+            usuarioLogado = userService.getCurrentUser();
             
-            User usuarioLogado = userRepository.findById(agendamentoRequest.getIdUser())
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            Long idPaciente = agendamentoRequest.getIdPaciente();
+            Paciente paciente = null;
 
-            Paciente paciente = pacienteService.findById(agendamentoRequest.getIdPaciente())
-                    .orElseThrow(() -> new RuntimeException("Paciente nao encontrado"));
+            if (idPaciente != null && idPaciente > 0) {
+                paciente = pacienteService.findById(agendamentoRequest.getIdPaciente())
+                        .orElseThrow(() -> new RuntimeException("Paciente nao encontrado"));
+            }
 
-
+            
             Agendamento agendamento = Agendamento.builder()
                     .destinatario(agendamentoRequest.getDestinatario())
                     .message(agendamentoRequest.getMessage())
                     .tipoComunicacao(agendamentoRequest.getTipoComunicacao())
-                    .dataHoraEnvio(agendamentoRequest.getDataHoraEnvio())                    
+                    .dataHoraAtendimento(agendamentoRequest.getDataHoraAtendimento())                    
                     .statusAgendamento(StatusAgendamento.AGENDADO)
                     .user(usuarioLogado)
                     .paciente(paciente)
@@ -101,11 +105,10 @@ public class AgendamentoService implements IAgendamentoService {
         }
 
         return new AgendamentoResponseDto(
-                agendamento.getId(),
                 agendamento.getDestinatario(),
                 agendamento.getMessage(),
                 agendamento.getTipoComunicacao(),
-                agendamento.getDataHoraEnvio(),
+                agendamento.getDataHoraAtendimento(),
                 agendamento.getStatusAgendamento(),
                 agendamento.getCreateAt(),
                 pacienteDto,

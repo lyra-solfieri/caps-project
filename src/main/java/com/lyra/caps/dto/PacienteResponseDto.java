@@ -1,5 +1,6 @@
 package com.lyra.caps.dto;
 
+import com.lyra.caps.model.Paciente;
 import com.lyra.caps.model.enums.Genero;
 import com.lyra.caps.model.enums.Raca;
 
@@ -20,10 +21,38 @@ public class PacienteResponseDto {
     private String nomeMae;
     private String nomePai;
     private String profissao;
-    private String numeroCartaoSUS;
+    private Long numeroCartaoSUS;
     private Raca raca;
     private Long numeroProntuario;
     private boolean infantojuvenil;
     private boolean emSituacaoSocioeconomica;
 
+  public static PacienteResponseDto fromEntity(Paciente paciente) {
+        if (paciente == null) {
+            return null;
+        }
+
+        PacienteResponseDto dto = new PacienteResponseDto();
+        dto.setId(paciente.getId());
+        dto.setNome(paciente.getNome());
+        dto.setEmail(paciente.getEmail());
+        dto.setTelefone(paciente.getTelefone());
+        dto.setCpf(paciente.getCpf());
+        dto.setGenero(paciente.getGenero());
+        dto.setDataNascimento(paciente.getDataNascimento());
+        dto.setNomeMae(paciente.getNomeMae());
+        dto.setNomePai(paciente.getNomePai());
+        dto.setProfissao(paciente.getProfissao());
+        dto.setNumeroCartaoSUS(paciente.getNumeroCartaoSUS());
+        dto.setRaca(paciente.getRaca());
+        dto.setNumeroProntuario(paciente.getNumeroProntuario());
+        dto.setInfantojuvenil(paciente.isInfantojuvenil());
+        dto.setEmSituacaoSocioeconomica(paciente.isEmSituacaoSocioeconomica());
+
+        if (paciente.getEndereco() != null) {
+            dto.setEndereco(EnderecoDto.fromEntity(paciente.getEndereco()));
+        }
+
+        return dto;
+    }
 }

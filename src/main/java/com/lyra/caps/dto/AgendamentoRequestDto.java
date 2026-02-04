@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 import com.lyra.caps.model.enums.TipoComunicacao;
 
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 
@@ -18,17 +18,15 @@ public class AgendamentoRequestDto {
     @NotBlank(message = "O message não pode ser vazio")
     private String message;
 
-    @NotBlank(message = "O tipoComunicacao não pode ser vazio")
+    @NotNull(message = "O tipoComunicacao não pode ser vazio")
     private TipoComunicacao tipoComunicacao;
 
-    @NotBlank(message = "O dataHoraEnvio não pode ser vazio")
-    @Future(message = "A dataHoraEnvio deve ser futura")
-    private LocalDateTime dataHoraEnvio;
+    @NotNull(message = "O dataHoraAtendimento não pode ser vazio")    
+    private LocalDateTime dataHoraAtendimento;
 
-    @NotBlank(message = "O usuario não pode ser vazio")
+    
     private Long idUser;
 
-    @NotBlank(message = "O paciente não pode ser vazio")
     private Long idPaciente;
 
 }

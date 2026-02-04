@@ -16,4 +16,8 @@ public interface IUserService {
 
     void deleteUser(Long userId);
 
+    User getCurrentUser();
+
+    Long getCurrentUserId();
+
 }

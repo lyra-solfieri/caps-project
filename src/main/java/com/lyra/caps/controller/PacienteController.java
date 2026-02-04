@@ -69,7 +69,7 @@ public class PacienteController {
     public ResponseEntity<List<PacienteResponseDto>> listarTodos() {
         
         try {
-            List<PacienteResponseDto> pacientes = pacienteService.listarTodos();
+            List<PacienteResponseDto> pacientes = pacienteService.listarTodos();            
             return ResponseEntity.ok(pacientes);
 
         } catch (Exception e) {

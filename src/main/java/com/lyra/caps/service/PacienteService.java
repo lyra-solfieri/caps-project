@@ -33,7 +33,7 @@ public class PacienteService implements IPacienteService {
             Paciente paciente = Paciente.fromDto(pacienteDto);
             Paciente pacienteSalvo = pacienteRepository.save(paciente);
             logPersonalizado.info("Paciente criado com sucesso" + pacienteSalvo);
-            return pacienteMapper.toResponseDto(pacienteSalvo);
+            return PacienteResponseDto.fromEntity(pacienteSalvo);
         }
         catch (Exception e) {
             logPersonalizado.error(e.getMessage(), e);
@@ -63,7 +63,7 @@ public class PacienteService implements IPacienteService {
     public List<PacienteResponseDto> listarTodos() {
         try {
             return pacienteRepository.findAll().stream()
-                    .map(pacienteMapper::toResponseDto)
+                    .map(PacienteResponseDto::fromEntity)
                     .collect(Collectors.toList());
         }
         catch (Exception e) {
