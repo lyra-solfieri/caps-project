@@ -51,6 +51,8 @@ public class User implements UserDetails {
   @ColumnDefault(value = "0")
 	private Boolean bloqueado;
 
+  private String profissaoUsuario;
+
   public User(String email, String password, Role role) {
     this.email = email;
     this.password = password;

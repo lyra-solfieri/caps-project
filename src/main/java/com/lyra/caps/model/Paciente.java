@@ -93,6 +93,9 @@ public class Paciente {
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Atendimento> atendimentos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Anamnese> anamneses = new ArrayList<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
