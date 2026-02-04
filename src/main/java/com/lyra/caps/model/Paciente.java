@@ -48,6 +48,8 @@ public class Paciente {
     @CPF
     private String cpf;
 
+    private String rg;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
@@ -57,9 +59,13 @@ public class Paciente {
 
     @Size(min = 3, max = 100)
     private String nomeMae;
+    private String profissaoMae;
+
+    private String codIBGEMunicipio;
 
     @Size(min = 3, max = 100)
     private String nomePai;
+    private String profissaoPai;
 
     @Size(min = 3, max = 100)
     private String profissao;
@@ -69,6 +75,20 @@ public class Paciente {
     private Long numeroProntuario;
     private boolean infantojuvenil;
     private boolean emSituacaoSocioeconomica;
+    private String contextoVulnerabilidadeSocioeconomica;
+    private String etniaIndigena;
+    private String nacionalidade;
+    private String escolaridade;
+    private String rendaFamiliar;
+    private String auxilioOuBeneficioSocial;
+    private String responsavelLegal;
+    private String parentescoResponsavelLegal;
+    private String telefoneResponsavelLegal;
+    private String profissaoResponsavelLegal;
+    private String instituicaoEnsino;
+    private String religiao;
+    private String unidadeBasicaSaude;
+    private String agenteSaude;
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Atendimento> atendimentos = new ArrayList<>();
@@ -106,6 +126,25 @@ public class Paciente {
         paciente.setNumeroProntuario(dto.getNumeroProntuario());
         paciente.setInfantojuvenil(dto.isInfantojuvenil());
         paciente.setEmSituacaoSocioeconomica(dto.isEmSituacaoSocioeconomica());
+        paciente.setEtniaIndigena(dto.getEtniaIndigena());
+        paciente.setNacionalidade(dto.getNacionalidade());
+        paciente.setEscolaridade(dto.getEscolaridade());
+        paciente.setRg(dto.getRg());
+        paciente.setRendaFamiliar(dto.getRendaFamiliar());
+        paciente.setProfissaoMae(dto.getProfissaoMae());
+        paciente.setProfissaoPai(dto.getProfissaoPai());
+        paciente.setCodIBGEMunicipio(dto.getCodIBGEMunicipio());
+        paciente.setAuxilioOuBeneficioSocial(dto.getAuxilioOuBeneficioSocial());
+        paciente.setResponsavelLegal(dto.getResponsavelLegal());
+        paciente.setParentescoResponsavelLegal(dto.getParentescoResponsavelLegal());
+        paciente.setTelefoneResponsavelLegal(dto.getTelefoneResponsavelLegal());
+        paciente.setProfissaoResponsavelLegal(dto.getProfissaoResponsavelLegal());
+        paciente.setInstituicaoEnsino(dto.getInstituicaoEnsino());
+        paciente.setReligiao(dto.getReligiao());
+        paciente.setUnidadeBasicaSaude(dto.getUnidadeBasicaSaude());
+        paciente.setAgenteSaude(dto.getAgenteSaude());
+        paciente.setContextoVulnerabilidadeSocioeconomica(dto.getContextoVulnerabilidadeSocioeconomica());
+                
 
         if (dto.getEndereco() != null) {
             Endereco endereco = new Endereco();

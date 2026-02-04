@@ -46,7 +46,7 @@ public class PacienteController {
             e.printStackTrace();
 
             ApiResponse<Object> erro = ApiResponse.erro(
-                    "Erro ao cadastrar paciente",
+                    "Erro ao cadastrar paciente Teste",
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
                     

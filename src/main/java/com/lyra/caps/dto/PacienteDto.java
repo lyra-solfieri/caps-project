@@ -12,31 +12,60 @@ import lombok.Data;
 
 @Data
 public class PacienteDto {
+
     private Long id;
 
     @NotEmpty
     @Size(min = 3, max = 100)
     private String nome;
 
-    @Email(message = "Email inválido")
+    @Email(message = "Email inválido")
     @NotEmpty
     private String email;
 
     private String telefone;
 
-    @CPF(message = "CPF inválido")
+    @CPF(message = "CPF inválido")
     @NotEmpty
     private String cpf;
 
     private EnderecoDto endereco;
+
     private Genero genero;
     private String dataNascimento;
+
     private String nomeMae;
     private String nomePai;
     private String profissao;
+
     private Long numeroCartaoSUS;
     private Raca raca;
     private Long numeroProntuario;
+
     private boolean infantojuvenil;
     private boolean emSituacaoSocioeconomica;
+
+    private String codIBGEMunicipio;
+    private String etniaIndigena;
+    private String nacionalidade;
+    private String escolaridade;
+    private String rg;
+
+    private String profissaoMae;
+    private String profissaoPai;
+    private String rendaFamiliar;
+
+    private String auxilioOuBeneficioSocial;
+
+    private String responsavelLegal;
+    private String parentescoResponsavelLegal;
+    private String telefoneResponsavelLegal;
+    private String profissaoResponsavelLegal;
+
+    private String instituicaoEnsino;
+    private String religiao;
+    private String unidadeBasicaSaude;
+    private String agenteSaude;
+
+    private String contextoVulnerabilidadeSocioeconomica;
 }
