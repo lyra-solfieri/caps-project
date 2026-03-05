@@ -8,9 +8,8 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
-@Getter
-@Setter
 @Data
+@NoArgsConstructor 
 @Table(name = "endereco")
 public class Endereco {
 

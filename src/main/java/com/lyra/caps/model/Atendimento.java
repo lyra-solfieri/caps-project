@@ -19,9 +19,8 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
-@Getter
-@Setter
 @Data
+@NoArgsConstructor
 @Table(name = "atendimento")
 public class Atendimento {
 
