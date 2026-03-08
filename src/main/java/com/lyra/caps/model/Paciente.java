@@ -52,6 +52,9 @@ public class Paciente {
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Evolucao> evolucoes = new ArrayList<>();
+
     private Genero genero;
     private String dataNascimento;
 
