@@ -109,10 +109,8 @@ public class Paciente {
         return getClass().hashCode();
     }
 
-    public static Paciente fromDto(PacienteDto dto) {
-        if (dto == null) {
-            return null;
-        }
+   public static Paciente fromDto(PacienteDto dto) {
+    if (dto == null) return null;
 
         Paciente paciente = new Paciente();
         paciente.setId(dto.getId());
@@ -120,24 +118,25 @@ public class Paciente {
         paciente.setEmail(dto.getEmail());
         paciente.setTelefone(dto.getTelefone());
         paciente.setCpf(dto.getCpf());
+        paciente.setRg(dto.getRg());
         paciente.setGenero(dto.getGenero());
         paciente.setDataNascimento(dto.getDataNascimento());
         paciente.setNomeMae(dto.getNomeMae());
+        paciente.setProfissaoMae(dto.getProfissaoMae());
+        paciente.setCodIBGEMunicipio(dto.getCodIBGEMunicipio());
         paciente.setNomePai(dto.getNomePai());
+        paciente.setProfissaoPai(dto.getProfissaoPai());
         paciente.setProfissao(dto.getProfissao());
         paciente.setNumeroCartaoSUS(dto.getNumeroCartaoSUS());
         paciente.setRaca(dto.getRaca());
         paciente.setNumeroProntuario(dto.getNumeroProntuario());
         paciente.setInfantojuvenil(dto.isInfantojuvenil());
         paciente.setEmSituacaoSocioeconomica(dto.isEmSituacaoSocioeconomica());
+        paciente.setContextoVulnerabilidadeSocioeconomica(dto.getContextoVulnerabilidadeSocioeconomica());
         paciente.setEtniaIndigena(dto.getEtniaIndigena());
         paciente.setNacionalidade(dto.getNacionalidade());
         paciente.setEscolaridade(dto.getEscolaridade());
-        paciente.setRg(dto.getRg());
         paciente.setRendaFamiliar(dto.getRendaFamiliar());
-        paciente.setProfissaoMae(dto.getProfissaoMae());
-        paciente.setProfissaoPai(dto.getProfissaoPai());
-        paciente.setCodIBGEMunicipio(dto.getCodIBGEMunicipio());
         paciente.setAuxilioOuBeneficioSocial(dto.getAuxilioOuBeneficioSocial());
         paciente.setResponsavelLegal(dto.getResponsavelLegal());
         paciente.setParentescoResponsavelLegal(dto.getParentescoResponsavelLegal());
@@ -147,8 +146,6 @@ public class Paciente {
         paciente.setReligiao(dto.getReligiao());
         paciente.setUnidadeBasicaSaude(dto.getUnidadeBasicaSaude());
         paciente.setAgenteSaude(dto.getAgenteSaude());
-        paciente.setContextoVulnerabilidadeSocioeconomica(dto.getContextoVulnerabilidadeSocioeconomica());
-                
 
         if (dto.getEndereco() != null) {
             Endereco endereco = new Endereco();

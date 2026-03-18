@@ -2,6 +2,8 @@ package com.lyra.caps.model;
 
 import java.time.LocalDateTime;
 
+import com.lyra.caps.dto.AnamneseDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -153,4 +155,55 @@ public class Anamnese {
 
     @Column(columnDefinition = "TEXT")
     private String projetoTerapeuticoSingular;
+
+    public static Anamnese fromDto( AnamneseDto anamneseDto) {
+
+        if (anamneseDto == null) {
+            return null;
+        }
+
+        Anamnese anamnese = new Anamnese();
+        anamnese.setId(anamneseDto.getId());
+        // anamnese.setPaciente(Paciente.fromDto(anamneseDto.getPacienteId()));
+        anamnese.setDataRegistro(anamneseDto.getDataRegistro());
+        anamnese.setProfissionalResponsavel(anamneseDto.getProfissionalResponsavel());
+        anamnese.setQueixaPrincipal(anamneseDto.getQueixaPrincipal());
+        anamnese.setHistoriaDoencaAtual(anamneseDto.getHistoriaDoencaAtual());
+        anamnese.setEncaminhamentos(anamneseDto.getEncaminhamentos());
+        anamnese.setAntecedentesFamiliares(anamneseDto.getAntecedentesFamiliares());
+        anamnese.setHabitosDeVida(anamneseDto.getHabitosDeVida());
+        anamnese.setObservacoesGerais(anamneseDto.getObservacoesGerais());
+        anamnese.setAlergias(anamneseDto.getAlergias());
+        anamnese.setCirurgias(anamneseDto.getCirurgias());
+        anamnese.setMedicamentosUsados(anamneseDto.getMedicamentosUsados());
+        anamnese.setHistoricoDeInternacao(anamneseDto.getHistoricoDeInternacao());
+        anamnese.setObservacoesGestacao(anamneseDto.getObservacoesGestacao());
+        anamnese.setLocalNascimento(anamneseDto.getLocalNascimento());
+        anamnese.setTipoParto(anamneseDto.getTipoParto());
+        anamnese.setPosicaoNascimento(anamneseDto.getPosicaoNascimento());
+        anamnese.setChorouAoNascer(anamneseDto.getChorouAoNascer());
+        anamnese.setNasceuVermelho(anamneseDto.getNasceuVermelho());
+        anamnese.setNasceuRoxo(anamneseDto.getNasceuRoxo());
+        anamnese.setAnoxia(anamneseDto.getAnoxia());
+        anamnese.setIctericia(anamneseDto.getIctericia());
+        anamnese.setPrecisouOxigenio(anamneseDto.getPrecisouOxigenio());
+        anamnese.setIncubadora(anamneseDto.getIncubadora());
+        anamnese.setAltaHospitalar(anamneseDto.getAltaHospitalar());
+        anamnese.setSudorese(anamneseDto.getSudorese());
+        anamnese.setFalaDormindo(anamneseDto.getFalaDormindo());
+        anamnese.setGritaDormindo(anamneseDto.getGritaDormindo());
+        anamnese.setRangeDentes(anamneseDto.getRangeDentes());
+        anamnese.setSonambulo(anamneseDto.getSonambulo());
+        anamnese.setPesadelos(anamneseDto.getPesadelos());
+        anamnese.setAmamentadoNoPeito(anamneseDto.getAmamentadoNoPeito());
+        anamnese.setAtitudeDesmame(anamneseDto.getAtitudeDesmame());
+        anamnese.setHabitosAlimentares(anamneseDto.getHabitosAlimentares());
+        anamnese.setComportamentoEscola(anamneseDto.getComportamentoEscola());
+        anamnese.setGostaEstudar(anamneseDto.getGostaEstudar());
+        anamnese.setHistoricoEscolar(anamneseDto.getHistoricoEscolar());
+        // anamnese.setProjetoTerapeuticoPlural(anamneseDto.getProjetoTerapeuticoPlural());
+        anamnese.setProjetoTerapeuticoSingular(anamneseDto.getProjetoTerapeuticoSingular());
+        return anamnese;
+        
+    }
 }

@@ -10,30 +10,23 @@ import lombok.Data;
 public class AnamneseDto {
 
     private Long id;
-
     private Long pacienteId;
-
     private LocalDateTime dataRegistro;
-
     private String profissionalResponsavel;
-
     private String queixaPrincipal;
     private String historiaDoencaAtual;
     private String encaminhamentos;
     private String antecedentesFamiliares;
     private String habitosDeVida;
     private String observacoesGerais;
-
     private String alergias;
     private String cirurgias;
     private String medicamentosUsados;
     private String historicoDeInternacao;
     private String observacoesGestacao;
-
     private String localNascimento;
     private String tipoParto;
     private String posicaoNascimento;
-
     private Boolean chorouAoNascer;
     private Boolean nasceuVermelho;
     private Boolean nasceuRoxo;
@@ -41,9 +34,7 @@ public class AnamneseDto {
     private Boolean ictericia;
     private Boolean precisouOxigenio;
     private Boolean incubadora;
-
     private String altaHospitalar;
-
     private String sorriu;
     private String equilibrouPescoco;
     private String engatinhou;
@@ -58,7 +49,6 @@ public class AnamneseDto {
     private String controleEsfincterVesicalDiurno;
     private String controleEsfincterNoturno;
     private String cuidadosPorQuem;
-
     private Boolean usouChupeta;
     private Boolean chupouDedo;
     private Boolean roeUnhas;
@@ -66,9 +56,7 @@ public class AnamneseDto {
     private Boolean arrancaCabelos;
     private Boolean mordeLabios;
     private Boolean tiques;
-
     private String atitudeDianteHabitos;
-
     private Boolean dormeBem;
     private Boolean pulaQuandoDorme;
     private Boolean babaNoite;
@@ -79,54 +67,100 @@ public class AnamneseDto {
     private Boolean rangeDentes;
     private Boolean sonambulo;
     private Boolean pesadelos;
-
     private Boolean amamentadoNoPeito;
-
     private String atitudeDesmame;
     private String habitosAlimentares;
-
     private String comportamentoEscola;
     private Boolean gostaEstudar;
     private String historicoEscolar;
     private Boolean gostaEscola;
     private String queixasComportamento;
     private Boolean dificuldadeAprendizagem;
-
     private String prefereBrincar;
     private String ativoOuPassivo;
-
     private String observacoesComportamentoSocial;
     private String observacoesEstrategicas;
     private String projetoTerapeuticoSingular;
 
     public static AnamneseDto fromEntity(Anamnese anamnese) {
-    AnamneseDto dto = new AnamneseDto();
-    dto.setId(anamnese.getId());
-    dto.setPacienteId(anamnese.getPaciente().getId());
-    dto.setDataRegistro(anamnese.getDataRegistro());
-    dto.setProfissionalResponsavel(anamnese.getProfissionalResponsavel());
-    dto.setQueixaPrincipal(anamnese.getQueixaPrincipal());
-    dto.setHistoriaDoencaAtual(anamnese.getHistoriaDoencaAtual());
-    dto.setEncaminhamentos(anamnese.getEncaminhamentos());
-    dto.setAntecedentesFamiliares(anamnese.getAntecedentesFamiliares());
-    dto.setHabitosDeVida(anamnese.getHabitosDeVida());
-    dto.setObservacoesGerais(anamnese.getObservacoesGerais());
-    dto.setAlergias(anamnese.getAlergias());
-    dto.setCirurgias(anamnese.getCirurgias());
-    dto.setMedicamentosUsados(anamnese.getMedicamentosUsados());
-    dto.setHistoricoDeInternacao(anamnese.getHistoricoDeInternacao());
-    dto.setObservacoesGestacao(anamnese.getObservacoesGestacao());
-    dto.setLocalNascimento(anamnese.getLocalNascimento());
-    dto.setTipoParto(anamnese.getTipoParto());
-    dto.setPosicaoNascimento(anamnese.getPosicaoNascimento());
-    dto.setChorouAoNascer(anamnese.getChorouAoNascer());
-    dto.setNasceuVermelho(anamnese.getNasceuVermelho());
-    dto.setNasceuRoxo(anamnese.getNasceuRoxo());
-    dto.setAnoxia(anamnese.getAnoxia());
-    dto.setIctericia(anamnese.getIctericia());
-    dto.setPrecisouOxigenio(anamnese.getPrecisouOxigenio());
-    dto.setIncubadora(anamnese.getIncubadora());
-    dto.setAltaHospitalar(anamnese.getAltaHospitalar());
-    return dto;
-}
+        if (anamnese == null) {
+            return null;
+        }
+        
+        AnamneseDto dto = new AnamneseDto();
+        dto.setId(anamnese.getId());
+        dto.setPacienteId(anamnese.getPaciente() != null ? anamnese.getPaciente().getId() : null);
+        dto.setDataRegistro(anamnese.getDataRegistro());
+        dto.setProfissionalResponsavel(anamnese.getProfissionalResponsavel());
+        dto.setQueixaPrincipal(anamnese.getQueixaPrincipal());
+        dto.setHistoriaDoencaAtual(anamnese.getHistoriaDoencaAtual());
+        dto.setEncaminhamentos(anamnese.getEncaminhamentos());
+        dto.setAntecedentesFamiliares(anamnese.getAntecedentesFamiliares());
+        dto.setHabitosDeVida(anamnese.getHabitosDeVida());
+        dto.setObservacoesGerais(anamnese.getObservacoesGerais());
+        dto.setAlergias(anamnese.getAlergias());
+        dto.setCirurgias(anamnese.getCirurgias());
+        dto.setMedicamentosUsados(anamnese.getMedicamentosUsados());
+        dto.setHistoricoDeInternacao(anamnese.getHistoricoDeInternacao());
+        dto.setObservacoesGestacao(anamnese.getObservacoesGestacao());
+        dto.setLocalNascimento(anamnese.getLocalNascimento());
+        dto.setTipoParto(anamnese.getTipoParto());
+        dto.setPosicaoNascimento(anamnese.getPosicaoNascimento());
+        dto.setChorouAoNascer(anamnese.getChorouAoNascer());
+        dto.setNasceuVermelho(anamnese.getNasceuVermelho());
+        dto.setNasceuRoxo(anamnese.getNasceuRoxo());
+        dto.setAnoxia(anamnese.getAnoxia());
+        dto.setIctericia(anamnese.getIctericia());
+        dto.setPrecisouOxigenio(anamnese.getPrecisouOxigenio());
+        dto.setIncubadora(anamnese.getIncubadora());
+        dto.setAltaHospitalar(anamnese.getAltaHospitalar());
+        dto.setSorriu(anamnese.getSorriu());
+        dto.setEquilibrouPescoco(anamnese.getEquilibrouPescoco());
+        dto.setEngatinhou(anamnese.getEngatinhou());
+        dto.setSentou(anamnese.getSentou());
+        dto.setAndou(anamnese.getAndou());
+        dto.setPrimeirasPalavras(anamnese.getPrimeirasPalavras());
+        dto.setFalaCorreta(anamnese.getFalaCorreta());
+        dto.setTrocouLetras(anamnese.getTrocouLetras());
+        dto.setGaguejou(anamnese.getGaguejou());
+        dto.setDenticao(anamnese.getDenticao());
+        dto.setControleEsfincterAnalDiurno(anamnese.getControleEsfincterAnalDiurno());
+        dto.setControleEsfincterVesicalDiurno(anamnese.getControleEsfincterVesicalDiurno());
+        dto.setControleEsfincterNoturno(anamnese.getControleEsfincterNoturno());
+        dto.setCuidadosPorQuem(anamnese.getCuidadosPorQuem());
+        dto.setUsouChupeta(anamnese.getUsouChupeta());
+        dto.setChupouDedo(anamnese.getChupouDedo());
+        dto.setRoeUnhas(anamnese.getRoeUnhas());
+        dto.setPuxaOrelha(anamnese.getPuxaOrelha());
+        dto.setArrancaCabelos(anamnese.getArrancaCabelos());
+        dto.setMordeLabios(anamnese.getMordeLabios());
+        dto.setTiques(anamnese.getTiques());
+        dto.setAtitudeDianteHabitos(anamnese.getAtitudeDianteHabitos());
+        dto.setDormeBem(anamnese.getDormeBem());
+        dto.setPulaQuandoDorme(anamnese.getPulaQuandoDorme());
+        dto.setBabaNoite(anamnese.getBabaNoite());
+        dto.setSudorese(anamnese.getSudorese());
+        dto.setAcordaVariasVezes(anamnese.getAcordaVariasVezes());
+        dto.setFalaDormindo(anamnese.getFalaDormindo());
+        dto.setGritaDormindo(anamnese.getGritaDormindo());
+        dto.setRangeDentes(anamnese.getRangeDentes());
+        dto.setSonambulo(anamnese.getSonambulo());
+        dto.setPesadelos(anamnese.getPesadelos());
+        dto.setAmamentadoNoPeito(anamnese.getAmamentadoNoPeito());
+        dto.setAtitudeDesmame(anamnese.getAtitudeDesmame());
+        dto.setHabitosAlimentares(anamnese.getHabitosAlimentares());
+        dto.setComportamentoEscola(anamnese.getComportamentoEscola());
+        dto.setGostaEstudar(anamnese.getGostaEstudar());
+        dto.setHistoricoEscolar(anamnese.getHistoricoEscolar());
+        dto.setGostaEscola(anamnese.getGostaEscola());
+        dto.setQueixasComportamento(anamnese.getQueixasComportamento());
+        dto.setDificuldadeAprendizagem(anamnese.getDificuldadeAprendizagem());
+        dto.setPrefereBrincar(anamnese.getPrefereBrincar());
+        dto.setAtivoOuPassivo(anamnese.getAtivoOuPassivo());
+        dto.setObservacoesComportamentoSocial(anamnese.getObservacoesComportamentoSocial());
+        dto.setObservacoesEstrategicas(anamnese.getObservacoesEstrategicas());
+        dto.setProjetoTerapeuticoSingular(anamnese.getProjetoTerapeuticoSingular());
+        
+        return dto;
+    }
 }
