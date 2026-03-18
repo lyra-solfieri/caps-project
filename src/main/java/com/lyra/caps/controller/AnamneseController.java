@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import com.lyra.caps.dto.AnamneseDto;
 import com.lyra.caps.service.AnamneseService;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-// import javax.validation.Valid;
+
 
 @Slf4j
 @RestController
@@ -21,7 +22,7 @@ public class AnamneseController {
     private final AnamneseService anamneseService;
 
     @PostMapping
-    public ResponseEntity<AnamneseDto> save(@RequestBody AnamneseDto anamneseDto) {
+    public ResponseEntity<AnamneseDto> save(@RequestBody @Valid AnamneseDto anamneseDto) {
         log.info("Requisição para salvar nova anamnese");
         AnamneseDto savedAnamnese = anamneseService.save(anamneseDto);
         return new ResponseEntity<>(savedAnamnese, HttpStatus.CREATED);

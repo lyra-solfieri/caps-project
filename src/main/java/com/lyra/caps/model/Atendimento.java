@@ -1,14 +1,8 @@
 package com.lyra.caps.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-import com.lyra.caps.model.enums.OrigemPaciente;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -28,21 +23,45 @@ public class Atendimento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate data;
-    private LocalDate dataDeConclusao;
+    private LocalDate dataAdmissao;
+    private LocalDate dataConclusao;
+    private String mesAtendimento;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private OrigemPaciente origemPaciente;
+    private Long numeroAutorizacao;
 
-    private LocalTime hora;
+    private String usoDrogas;
+
+    private boolean alcool;
+    private boolean crack;
+    private boolean outrasDrogas;
+
+    private boolean origemDemandaEspontanea;
+    private boolean origemAtencaoBasica;
+    private boolean origemUrgencia;
+    private boolean origemCaps;
+    private boolean origemHospitalGeral;
+    private boolean origemHospitalPsiquiatrico;
+
+    private String cidPrincipal;
+    private String descricaoCidPrincipal;
+
+    private String cidSecundario;
+    private String descricaoCidSecundario;
+
+    private String esf;
+
+    private String cnesAtendimento;
+
+    private boolean encaminhamentoCaps;
+    private boolean encaminhamentoAtencaoBasica;
+    private boolean alta;
+    private boolean obito;
+
+
     private String observacao;
-    private String encaminhamento;
-    private Long numeroDaAutorizacao;
-    private boolean usuarioDrogas;
 
+  
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
-
 }
