@@ -35,4 +35,8 @@ public class Evolucao {
     @Column(columnDefinition = "TEXT")
     private String texto;
 
+    @ManyToOne
+    @JoinColumn(name = "paciente_id", nullable = false)
+    private Paciente paciente;
+
 }
