@@ -1,5 +1,7 @@
 package com.lyra.caps.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.lyra.caps.dto.AnamneseDto;
@@ -7,6 +9,7 @@ import com.lyra.caps.model.Anamnese;
 import com.lyra.caps.model.Paciente;
 import com.lyra.caps.repository.AnamneseRepository;
 import com.lyra.caps.repository.PacienteRepository;
+import com.lyra.caps.util.LogPersonalizado;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,6 +94,30 @@ public class AnamneseService  implements IAnamneseService {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("Erro ao buscar anamnese por paciente: {}", e.getMessage());
+            throw new RuntimeException("Erro ao buscar anamnese: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<AnamneseDto>  listarAnamneses() {
+        try {            
+            return anamneseRepository.findAll()
+                                     .stream()
+                                     .map(AnamneseDto::fromEntity)
+                                     .toList();
+        } catch (Exception e) {
+            log.error("Erro ao buscar anamnese: {}", e.getMessage());
+            throw new RuntimeException("Erro ao buscar anamnese: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Long listarQuantidade() {
+        try {
+            return anamneseRepository.count();
+        } catch (Exception e) {
+            log.error("Erro ao buscar anamnese: {}", e.getMessage());
+            // LogPersonalizado.getLogger(this.getClass()).error("Erro ao buscar anamnese: {}", e.getMessage());
             throw new RuntimeException("Erro ao buscar anamnese: " + e.getMessage(), e);
         }
     }

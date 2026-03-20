@@ -1,5 +1,7 @@
 package com.lyra.caps.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +29,7 @@ public class AnamneseController {
             return new ResponseEntity<>(savedAnamnese, HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("Erro ao salvar anamnese: {}", e.getMessage());
-            throw e;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -39,7 +41,7 @@ public class AnamneseController {
             return ResponseEntity.ok(anamnese);
         } catch (Exception e) {
             log.error("Erro ao buscar anamnese por ID {}: {}", id, e.getMessage());
-            throw e;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -51,7 +53,7 @@ public class AnamneseController {
             return ResponseEntity.ok(anamnese);
         } catch (Exception e) {
             log.error("Erro ao buscar anamnese por paciente ID {}: {}", pacienteId, e.getMessage());
-            throw e;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -59,7 +61,6 @@ public class AnamneseController {
     public ResponseEntity<AnamneseDto> update(
             @PathVariable Long id, 
             @RequestBody @Valid AnamneseDto anamneseDto) {
-        log.info("Requisição para atualizar anamnese com ID: {}", id);
         try {
 
             anamneseDto.setId(id);
@@ -67,7 +68,7 @@ public class AnamneseController {
             return ResponseEntity.ok(updatedAnamnese);
         } catch (Exception e) {
             log.error("Erro ao atualizar anamnese ID {}: {}", id, e.getMessage());
-            throw e;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -79,7 +80,28 @@ public class AnamneseController {
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             log.error("Erro ao deletar anamnese ID {}: {}", id, e.getMessage());
-            throw e;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping
+    public ResponseEntity<List<AnamneseDto>> listarAnamneses() {
+        try {
+            List<AnamneseDto> anamnese = anamneseService.listarAnamneses();
+            return ResponseEntity.ok(anamnese);
+        } catch (Exception e) {            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/quantidade")
+    public ResponseEntity<Long> listarQuantidade() {
+        try {            
+            Long quantidade = anamneseService.listarQuantidade();
+            return ResponseEntity.ok(quantidade);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
 }
