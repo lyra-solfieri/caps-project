@@ -1,6 +1,7 @@
 package com.lyra.caps.service;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 import com.lyra.caps.dto.AnamneseDto;
 
@@ -16,7 +17,7 @@ public interface IAnamneseService {
 
     AnamneseDto update(Long id, AnamneseDto anamneseDto);
 
-    List<AnamneseDto> listarAnamneses();
+    Page<AnamneseDto> listarAnamneses(Pageable pageable);
 
     Long listarQuantidade();
 

@@ -2,6 +2,7 @@ package com.lyra.caps.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -85,10 +86,10 @@ public class AnamneseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AnamneseDto>> listarAnamneses() {
+    public ResponseEntity<List<AnamneseDto>> listarAnamneses(Pageable pageable) {
         try {
-            List<AnamneseDto> anamnese = anamneseService.listarAnamneses();
-            return ResponseEntity.ok(anamnese);
+            List<AnamneseDto> anamneses = anamneseService.listarAnamneses(pageable).getContent();
+            return ResponseEntity.ok(anamneses);
         } catch (Exception e) {            
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

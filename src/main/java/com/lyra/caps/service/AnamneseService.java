@@ -1,7 +1,8 @@
 package com.lyra.caps.service;
 
-import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.lyra.caps.dto.AnamneseDto;
@@ -9,7 +10,6 @@ import com.lyra.caps.model.Anamnese;
 import com.lyra.caps.model.Paciente;
 import com.lyra.caps.repository.AnamneseRepository;
 import com.lyra.caps.repository.PacienteRepository;
-import com.lyra.caps.util.LogPersonalizado;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class AnamneseService  implements IAnamneseService {
             Anamnese anamnese = anamneseRepository.findById(id).get();
             return AnamneseDto.fromEntity(anamnese);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); 
             log.error("Erro ao buscar anamnese: {}", e.getMessage());
             throw new RuntimeException("Erro ao buscar anamnese: " + e.getMessage(), e);
         }
@@ -78,6 +78,7 @@ public class AnamneseService  implements IAnamneseService {
             return AnamneseDto.fromEntity(anamnese);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error("Erro ao atualizar anamnese: {}", e.getMessage());
             throw new RuntimeException("Erro ao atualizar anamnese: " + e.getMessage(), e);
         }
     }
@@ -99,12 +100,9 @@ public class AnamneseService  implements IAnamneseService {
     }
 
     @Override
-    public List<AnamneseDto>  listarAnamneses() {
+    public Page<AnamneseDto> listarAnamneses(Pageable pageable) {
         try {            
-            return anamneseRepository.findAll()
-                                     .stream()
-                                     .map(AnamneseDto::fromEntity)
-                                     .toList();
+            return anamneseRepository.findAll(pageable).map(AnamneseDto::fromEntity);
         } catch (Exception e) {
             log.error("Erro ao buscar anamnese: {}", e.getMessage());
             throw new RuntimeException("Erro ao buscar anamnese: " + e.getMessage(), e);
@@ -117,7 +115,6 @@ public class AnamneseService  implements IAnamneseService {
             return anamneseRepository.count();
         } catch (Exception e) {
             log.error("Erro ao buscar anamnese: {}", e.getMessage());
-            // LogPersonalizado.getLogger(this.getClass()).error("Erro ao buscar anamnese: {}", e.getMessage());
             throw new RuntimeException("Erro ao buscar anamnese: " + e.getMessage(), e);
         }
     }
