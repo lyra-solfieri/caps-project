@@ -1,5 +1,8 @@
 package com.lyra.caps.dto;
 
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lyra.caps.model.Paciente;
 import com.lyra.caps.model.enums.Genero;
 import com.lyra.caps.model.enums.Raca;
@@ -17,7 +20,8 @@ public class PacienteResponseDto {
     private String cpf;
     private EnderecoDto endereco;
     private Genero genero;
-    private String dataNascimento;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataNascimento;
     private String nomeMae;
     private String nomePai;
     private String profissao;
