@@ -42,7 +42,7 @@ public class EvolucaoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping
+    @PostMapping("/{id}")
     public ResponseEntity<EvolucaoDto> update(@RequestBody EvolucaoDto entity) {
         entity = evolucaoService.update(entity.getId(), entity);
         return ResponseEntity.ok(entity);
