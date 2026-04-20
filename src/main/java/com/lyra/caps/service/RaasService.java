@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.lyra.caps.dto.RaasRequestDTO;
 import com.lyra.caps.model.Atendimento;
 import com.lyra.caps.model.Paciente;
@@ -22,6 +24,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
+@Service
 public class RaasService implements IRaasService {
 
     private final RaasRepository raasRepository;
@@ -93,7 +96,7 @@ public class RaasService implements IRaasService {
                 acao.setCaps(a.isCaps());
                 acao.setTerritorio(a.isTerritorio());
 
-                acao.setRaas(raas); // 🔥 ESSENCIAL
+                acao.setRaas(raas);
                 return acao;
             }).toList();
 
