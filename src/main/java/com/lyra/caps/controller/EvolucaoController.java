@@ -14,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -42,14 +42,14 @@ public class EvolucaoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping
-    public ResponseEntity<EvolucaoDto> update(@RequestBody EvolucaoDto entity) {
-        entity = evolucaoService.update(entity.getId(), entity);
+    @PutMapping("/{id}")
+    public ResponseEntity<EvolucaoDto> update(@PathVariable Long id, @RequestBody EvolucaoDto entity) {
+        entity = evolucaoService.update(id, entity);
         return ResponseEntity.ok(entity);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EvolucaoDto> findById(@RequestParam Long id) {
+    public ResponseEntity<EvolucaoDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(evolucaoService.findById(id));
     }
 
