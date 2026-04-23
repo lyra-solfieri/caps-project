@@ -30,10 +30,10 @@ public class EvolucaoController {
         this.evolucaoService = evolucaoService;
     }
 
-    @PostMapping
-    public ResponseEntity<EvolucaoDto> save(@RequestBody EvolucaoDto entity) {
-        entity = evolucaoService.save(entity);
-        return ResponseEntity.ok(entity);            
+    @PutMapping("/{id}")
+    public ResponseEntity<EvolucaoDto> update(@PathVariable Long id, @RequestBody EvolucaoDto entity) {
+        entity = evolucaoService.update(id, entity);
+        return ResponseEntity.ok(entity);
     }
 
     @DeleteMapping("/{id}")
@@ -42,9 +42,9 @@ public class EvolucaoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<EvolucaoDto> update(@PathVariable Long id, @RequestBody EvolucaoDto entity) {
-        entity = evolucaoService.update(id, entity);
+    @PostMapping("/{id}")
+    public ResponseEntity<EvolucaoDto> update(@RequestBody EvolucaoDto entity) {
+        entity = evolucaoService.update(entity.getId(), entity);
         return ResponseEntity.ok(entity);
     }
 
