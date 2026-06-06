@@ -1,6 +1,7 @@
 package com.lyra.caps.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,12 +27,17 @@ public class AgendamentoController {
     private final IAgendamentoService agendamentoService;
 
     @PostMapping
-    public ResponseEntity<String> agendar(@Valid @RequestBody AgendamentoRequestDto agendamentoRequest) {
-        try {          
-           
+    public ResponseEntity<Map<String, String>> agendar(
+            @Valid @RequestBody AgendamentoRequestDto agendamentoRequest) {
+
+        try {
+
             agendamentoService.agendar(agendamentoRequest);
-            return ResponseEntity.ok("Agendamento realizado com sucesso");
-            
+
+            return ResponseEntity.ok(
+                Map.of("message", "Agendamento realizado com sucesso!")
+            );
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();

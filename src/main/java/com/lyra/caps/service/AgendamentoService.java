@@ -30,20 +30,18 @@ public class AgendamentoService implements IAgendamentoService {
     public AgendamentoResponseDto agendar(AgendamentoRequestDto agendamentoRequest) {
 
         try {
-            /* Verificar qual usuario esta logado
-             * e vincular ao agendamento
-             * Verificar o tipo de agendamento
-             */
+
             User usuarioLogado = null;
+            Paciente paciente = null;
 
             usuarioLogado = userService.getCurrentUser();
             
-            Long idPaciente = agendamentoRequest.getIdPaciente();
-            Paciente paciente = null;
+            Long idPaciente = agendamentoRequest.getPacienteId();
 
             if (idPaciente != null && idPaciente > 0) {
-                paciente = pacienteService.findById(agendamentoRequest.getIdPaciente())
-                        .orElseThrow(() -> new RuntimeException("Paciente nao encontrado"));
+
+                paciente = pacienteService.findById(idPaciente)
+                    .orElseThrow(() -> new RuntimeException("Paciente nao encontrado"));
             }
 
             
