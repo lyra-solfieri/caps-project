@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AgendamentoResponseDto {
-
+    Long id;
     String destinatario;
     String message;
     TipoComunicacao tipoComunicacao;

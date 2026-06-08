@@ -30,20 +30,18 @@ public class AgendamentoService implements IAgendamentoService {
     public AgendamentoResponseDto agendar(AgendamentoRequestDto agendamentoRequest) {
 
         try {
-            /* Verificar qual usuario esta logado
-             * e vincular ao agendamento
-             * Verificar o tipo de agendamento
-             */
+
             User usuarioLogado = null;
+            Paciente paciente = null;
 
             usuarioLogado = userService.getCurrentUser();
             
-            Long idPaciente = agendamentoRequest.getIdPaciente();
-            Paciente paciente = null;
+            Long idPaciente = agendamentoRequest.getPacienteId();
 
             if (idPaciente != null && idPaciente > 0) {
-                paciente = pacienteService.findById(agendamentoRequest.getIdPaciente())
-                        .orElseThrow(() -> new RuntimeException("Paciente nao encontrado"));
+
+                paciente = pacienteService.findById(idPaciente)
+                    .orElseThrow(() -> new RuntimeException("Paciente nao encontrado"));
             }
 
             
@@ -68,10 +66,17 @@ public class AgendamentoService implements IAgendamentoService {
         }
     }
 
-    public AgendamentoResponseDto buscarPorId(Long id){
+    public AgendamentoResponseDto buscarPorId(Long id) {
 
-        return toResponse(agendamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Agendamento nao encontrado")));
+        try {
+            return toResponse(agendamentoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Agendamento nao encontrado")));
+            
+        } catch (Exception e) {
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao buscar agendamento", e);
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar agendamento");
+        }
 
     }
 
@@ -108,6 +113,7 @@ public class AgendamentoService implements IAgendamentoService {
         }
 
         return new AgendamentoResponseDto(
+                agendamento.getId(),
                 agendamento.getDestinatario(),
                 agendamento.getMessage(),
                 agendamento.getTipoComunicacao(),
