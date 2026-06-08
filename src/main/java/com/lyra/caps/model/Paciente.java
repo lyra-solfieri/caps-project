@@ -71,7 +71,7 @@ public class Paciente {
     private String nomePai;
     private String profissaoPai;
 
-    @Size(min = 3, max = 100)
+    
     private String profissao;
 
     private Long numeroCartaoSUS;
