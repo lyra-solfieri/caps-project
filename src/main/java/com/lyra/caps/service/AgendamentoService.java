@@ -66,10 +66,17 @@ public class AgendamentoService implements IAgendamentoService {
         }
     }
 
-    public AgendamentoResponseDto buscarPorId(Long id){
+    public AgendamentoResponseDto buscarPorId(Long id) {
 
-        return toResponse(agendamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Agendamento nao encontrado")));
+        try {
+            return toResponse(agendamentoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Agendamento nao encontrado")));
+            
+        } catch (Exception e) {
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao buscar agendamento", e);
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar agendamento");
+        }
 
     }
 
@@ -106,6 +113,7 @@ public class AgendamentoService implements IAgendamentoService {
         }
 
         return new AgendamentoResponseDto(
+                agendamento.getId(),
                 agendamento.getDestinatario(),
                 agendamento.getMessage(),
                 agendamento.getTipoComunicacao(),

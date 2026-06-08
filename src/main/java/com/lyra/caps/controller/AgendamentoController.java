@@ -67,6 +67,17 @@ public class AgendamentoController {
         }
     }
 
+    public ResponseEntity<Void> listarAgendamentosPorId(@PathVariable Long id) {
+        try {
+            agendamentoService.buscarPorId(id);
+            return ResponseEntity.noContent().build();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @GetMapping("/alertar/{id}")
     public ResponseEntity<String> alertarAgendamento(@PathVariable Long id) {
         try {
