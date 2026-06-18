@@ -42,7 +42,7 @@ public class PacienteController {
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
         } catch (Exception e) {
-            LogPersonalizado.getLogger(this.getClass()).error("Erro ao cadastrar paciente: " + e.getMessage(), e);
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao cadastrar paciente teste: " + e.getMessage(), e);
             e.printStackTrace();
 
             ApiResponse<Object> erro = ApiResponse.erro(

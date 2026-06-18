@@ -1,10 +1,12 @@
 package com.lyra.caps.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lyra.caps.dto.PacienteDto;
 import com.lyra.caps.model.enums.Genero;
 import com.lyra.caps.model.enums.Raca;
@@ -56,7 +58,8 @@ public class Paciente {
     private List<Evolucao> evolucoes = new ArrayList<>();
 
     private Genero genero;
-    private String dataNascimento;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataNascimento;
 
     @Size(min = 3, max = 100)
     private String nomeMae;
@@ -68,7 +71,7 @@ public class Paciente {
     private String nomePai;
     private String profissaoPai;
 
-    @Size(min = 3, max = 100)
+    
     private String profissao;
 
     private Long numeroCartaoSUS;

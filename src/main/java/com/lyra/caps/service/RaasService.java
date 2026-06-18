@@ -68,7 +68,7 @@ public class RaasService implements IRaasService {
         
         raas.setNomePaciente(paciente.getNome());
         raas.setCartaoSus(paciente.getNumeroCartaoSUS());
-        raas.setDataNascimento(paciente.getDataNascimento());
+        raas.setDataNascimento(paciente.getDataNascimento().toString());
         raas.setNomeMae(paciente.getNomeMae());
 
         
