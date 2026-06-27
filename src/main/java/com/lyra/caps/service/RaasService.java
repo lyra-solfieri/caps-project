@@ -16,13 +16,13 @@ import com.lyra.caps.repository.AtendimentoRepository;
 import com.lyra.caps.repository.PacienteRepository;
 import com.lyra.caps.repository.RaasRepository;
 
-import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+// import net.sf.jasperreports.engine.JREmptyDataSource;
+// import net.sf.jasperreports.engine.JasperCompileManager;
+// import net.sf.jasperreports.engine.JasperExportManager;
+// import net.sf.jasperreports.engine.JasperFillManager;
+// import net.sf.jasperreports.engine.JasperPrint;
+// import net.sf.jasperreports.engine.JasperReport;
+// import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Service
 public class RaasService implements IRaasService {
@@ -106,92 +106,93 @@ public class RaasService implements IRaasService {
         return raasRepository.save(raas);
     }
 
-    @Override
-    public Raas buscarPorId(Long id) {
-        return raasRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("RAAS não encontrado"));
-    }
+@Override
+public Raas buscarPorId(Long id) {
+    return raasRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("RAAS não encontrado"));
+}
 
-    @Override
-    public List<Raas> listarPorPaciente(Long pacienteId) {
+@Override
+public List<Raas> listarPorPaciente(Long pacienteId) {
 
-        try {
-            return raasRepository.findByPacienteId(pacienteId);
-        } catch (Exception e) {
-            throw new RuntimeException("Paciente nao encontrado");
-        }
+    try {
+        return raasRepository.findByPacienteId(pacienteId);
+    } catch (Exception e) {
+        throw new RuntimeException("Paciente nao encontrado");
     }
+}
 
-    @Override
-    public void deletar(Long id) {
-        try {
-            raasRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Raas nao encontrado");
-        }
+@Override
+public void deletar(Long id) {
+    try {
+        raasRepository.deleteById(id);
+    } catch (Exception e) {
+        throw new RuntimeException("Raas nao encontrado");
     }
+}
 
    @Override
    public byte[] gerarPdf(Long raasId) {
 
-    try {
+//     try {
 
-        Raas raas = raasRepository.findById(raasId).orElseThrow(
-                 () -> new RuntimeException("Raas não encontrada") );
+//         Raas raas = raasRepository.findById(raasId).orElseThrow(
+//                  () -> new RuntimeException("Raas não encontrada") );
 
-        Map<String, Object> params = new HashMap<>();
-
-
-        params.put("nomeEstabelecimento", (raas.getNomeEstabelecimento()));
-        params.put("cnes", (raas.getCnes()));
+//         Map<String, Object> params = new HashMap<>();
 
 
-        params.put("nomePaciente", (raas.getNomePaciente()));
-        params.put("cartaoSus", raas.getCartaoSus());
-        params.put("dataNascimento", (raas.getDataNascimento()));
-        params.put("nomeMae", (raas.getNomeMae()));
+//         params.put("nomeEstabelecimento", (raas.getNomeEstabelecimento()));
+//         params.put("cnes", (raas.getCnes()));
 
 
-        params.put("dataAdmissao", raas.getDataAdmissao());
-        params.put("dataConclusao", raas.getDataConclusao());
-        params.put("mesAtendimento", (raas.getMesAtendimento()));
-        params.put("numeroAutorizacao", raas.getNumeroAutorizacao());
-
-        // params.put("cidPrincipal", safe(raas.getCidPrincipal()));
-        // params.put("descricaoCidPrincipal", safe(raas.getDescricaoCidPrincipal()));
-
-        // params.put("cidSecundario", safe(raas.getCidSecundario()));
-        // params.put("descricaoCidSecundario", safe(raas.getDescricaoCidSecundario()));
+//         params.put("nomePaciente", (raas.getNomePaciente()));
+//         params.put("cartaoSus", raas.getCartaoSus());
+//         params.put("dataNascimento", (raas.getDataNascimento()));
+//         params.put("nomeMae", (raas.getNomeMae()));
 
 
-        JRBeanCollectionDataSource acoesDataSource =
-            new JRBeanCollectionDataSource(raas.getAcoes());
+//         params.put("dataAdmissao", raas.getDataAdmissao());
+//         params.put("dataConclusao", raas.getDataConclusao());
+//         params.put("mesAtendimento", (raas.getMesAtendimento()));
+//         params.put("numeroAutorizacao", raas.getNumeroAutorizacao());
 
-        params.put("acoesDataset", acoesDataSource);
+//         // params.put("cidPrincipal", safe(raas.getCidPrincipal()));
+//         // params.put("descricaoCidPrincipal", safe(raas.getDescricaoCidPrincipal()));
+
+//         // params.put("cidSecundario", safe(raas.getCidSecundario()));
+//         // params.put("descricaoCidSecundario", safe(raas.getDescricaoCidSecundario()));
 
 
-        InputStream reportStream = getClass()
-            .getResourceAsStream("/reports/raas.jrxml");
+//         JRBeanCollectionDataSource acoesDataSource =
+//             new JRBeanCollectionDataSource(raas.getAcoes());
 
-        if (reportStream == null) {
-            throw new RuntimeException("Template RAAS não encontrado em /reports/raas.jrxml");
-        }
+//         params.put("acoesDataset", acoesDataSource);
 
-        JasperReport jasperReport =
-            JasperCompileManager.compileReport(reportStream);
 
-        JasperPrint jasperPrint =
-            JasperFillManager.fillReport(
-                jasperReport,
-                params,
-                new JREmptyDataSource()
-            );
+//         InputStream reportStream = getClass()
+//             .getResourceAsStream("/reports/raas.jrxml");
 
-        return JasperExportManager.exportReportToPdf(jasperPrint);
+//         if (reportStream == null) {
+//             throw new RuntimeException("Template RAAS não encontrado em /reports/raas.jrxml");
+//         }
 
-    } catch (Exception e) {
-        throw new RuntimeException("Erro ao gerar PDF do RAAS", e);
+//         JasperReport jasperReport =
+//             JasperCompileManager.compileReport(reportStream);
+
+//         JasperPrint jasperPrint =
+//             JasperFillManager.fillReport(
+//                 jasperReport,
+//                 params,
+//                 new JREmptyDataSource()
+//             );
+
+//         return JasperExportManager.exportReportToPdf(jasperPrint);
+
+//     } catch (Exception e) {
+//         throw new RuntimeException("Erro ao gerar PDF do RAAS", e);
+//     }
+// }
+    return null;
     }
-}
-
 }
