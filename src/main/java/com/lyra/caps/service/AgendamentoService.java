@@ -3,7 +3,10 @@ package com.lyra.caps.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.lyra.caps.dto.AgendamentoRequestDto;
 import com.lyra.caps.dto.AgendamentoResponseDto;
@@ -66,33 +69,13 @@ public class AgendamentoService implements IAgendamentoService {
         }
     }
 
-    public AgendamentoResponseDto buscarPorId(Long id) {
-
-        try {
-            return toResponse(agendamentoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Agendamento nao encontrado")));
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public AgendamentoResponseDto buscarPorId(@PathVariable Long id) {
+        Agendamento agendamento = agendamentoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
             
-        } catch (Exception e) {
-            LogPersonalizado.getLogger(this.getClass()).error("Erro ao buscar agendamento", e);
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao buscar agendamento");
-        }
-
-    }
-
-    public void deletarAgendamento(Long id) {
-        try {
-            
-            if (!agendamentoRepository.existsById(id)) {
-                throw new RuntimeException("Agendamento nao encontrado");
-            }
-                
-            agendamentoRepository.deleteById(id);
-            
-        } catch (Exception e) {
-            LogPersonalizado.getLogger(this.getClass()).error("Erro ao deletar agendamento", e);
-            e.printStackTrace();
-        }
+        return toResponse(agendamento); 
     }
 
     public AgendamentoResponseDto toResponse(Agendamento agendamento) {
@@ -110,6 +93,11 @@ public class AgendamentoService implements IAgendamentoService {
         PacienteDto pacienteDto = null;
         if (agendamento.getPaciente() != null) {
             pacienteDto = new PacienteDto();
+            
+            pacienteDto.setId(agendamento.getPaciente().getId());
+            pacienteDto.setNome(agendamento.getPaciente().getNome());
+            pacienteDto.setEmail(agendamento.getPaciente().getEmail());
+            pacienteDto.setCpf(agendamento.getPaciente().getCpf());
         }
 
         return new AgendamentoResponseDto(
@@ -150,6 +138,43 @@ public class AgendamentoService implements IAgendamentoService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void deletarAgendamento(Long id) {
+        try {
+            
+            if (!agendamentoRepository.existsById(id)) {
+                throw new RuntimeException("Agendamento nao encontrado");
+            }
+                
+            agendamentoRepository.deleteById(id);
+            
+        } catch (Exception e) {
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao deletar agendamento", e);
+            e.printStackTrace();
+        }
+    }
+
+   @Override
+    public AgendamentoResponseDto atualizarAgendamento(Long id, AgendamentoRequestDto dto) {
+        // 1. Busca o agendamento antigo
+        Agendamento agendamento = agendamentoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+
+        // 2. Busca o paciente atualizado (caso ele tenha trocado o paciente)
+        Paciente paciente = pacienteService.findById(dto.getPacienteId())
+            .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
+        // 3. Atualiza os dados
+        agendamento.setPaciente(paciente);
+        agendamento.setTipoComunicacao(dto.getTipoComunicacao());
+        agendamento.setDestinatario(dto.getDestinatario());
+        agendamento.setMessage(dto.getMessage());
+        agendamento.setDataHoraAtendimento(dto.getDataHoraAtendimento());
+
+        Agendamento agendamentoSalvo = agendamentoRepository.save(agendamento);
+
+        return toResponse(agendamentoSalvo);
     }
 
 }
