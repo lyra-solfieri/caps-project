@@ -12,6 +12,7 @@ import com.lyra.caps.model.Atendimento;
 import com.lyra.caps.model.Paciente;
 import com.lyra.caps.model.Raas;
 import com.lyra.caps.model.RaasAcao;
+import com.lyra.caps.model.enums.AcaoAuditoria;
 import com.lyra.caps.repository.AtendimentoRepository;
 import com.lyra.caps.repository.PacienteRepository;
 import com.lyra.caps.repository.RaasRepository;
@@ -30,14 +31,19 @@ public class RaasService implements IRaasService {
     private final RaasRepository raasRepository;
     private final PacienteRepository pacienteRepository;
     private final AtendimentoRepository atendimentoRepository;
+    private final AuditoriaService auditoriaService;
+    private final UserService userService;
 
 
     public RaasService(RaasRepository raasRepository, PacienteRepository pacienteRepository, 
-            AtendimentoRepository atendimentoRepository) {
+            AtendimentoRepository atendimentoRepository, AuditoriaService auditoriaService,
+            UserService userService) {
 
         this.raasRepository = raasRepository;
         this.pacienteRepository = pacienteRepository;
         this.atendimentoRepository = atendimentoRepository;
+        this.auditoriaService = auditoriaService;
+        this.userService = userService;
 
     }
 
@@ -103,7 +109,12 @@ public class RaasService implements IRaasService {
             raas.setAcoes(acoes);
         }
 
-        return raasRepository.save(raas);
+        Raas raasSalvo = raasRepository.save(raas);
+
+        auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.CRIACAO, "Raas", raasSalvo.getId(),
+                "RAAS gerado para paciente: " + paciente.getNome() + " - estabelecimento: " + dto.getNomeEstabelecimento(), null);
+
+        return raasSalvo;
     }
 
 @Override
@@ -123,13 +134,16 @@ public List<Raas> listarPorPaciente(Long pacienteId) {
 }
 
 @Override
-public void deletar(Long id) {
-    try {
-        raasRepository.deleteById(id);
-    } catch (Exception e) {
-        throw new RuntimeException("Raas nao encontrado");
+    public void deletar(Long id) {
+        try {
+            raasRepository.deleteById(id);
+
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.EXCLUSAO, "Raas", id,
+                    "RAAS excluido - ID: " + id, null);
+        } catch (Exception e) {
+            throw new RuntimeException("Raas nao encontrado");
+        }
     }
-}
 
    @Override
    public byte[] gerarPdf(Long raasId) {

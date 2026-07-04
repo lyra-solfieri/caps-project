@@ -8,15 +8,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.lyra.caps.dto.AuditoriaLogResponse;
 import com.lyra.caps.model.AuditoriaLog;
+import com.lyra.caps.model.User;
 import com.lyra.caps.model.enums.AcaoAuditoria;
 import com.lyra.caps.repository.AuditoriaLogRepository;
 import com.lyra.caps.util.LogPersonalizado;
 
 import jakarta.persistence.criteria.Predicate;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class AuditoriaService implements IAuditoriaService {
@@ -30,6 +36,53 @@ public class AuditoriaService implements IAuditoriaService {
     public AuditoriaService(AuditoriaLogRepository auditoriaLogRepository) {
         this.auditoriaLogRepository = auditoriaLogRepository;
         this.log = LogPersonalizado.getLogger(this.getClass());
+    }
+
+    @Override
+    public void registrar(String usuario, AcaoAuditoria acao, String entidade, Long entidadeId, String detalhes, String ip) {
+        AuditoriaLog auditLog = AuditoriaLog.builder()
+                .usuario(usuario != null ? usuario : getCurrentUsername())
+                .acao(acao)
+                .entidade(entidade)
+                .entidadeId(entidadeId)
+                .detalhes(detalhes)
+                .ip(ip != null ? ip : getClientIp())
+                .dataHora(LocalDateTime.now())
+                .build();
+        auditoriaLogRepository.save(auditLog);
+        log.info("Auditoria: " + auditLog.getUsuario() + " - " + acao + " em " + entidade
+                + (entidadeId != null ? "(" + entidadeId + ")" : ""));
+    }
+
+    public String getCurrentUsername() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+            Object principal = auth.getPrincipal();
+            if (principal instanceof User user) {
+                return user.getEmail();
+            }
+            return principal.toString();
+        }
+        return "desconhecido";
+    }
+
+    public String getClientIp() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            String ip = request.getHeader("X-Forwarded-For");
+            if (ip == null || ip.isBlank()) {
+                ip = request.getHeader("X-Real-IP");
+            }
+            if (ip == null || ip.isBlank()) {
+                ip = request.getRemoteAddr();
+            }
+            if (ip != null && ip.contains(",")) {
+                ip = ip.split(",")[0].trim();
+            }
+            return ip;
+        }
+        return "desconhecido";
     }
 
     @Override
@@ -61,7 +114,7 @@ public class AuditoriaService implements IAuditoriaService {
                 predicate = cb.and(predicate, cb.equal(root.get("entidade"), entidade));
             }
             if (usuarioFinal != null && !usuarioFinal.isBlank()) {
-                predicate = cb.and(predicate, cb.like(cb.lower(root.get("usuario")), "%" + usuario.toLowerCase() + "%"));
+                predicate = cb.and(predicate, cb.like(cb.lower(root.get("usuario")), "%" + usuarioFinal.toLowerCase() + "%"));
             }
             if (dataInicio != null) {
                 predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get("dataHora"), dataInicio));

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.lyra.caps.dto.AnamneseDto;
 import com.lyra.caps.model.Anamnese;
 import com.lyra.caps.model.Paciente;
+import com.lyra.caps.model.enums.AcaoAuditoria;
 import com.lyra.caps.repository.AnamneseRepository;
 import com.lyra.caps.repository.PacienteRepository;
 
@@ -21,6 +22,8 @@ public class AnamneseService  implements IAnamneseService {
    
     private final AnamneseRepository anamneseRepository;
     private final PacienteRepository pacienteRepository;
+    private final AuditoriaService auditoriaService;
+    private final UserService userService;
 
     @Override
     public AnamneseDto save(AnamneseDto anamneseDto) {
@@ -33,6 +36,10 @@ public class AnamneseService  implements IAnamneseService {
             Anamnese anamnese = Anamnese.fromDto(anamneseDto);
             anamnese.setPaciente(paciente);
             anamnese = anamneseRepository.save(anamnese);
+
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.CRIACAO, "Anamnese", anamnese.getId(),
+                    "Anamnese criada para paciente ID: " + anamneseDto.getPacienteId(), null);
+
             return AnamneseDto.fromEntity(anamnese);
             
         } catch (Exception e) {
@@ -61,6 +68,9 @@ public class AnamneseService  implements IAnamneseService {
         try {
             if (id != null) {
                 anamneseRepository.deleteById(id);
+
+                auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.EXCLUSAO, "Anamnese", id,
+                        "Anamnese excluida - ID: " + id, null);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,9 +85,12 @@ public class AnamneseService  implements IAnamneseService {
             Anamnese anamnese = Anamnese.fromDto(anamneseDto);
             anamnese.setId(id);
             anamnese = anamneseRepository.save(anamnese);
+
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.ATUALIZACAO, "Anamnese", id,
+                    "Anamnese atualizada - ID: " + id, null);
+
             return AnamneseDto.fromEntity(anamnese);
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Erro ao atualizar anamnese: {}", e.getMessage());
             throw new RuntimeException("Erro ao atualizar anamnese: " + e.getMessage(), e);
         }

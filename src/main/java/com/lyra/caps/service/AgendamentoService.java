@@ -15,6 +15,7 @@ import com.lyra.caps.dto.UserDto;
 import com.lyra.caps.model.Agendamento;
 import com.lyra.caps.model.Paciente;
 import com.lyra.caps.model.User;
+import com.lyra.caps.model.enums.AcaoAuditoria;
 import com.lyra.caps.model.enums.StatusAgendamento;
 import com.lyra.caps.repository.AgendamentoRepository;
 import com.lyra.caps.repository.PacienteRepository;
@@ -29,6 +30,7 @@ public class AgendamentoService implements IAgendamentoService {
     private final AgendamentoRepository agendamentoRepository;
     private final PacienteRepository pacienteService;
     private final UserService userService;
+    private final AuditoriaService auditoriaService;
 
     public AgendamentoResponseDto agendar(AgendamentoRequestDto agendamentoRequest) {
 
@@ -59,7 +61,13 @@ public class AgendamentoService implements IAgendamentoService {
                     .createAt(LocalDateTime.now())
                     .build();
     
-            return toResponse(agendamentoRepository.save(agendamento));
+            Agendamento agendamentoSalvo = agendamentoRepository.save(agendamento);
+
+            auditoriaService.registrar(usuarioLogado.getEmail(), AcaoAuditoria.CRIACAO, "Agendamento", agendamentoSalvo.getId(),
+                    "Agendamento criado para paciente: " + (paciente != null ? paciente.getNome() : "N/A")
+                    + " - tipo: " + agendamentoRequest.getTipoComunicacao(), null);
+
+            return toResponse(agendamentoSalvo);
                     
             
         } catch (Exception e) {
@@ -148,6 +156,9 @@ public class AgendamentoService implements IAgendamentoService {
             }
                 
             agendamentoRepository.deleteById(id);
+
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.EXCLUSAO, "Agendamento", id,
+                    "Agendamento excluido - ID: " + id, null);
             
         } catch (Exception e) {
             LogPersonalizado.getLogger(this.getClass()).error("Erro ao deletar agendamento", e);
@@ -170,6 +181,9 @@ public class AgendamentoService implements IAgendamentoService {
         agendamento.setDataHoraAtendimento(dto.getDataHoraAtendimento());
 
         Agendamento agendamentoSalvo = agendamentoRepository.save(agendamento);
+
+        auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.ATUALIZACAO, "Agendamento", agendamentoSalvo.getId(),
+                "Agendamento atualizado - paciente: " + (agendamentoSalvo.getPaciente() != null ? agendamentoSalvo.getPaciente().getNome() : "N/A"), null);
 
         return toResponse(agendamentoSalvo);
     }

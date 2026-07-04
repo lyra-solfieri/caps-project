@@ -4,6 +4,7 @@ import com.lyra.caps.dto.PacienteDto;
 import com.lyra.caps.dto.PacienteResponseDto;
 import com.lyra.caps.mapper.PacienteMapper;
 import com.lyra.caps.model.Paciente;
+import com.lyra.caps.model.enums.AcaoAuditoria;
 import com.lyra.caps.repository.PacienteRepository;
 import com.lyra.caps.util.LogPersonalizado;
 
@@ -23,29 +24,31 @@ public class PacienteService implements IPacienteService {
 
     private final PacienteRepository pacienteRepository;
     private final PacienteMapper pacienteMapper;
+    private final AuditoriaService auditoriaService;
+    private final UserService userService;
     private final LogPersonalizado logPersonalizado = LogPersonalizado.getLogger(this.getClass());
 
     @Override
     public PacienteResponseDto criarPaciente(PacienteDto pacienteDto) {
         
-        // 1. Validação de negócio (FORA do try-catch)
-        if(pacienteRepository.existsByCpf(pacienteDto.getCpf())) {
-            // Lança o status 409 (Conflict) que o Angular está esperando
+        if(pacienteRepository.existsByCpf(pacienteDto.getCpf())) {            
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este CPF já está cadastrado no sistema.");
         }
         
-        // 2. Operações de banco de dados
+        
         try {   
             Paciente paciente = Paciente.fromDto(pacienteDto);
             Paciente pacienteSalvo = pacienteRepository.save(paciente);
             logPersonalizado.info("Paciente criado com sucesso: " + pacienteSalvo);
+
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.CRIACAO, "Paciente", pacienteSalvo.getId(),
+                    "Paciente criado: " + pacienteSalvo.getNome() + " - CPF: " + pacienteSalvo.getCpf(), null);
             
             return PacienteResponseDto.fromEntity(pacienteSalvo);
             
         } catch (Exception e) {
             logPersonalizado.error(e.getMessage(), e);
             e.printStackTrace();
-            // Lança 500 apenas se der erro real de banco de dados/sistema
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao cadastrar paciente.");
         }
     }
@@ -91,6 +94,9 @@ public class PacienteService implements IPacienteService {
                     .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
             pacienteMapper.updateEntityFromDto(pacienteDto, paciente);
             pacienteRepository.save(paciente);
+
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.ATUALIZACAO, "Paciente", id,
+                    "Paciente atualizado: " + paciente.getNome(), null);
         }
         catch (Exception e) {
             logPersonalizado.error("Erro ao atualizar paciente", e);
@@ -108,6 +114,9 @@ public class PacienteService implements IPacienteService {
             }
 
             pacienteRepository.deleteById(id);
+
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.EXCLUSAO, "Paciente", id,
+                    "Paciente excluido - ID: " + id, null);
         }
         catch (Exception e) {
             logPersonalizado.error("Erro ao deletar paciente", e);
