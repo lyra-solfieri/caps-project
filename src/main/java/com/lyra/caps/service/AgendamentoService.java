@@ -157,15 +157,12 @@ public class AgendamentoService implements IAgendamentoService {
 
    @Override
     public AgendamentoResponseDto atualizarAgendamento(Long id, AgendamentoRequestDto dto) {
-        // 1. Busca o agendamento antigo
         Agendamento agendamento = agendamentoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
 
-        // 2. Busca o paciente atualizado (caso ele tenha trocado o paciente)
         Paciente paciente = pacienteService.findById(dto.getPacienteId())
             .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
-        // 3. Atualiza os dados
         agendamento.setPaciente(paciente);
         agendamento.setTipoComunicacao(dto.getTipoComunicacao());
         agendamento.setDestinatario(dto.getDestinatario());
