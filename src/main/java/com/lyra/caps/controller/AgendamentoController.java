@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,6 +56,25 @@ public class AgendamentoController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, String>> atualizarAgendamento(
+            @PathVariable Long id, 
+            @Valid @RequestBody AgendamentoRequestDto agendamentoRequest) {
+            
+        try {
+            // Chama o serviço para atualizar os dados
+            agendamentoService.atualizarAgendamento(id, agendamentoRequest);
+            
+            return ResponseEntity.ok(
+                Map.of("message", "Agendamento atualizado com sucesso!")
+            );
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarAgendamento(@PathVariable Long id) {
         try {
@@ -67,10 +87,10 @@ public class AgendamentoController {
         }
     }
 
-    public ResponseEntity<Void> listarAgendamentosPorId(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<AgendamentoResponseDto> listarAgendamentosPorId(@PathVariable Long id) {
         try {
-            agendamentoService.buscarPorId(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(agendamentoService.buscarPorId(id));
             
         } catch (Exception e) {
             e.printStackTrace();
