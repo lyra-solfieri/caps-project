@@ -9,6 +9,7 @@ import com.lyra.caps.util.LogPersonalizado;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -25,27 +26,25 @@ public class PacienteService implements IPacienteService {
     private final PacienteMapper pacienteMapper;
     private final LogPersonalizado logPersonalizado = LogPersonalizado.getLogger(this.getClass());
 
+
     @Override
     public PacienteResponseDto criarPaciente(PacienteDto pacienteDto) {
         
-        // 1. Validação de negócio (FORA do try-catch)
         if(pacienteRepository.existsByCpf(pacienteDto.getCpf())) {
-            // Lança o status 409 (Conflict) que o Angular está esperando
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este CPF já está cadastrado no sistema.");
         }
         
-        // 2. Operações de banco de dados
         try {   
             Paciente paciente = Paciente.fromDto(pacienteDto);
             Paciente pacienteSalvo = pacienteRepository.save(paciente);
-            logPersonalizado.info("Paciente criado com sucesso: " + pacienteSalvo);
             
             return PacienteResponseDto.fromEntity(pacienteSalvo);
             
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este CPF já está cadastrado no sistema.");
+            
         } catch (Exception e) {
-            logPersonalizado.error(e.getMessage(), e);
             e.printStackTrace();
-            // Lança 500 apenas se der erro real de banco de dados/sistema
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao cadastrar paciente.");
         }
     }
