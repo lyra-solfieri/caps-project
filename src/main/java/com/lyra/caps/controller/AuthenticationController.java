@@ -15,7 +15,11 @@ import com.lyra.caps.dto.LoginResponseDto;
 import com.lyra.caps.dto.RegisterDto;
 import com.lyra.caps.infra.security.TokenService;
 import com.lyra.caps.model.User;
+import com.lyra.caps.model.enums.AcaoAuditoria;
 import com.lyra.caps.repository.UserRepository;
+import com.lyra.caps.service.AuditoriaService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,20 +33,26 @@ public class AuthenticationController {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private AuditoriaService auditoriaService;
     
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody AuthenticationDto authentication) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody AuthenticationDto authentication, HttpServletRequest request) {
 
         var userEmailPassword = new UsernamePasswordAuthenticationToken(authentication.email(), authentication.password());
         var auth = this.authenticationManager.authenticate(userEmailPassword);
 
         var token = tokenService.generateToken((User) auth.getPrincipal());
 
+        String ip = getClientIp(request);
+        auditoriaService.registrar(authentication.email(), AcaoAuditoria.LOGIN, "User", null, "Login realizado", ip);
+
         return ResponseEntity.ok(new LoginResponseDto(token));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterDto register) {
+    public ResponseEntity<Void> register(@RequestBody RegisterDto register, HttpServletRequest request) {
         if(this.userRepository.findByEmail(register.email()) != null) {
             return ResponseEntity.badRequest().build();
         }
@@ -51,7 +61,24 @@ public class AuthenticationController {
         User user = new User(register.email(), encryptedPassword, register.role());
         this.userRepository.save(user);
 
+        String ip = getClientIp(request);
+        auditoriaService.registrar(register.email(), AcaoAuditoria.CRIACAO, "User", user.getId(), "Usuario registrado: " + register.email(), ip);
+
         return ResponseEntity.ok().build();
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isBlank()) {
+            ip = request.getHeader("X-Real-IP");
+        }
+        if (ip == null || ip.isBlank()) {
+            ip = request.getRemoteAddr();
+        }
+        if (ip != null && ip.contains(",")) {
+            ip = ip.split(",")[0].trim();
+        }
+        return ip;
     }
 
 }

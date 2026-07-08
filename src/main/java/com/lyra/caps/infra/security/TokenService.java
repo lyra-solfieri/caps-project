@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.lyra.caps.model.User;
 
 @Service
@@ -27,6 +28,7 @@ public class TokenService {
             String token = JWT.create()
                 .withIssuer("auth-api")
                 .withSubject(user.getEmail())
+                .withClaim("role", user.getRole().name())
                 .withExpiresAt(genExprirationDate())
                 .sign(algorithm);
 
@@ -46,9 +48,8 @@ public class TokenService {
                 .build()
                 .verify(token)
                 .getSubject();
-        } catch (JWTCreationException e) {
-            e.printStackTrace();
-            return "";
+        } catch (JWTVerificationException e) {
+            return null;
         }
     }
 

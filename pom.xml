@@ -150,11 +150,12 @@
 			<scope>provided</scope>
 	
 		</dependency>
-		<dependency>
+
+		<!-- <dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>6.21.0</version>
-		</dependency>
+			<version>6.20.0</version>
+		</dependency> -->
 	</dependencies>
 
 	<build>

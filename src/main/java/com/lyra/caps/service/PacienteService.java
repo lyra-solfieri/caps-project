@@ -4,6 +4,7 @@ import com.lyra.caps.dto.PacienteDto;
 import com.lyra.caps.dto.PacienteResponseDto;
 import com.lyra.caps.mapper.PacienteMapper;
 import com.lyra.caps.model.Paciente;
+import com.lyra.caps.model.enums.AcaoAuditoria;
 import com.lyra.caps.repository.PacienteRepository;
 import com.lyra.caps.util.LogPersonalizado;
 
@@ -24,6 +25,8 @@ public class PacienteService implements IPacienteService {
 
     private final PacienteRepository pacienteRepository;
     private final PacienteMapper pacienteMapper;
+    private final AuditoriaService auditoriaService;
+    private final UserService userService;
     private final LogPersonalizado logPersonalizado = LogPersonalizado.getLogger(this.getClass());
 
 
@@ -37,6 +40,9 @@ public class PacienteService implements IPacienteService {
         try {   
             Paciente paciente = Paciente.fromDto(pacienteDto);
             Paciente pacienteSalvo = pacienteRepository.save(paciente);
+
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.CRIACAO, "Paciente", pacienteSalvo.getId(),
+                    "Paciente criado: " + pacienteSalvo.getNome() + " - CPF: " + pacienteSalvo.getCpf(), null);
             
             return PacienteResponseDto.fromEntity(pacienteSalvo);
             
@@ -90,6 +96,9 @@ public class PacienteService implements IPacienteService {
                     .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
             pacienteMapper.updateEntityFromDto(pacienteDto, paciente);
             pacienteRepository.save(paciente);
+
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.ATUALIZACAO, "Paciente", id,
+                    "Paciente atualizado: " + paciente.getNome(), null);
         }
         catch (Exception e) {
             logPersonalizado.error("Erro ao atualizar paciente", e);
@@ -107,6 +116,9 @@ public class PacienteService implements IPacienteService {
             }
 
             pacienteRepository.deleteById(id);
+
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.EXCLUSAO, "Paciente", id,
+                    "Paciente excluido - ID: " + id, null);
         }
         catch (Exception e) {
             logPersonalizado.error("Erro ao deletar paciente", e);

@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lyra.caps.dto.EvolucaoDto;
 import com.lyra.caps.service.EvolucaoService;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -30,8 +32,14 @@ public class EvolucaoController {
         this.evolucaoService = evolucaoService;
     }
 
+    @PostMapping
+    public ResponseEntity<EvolucaoDto> create(@Valid @RequestBody EvolucaoDto entity) {
+        entity = evolucaoService.save(entity);
+        return ResponseEntity.ok(entity);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<EvolucaoDto> update(@PathVariable Long id, @RequestBody EvolucaoDto entity) {
+    public ResponseEntity<EvolucaoDto> update(@PathVariable Long id, @Valid @RequestBody EvolucaoDto entity) {
         entity = evolucaoService.update(id, entity);
         return ResponseEntity.ok(entity);
     }
@@ -42,27 +50,19 @@ public class EvolucaoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<EvolucaoDto> update(@RequestBody EvolucaoDto entity) {
-        entity = evolucaoService.update(entity.getId(), entity);
-        return ResponseEntity.ok(entity);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<EvolucaoDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(evolucaoService.findById(id));
     }
 
-
-    @GetMapping("/listar")
-    public ResponseEntity<List<EvolucaoDto>> listarAnamneses(Pageable pageable) {       
-        try {
-            List<EvolucaoDto> anamneses = evolucaoService.listarAnamneses(pageable).getContent();
-            return ResponseEntity.ok(anamneses);
-        } catch (Exception e) {            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    @GetMapping
+    public ResponseEntity<List<EvolucaoDto>> listar(
+            @RequestParam(required = false) Long pacienteId,
+            Pageable pageable) {
+        if (pacienteId != null) {
+            return ResponseEntity.ok(evolucaoService.listarPorPaciente(pacienteId));
         }
-        
+        return ResponseEntity.ok(evolucaoService.listar(pageable).getContent());
     }
 
 }

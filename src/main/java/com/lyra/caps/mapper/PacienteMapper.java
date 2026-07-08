@@ -11,6 +11,5 @@ import org.mapstruct.MappingTarget;
 public interface PacienteMapper {
     Paciente toEntity(PacienteDto dto);
     PacienteResponseDto toResponseDto(Paciente entity);
-    @Mapping(target = "id", ignore = true)
     void updateEntityFromDto(PacienteDto dto, @MappingTarget Paciente entity);
 }

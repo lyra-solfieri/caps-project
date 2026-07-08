@@ -1,5 +1,6 @@
 package com.lyra.caps.service;
 
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,8 @@ public interface IEvolucaoService {
 
     EvolucaoDto update(Long id, EvolucaoDto evolucaoDto);
 
-    Page<EvolucaoDto> listarAnamneses(Pageable pageable);
+    Page<EvolucaoDto> listar(Pageable pageable);
+
+    List<EvolucaoDto> listarPorPaciente(Long pacienteId);
 
 }
