@@ -27,67 +27,108 @@ public class EvolucaoService implements IEvolucaoService {
     @Override
     @Transactional
     public EvolucaoDto save(EvolucaoDto evolucaoDto) {
-        Paciente paciente = pacienteRepository.findById(evolucaoDto.getPacienteId())
-                .orElseThrow(() -> new EntityNotFoundException("Paciente não encontrado: " + evolucaoDto.getPacienteId()));
+        log.debug("Criando evolução para pacienteId={}", evolucaoDto.getPacienteId());
+        try {
+            Paciente paciente = pacienteRepository.findById(evolucaoDto.getPacienteId())
+                    .orElseThrow(() -> new EntityNotFoundException("Paciente não encontrado: " + evolucaoDto.getPacienteId()));
 
-        var evolucao = EvolucaoDto.toEntity(evolucaoDto, paciente);
-        evolucao = evolucaoRepository.save(evolucao);
-        log.info("Evolução criada: id={}, pacienteId={}", evolucao.getId(), evolucaoDto.getPacienteId());
-        return EvolucaoDto.fromEntity(evolucao);
+            var evolucao = EvolucaoDto.toEntity(evolucaoDto, paciente);
+            evolucao = evolucaoRepository.save(evolucao);
+            log.info("Evolução criada: id={}, pacienteId={}", evolucao.getId(), evolucaoDto.getPacienteId());
+            return EvolucaoDto.fromEntity(evolucao);
+        } catch (Exception e) {
+            log.error("Erro ao criar evolução para pacienteId={}", evolucaoDto.getPacienteId(), e);
+            throw e;
+        }
     }
 
     @Override
     public EvolucaoDto findById(Long id) {
-        var evolucao = evolucaoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Evolução não encontrada: " + id));
-        return EvolucaoDto.fromEntity(evolucao);
+        log.debug("Buscando evolução por id={}", id);
+        try {
+            var evolucao = evolucaoRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Evolução não encontrada: " + id));
+            log.info("Evolução encontrada: id={}", id);
+            return EvolucaoDto.fromEntity(evolucao);
+        } catch (Exception e) {
+            log.error("Erro ao buscar evolução id={}", id, e);
+            throw e;
+        }
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!evolucaoRepository.existsById(id)) {
-            throw new EntityNotFoundException("Evolução não encontrada: " + id);
+        log.debug("Excluindo evolução id={}", id);
+        try {
+            if (!evolucaoRepository.existsById(id)) {
+                throw new EntityNotFoundException("Evolução não encontrada: " + id);
+            }
+            evolucaoRepository.deleteById(id);
+            log.info("Evolução excluída: id={}", id);
+        } catch (Exception e) {
+            log.error("Erro ao excluir evolução id={}", id, e);
+            throw e;
         }
-        evolucaoRepository.deleteById(id);
-        log.info("Evolução excluída: id={}", id);
     }
 
     @Override
     @Transactional
     public EvolucaoDto update(Long id, EvolucaoDto evolucaoDto) {
-        var evolucao = evolucaoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Evolução não encontrada: " + id));
+        log.debug("Atualizando evolução id={}", id);
+        try {
+            var evolucao = evolucaoRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Evolução não encontrada: " + id));
 
-        if (evolucaoDto.getTexto() != null) {
-            evolucao.setTexto(evolucaoDto.getTexto());
-        }
-        if (evolucaoDto.getNomeProfissional() != null) {
-            evolucao.setNomeProfissional(evolucaoDto.getNomeProfissional());
-        }
-        if (evolucaoDto.getDataHoraEdicao() != null) {
-            evolucao.setDataHoraEdicao(evolucaoDto.getDataHoraEdicao());
-        }
-        if (evolucaoDto.getCodProntuario() != null) {
-            evolucao.setCodProntuario(evolucaoDto.getCodProntuario());
-        }
+            if (evolucaoDto.getTexto() != null) {
+                evolucao.setTexto(evolucaoDto.getTexto());
+            }
+            if (evolucaoDto.getNomeProfissional() != null) {
+                evolucao.setNomeProfissional(evolucaoDto.getNomeProfissional());
+            }
+            if (evolucaoDto.getDataHoraEdicao() != null) {
+                evolucao.setDataHoraEdicao(evolucaoDto.getDataHoraEdicao());
+            }
+            if (evolucaoDto.getCodProntuario() != null) {
+                evolucao.setCodProntuario(evolucaoDto.getCodProntuario());
+            }
 
-        evolucao = evolucaoRepository.save(evolucao);
-        log.info("Evolução atualizada: id={}", id);
-        return EvolucaoDto.fromEntity(evolucao);
+            evolucao = evolucaoRepository.save(evolucao);
+            log.info("Evolução atualizada: id={}", id);
+            return EvolucaoDto.fromEntity(evolucao);
+        } catch (Exception e) {
+            log.error("Erro ao atualizar evolução id={}", id, e);
+            throw e;
+        }
     }
 
     @Override
     public Page<EvolucaoDto> listar(Pageable pageable) {
-        return evolucaoRepository.findAll(pageable)
-                .map(EvolucaoDto::fromEntity);
+        log.debug("Listando evoluções com pageable={}", pageable);
+        try {
+            Page<EvolucaoDto> result = evolucaoRepository.findAll(pageable)
+                    .map(EvolucaoDto::fromEntity);
+            log.info("Evoluções listadas: total={}", result.getTotalElements());
+            return result;
+        } catch (Exception e) {
+            log.error("Erro ao listar evoluções", e);
+            throw e;
+        }
     }
 
     @Override
     public List<EvolucaoDto> listarPorPaciente(Long pacienteId) {
-        return evolucaoRepository.findByPacienteId(pacienteId).stream()
-                .map(EvolucaoDto::fromEntity)
-                .toList();
+        log.debug("Listando evoluções por pacienteId={}", pacienteId);
+        try {
+            List<EvolucaoDto> result = evolucaoRepository.findByPacienteId(pacienteId).stream()
+                    .map(EvolucaoDto::fromEntity)
+                    .toList();
+            log.info("Evoluções do paciente {} listadas: total={}", pacienteId, result.size());
+            return result;
+        } catch (Exception e) {
+            log.error("Erro ao listar evoluções do pacienteId={}", pacienteId, e);
+            throw e;
+        }
     }
 
 }

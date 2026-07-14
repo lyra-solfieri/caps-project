@@ -117,33 +117,33 @@ public class RaasService implements IRaasService {
         return raasSalvo;
     }
 
-@Override
-public Raas buscarPorId(Long id) {
-    return raasRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("RAAS não encontrado"));
-}
-
-@Override
-public List<Raas> listarPorPaciente(Long pacienteId) {
-
-    try {
-        return raasRepository.findByPacienteId(pacienteId);
-    } catch (Exception e) {
-        throw new RuntimeException("Paciente nao encontrado");
+    @Override
+    public Raas buscarPorId(Long id) {
+        return raasRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("RAAS não encontrado"));
     }
-}
 
-@Override
-    public void deletar(Long id) {
+    @Override
+    public List<Raas> listarPorPaciente(Long pacienteId) {
+
         try {
-            raasRepository.deleteById(id);
-
-            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.EXCLUSAO, "Raas", id,
-                    "RAAS excluido - ID: " + id, null);
+            return raasRepository.findByPacienteId(pacienteId);
         } catch (Exception e) {
-            throw new RuntimeException("Raas nao encontrado");
+            throw new RuntimeException("Paciente nao encontrado");
         }
     }
+
+    @Override
+        public void deletar(Long id) {
+            try {
+                raasRepository.deleteById(id);
+
+                auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.EXCLUSAO, "Raas", id,
+                        "RAAS excluido - ID: " + id, null);
+            } catch (Exception e) {
+                throw new RuntimeException("Raas nao encontrado");
+            }
+        }
 
    @Override
    public byte[] gerarPdf(Long raasId) {
