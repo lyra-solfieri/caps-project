@@ -10,6 +10,7 @@ import com.lyra.caps.util.LogPersonalizado;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -28,26 +29,27 @@ public class PacienteService implements IPacienteService {
     private final UserService userService;
     private final LogPersonalizado logPersonalizado = LogPersonalizado.getLogger(this.getClass());
 
+
     @Override
     public PacienteResponseDto criarPaciente(PacienteDto pacienteDto) {
         
-        if(pacienteRepository.existsByCpf(pacienteDto.getCpf())) {            
+        if(pacienteRepository.existsByCpf(pacienteDto.getCpf())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este CPF já está cadastrado no sistema.");
         }
-        
         
         try {   
             Paciente paciente = Paciente.fromDto(pacienteDto);
             Paciente pacienteSalvo = pacienteRepository.save(paciente);
-            logPersonalizado.info("Paciente criado com sucesso: " + pacienteSalvo);
 
             auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.CRIACAO, "Paciente", pacienteSalvo.getId(),
                     "Paciente criado: " + pacienteSalvo.getNome() + " - CPF: " + pacienteSalvo.getCpf(), null);
             
             return PacienteResponseDto.fromEntity(pacienteSalvo);
             
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este CPF já está cadastrado no sistema.");
+            
         } catch (Exception e) {
-            logPersonalizado.error(e.getMessage(), e);
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao cadastrar paciente.");
         }

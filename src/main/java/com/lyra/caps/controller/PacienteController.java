@@ -12,9 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.server.ResponseStatusException;
+import java.util.Map;
 
 
 @RestController
@@ -29,29 +28,20 @@ public class PacienteController {
 
     
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> criarPaciente(@Valid @RequestBody PacienteDto pacienteDto) {
+    public ResponseEntity<?> criarPaciente(@Valid @RequestBody PacienteDto pacienteDto) {
         try {
-            pacienteService.criarPaciente(pacienteDto);
-
-            ApiResponse<Void> response = ApiResponse.sucesso(
-                    "Paciente cadastrado com sucesso",
-                    HttpStatus.CREATED,
-                    null
-            );
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
-        } catch (Exception e) {
-            LogPersonalizado.getLogger(this.getClass()).error("Erro ao cadastrar paciente teste: " + e.getMessage(), e);
-            e.printStackTrace();
-
-            ApiResponse<Object> erro = ApiResponse.erro(
-                    "Erro ao cadastrar paciente Teste",
-                    HttpStatus.INTERNAL_SERVER_ERROR
-            );
+            PacienteResponseDto salvo = pacienteService.criarPaciente(pacienteDto);
+            return ResponseEntity.ok(salvo);
+            
+        } catch (ResponseStatusException e) {
+            return ResponseEntity
+                    .status(e.getStatusCode())
+                    .body(Map.of("message", e.getReason()));
                     
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Ocorreu um erro interno no servidor."));
         }
     }
 
