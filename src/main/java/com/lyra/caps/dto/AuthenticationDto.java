@@ -1,5 +1,15 @@
 package com.lyra.caps.dto;
 
-public record AuthenticationDto(String email, String password) {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record AuthenticationDto(
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Email inválido")
+    String email,
+
+    @NotBlank(message = "Senha é obrigatória")
+    String password
+) {
 
 }

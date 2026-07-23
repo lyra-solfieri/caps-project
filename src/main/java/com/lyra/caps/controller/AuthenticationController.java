@@ -1,6 +1,5 @@
 package com.lyra.caps.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,29 +15,33 @@ import com.lyra.caps.dto.RegisterDto;
 import com.lyra.caps.infra.security.TokenService;
 import com.lyra.caps.model.User;
 import com.lyra.caps.model.enums.AcaoAuditoria;
+import com.lyra.caps.model.enums.Role;
 import com.lyra.caps.repository.UserRepository;
 import com.lyra.caps.service.AuditoriaService;
-
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    @Autowired
-    private AuditoriaService auditoriaService;
+    private final AuditoriaService auditoriaService;
+    
+    AuthenticationController(AuthenticationManager authenticationManager, UserRepository userRepository, TokenService tokenService, AuditoriaService auditoriaService) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.tokenService = tokenService;
+        this.auditoriaService = auditoriaService;
+    }
     
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody AuthenticationDto authentication, HttpServletRequest request) {
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody AuthenticationDto authentication, HttpServletRequest request) {
 
         var userEmailPassword = new UsernamePasswordAuthenticationToken(authentication.email(), authentication.password());
         var auth = this.authenticationManager.authenticate(userEmailPassword);
@@ -52,13 +55,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterDto register, HttpServletRequest request) {
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterDto register, HttpServletRequest request) {
         if(this.userRepository.findByEmail(register.email()) != null) {
             return ResponseEntity.badRequest().build();
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(register.password());
-        User user = new User(register.email(), encryptedPassword, register.role());
+        User user = new User(register.email(), encryptedPassword, Role.USER);
         this.userRepository.save(user);
 
         String ip = getClientIp(request);
