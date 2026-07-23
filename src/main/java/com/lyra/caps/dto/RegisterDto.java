@@ -16,7 +16,13 @@ public record RegisterDto(
         regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$",
         message = "Senha deve conter letra maiúscula, minúscula, número e caractere especial"
     )
-    String password
+    String password,
+
+    @NotBlank(message = "Nome é obrigatório")
+    String nome,
+
+    @NotBlank(message = "Profissão é obrigatória")
+    String profissao
 ) {
 
 }

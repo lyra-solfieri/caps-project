@@ -62,6 +62,8 @@ public class AuthenticationController {
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(register.password());
         User user = new User(register.email(), encryptedPassword, Role.USER);
+        user.setNome(register.nome());
+        user.setProfissaoUsuario(register.profissao());
         this.userRepository.save(user);
 
         String ip = getClientIp(request);

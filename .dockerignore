@@ -1,0 +1,8 @@
+target/
+*.md
+.git
+.gitignore
+*.iml
+.idea/
+*.swp
+*.swo
