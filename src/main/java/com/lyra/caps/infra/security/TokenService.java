@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import com.lyra.caps.model.User;
 
 @Service
 public class TokenService {
+
+    private static final Logger log = LoggerFactory.getLogger(TokenService.class);
 
     @Value("${api.security.token.secret}")
     private String secret;
@@ -35,7 +39,7 @@ public class TokenService {
             return token;
 
         } catch (JWTCreationException e) {
-            e.printStackTrace();
+            log.error("Erro ao gerar token JWT", e);
             throw new RuntimeException("Error while generating token", e);
         }
     }
@@ -49,6 +53,7 @@ public class TokenService {
                 .verify(token)
                 .getSubject();
         } catch (JWTVerificationException e) {
+            log.warn("Token JWT invalido ou expirado");
             return null;
         }
     }

@@ -42,7 +42,7 @@ public class PacienteService implements IPacienteService {
             Paciente pacienteSalvo = pacienteRepository.save(paciente);
 
             auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.CRIACAO, "Paciente", pacienteSalvo.getId(),
-                    "Paciente criado: " + pacienteSalvo.getNome() + " - CPF: " + pacienteSalvo.getCpf(), null);
+                    "Paciente criado: " + pacienteSalvo.getNome(), null);
             
             return PacienteResponseDto.fromEntity(pacienteSalvo);
             
@@ -50,7 +50,7 @@ public class PacienteService implements IPacienteService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este CPF já está cadastrado no sistema.");
             
         } catch (Exception e) {
-            e.printStackTrace();
+            logPersonalizado.error("Erro interno ao cadastrar paciente", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao cadastrar paciente.");
         }
     }
@@ -67,7 +67,6 @@ public class PacienteService implements IPacienteService {
         }
         catch (Exception e) {
             logPersonalizado.error("Erro ao buscar paciente", e);
-            e.printStackTrace();
             throw new RuntimeException("Erro ao buscar paciente");
         }
     }
@@ -83,7 +82,6 @@ public class PacienteService implements IPacienteService {
         }
         catch (Exception e) {
             logPersonalizado.error("Erro ao listar pacientes", e);
-            e.printStackTrace();
             throw new RuntimeException("Erro ao listar pacientes");
         }
     }
@@ -102,7 +100,6 @@ public class PacienteService implements IPacienteService {
         }
         catch (Exception e) {
             logPersonalizado.error("Erro ao atualizar paciente", e);
-            e.printStackTrace();
             throw new RuntimeException("Erro ao atualizar paciente");
         }
     }
@@ -122,7 +119,6 @@ public class PacienteService implements IPacienteService {
         }
         catch (Exception e) {
             logPersonalizado.error("Erro ao deletar paciente", e);
-            e.printStackTrace();
             throw new RuntimeException("Erro ao deletar paciente");
         }
 
@@ -140,7 +136,6 @@ public class PacienteService implements IPacienteService {
         }
         catch (Exception e) {
             logPersonalizado.error("Erro ao filtrar pacientes", e);
-            e.printStackTrace();
             throw new RuntimeException("Erro ao filtrar pacientes");
         }
     }
