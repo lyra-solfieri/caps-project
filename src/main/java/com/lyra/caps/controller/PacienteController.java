@@ -1,6 +1,5 @@
 package com.lyra.caps.controller;
 
-import com.lyra.caps.mapper.ApiResponse;
 import com.lyra.caps.dto.PacienteDto;
 import com.lyra.caps.dto.PacienteResponseDto;
 import com.lyra.caps.service.IPacienteService;
@@ -11,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.Map;
@@ -18,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pacientes")
+@PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR', 'EDITOR')")
 public class PacienteController {
 
     private final IPacienteService pacienteService;
@@ -39,7 +40,7 @@ public class PacienteController {
                     .body(Map.of("message", e.getReason()));
                     
         } catch (Exception e) {
-            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao criar paciente", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "Ocorreu um erro interno no servidor."));
         }
@@ -53,7 +54,6 @@ public class PacienteController {
             return ResponseEntity.ok(pacienteService.buscarPorId(id));
         } catch (Exception e) {
             LogPersonalizado.getLogger(this.getClass()).error("Erro ao buscar paciente", e);
-            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -70,7 +70,7 @@ public class PacienteController {
             return ResponseEntity.ok(pacientes);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao listar pacientes", e);
             return ResponseEntity.internalServerError().build();
         }
             
@@ -83,7 +83,6 @@ public class PacienteController {
             return ResponseEntity.noContent().build();
 
         } catch (Exception e) {
-            e.printStackTrace();
             LogPersonalizado.getLogger(this.getClass()).error("Erro ao atualizar paciente", e);
             return ResponseEntity.internalServerError().build();
         }
@@ -96,8 +95,7 @@ public class PacienteController {
             return ResponseEntity.noContent().build();
 
         } catch(Exception e) {
-            LogPersonalizado.getLogger(this.getClass()).error("Erro ao deletar Paciente");
-            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao deletar paciente", e);
             return ResponseEntity.internalServerError().build();
 
         }
@@ -117,7 +115,7 @@ public class PacienteController {
             return ResponseEntity.ok(pacientes);
         
         } catch (Exception e) {
-            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao filtrar pacientes", e);
             return ResponseEntity.internalServerError().build();
         }
     

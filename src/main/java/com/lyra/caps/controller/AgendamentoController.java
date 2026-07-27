@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lyra.caps.dto.AgendamentoRequestDto;
 import com.lyra.caps.dto.AgendamentoResponseDto;
 import com.lyra.caps.service.IAgendamentoService;
+import com.lyra.caps.util.LogPersonalizado;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/agendamentos")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR', 'EDITOR')")
 public class AgendamentoController {
 
     private final IAgendamentoService agendamentoService;
@@ -40,7 +43,7 @@ public class AgendamentoController {
             );
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao criar agendamento", e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -51,7 +54,7 @@ public class AgendamentoController {
             return ResponseEntity.ok(agendamentoService.listarAgendamentos());
             
         } catch (Exception e) {
-            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao listar agendamentos", e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -62,7 +65,6 @@ public class AgendamentoController {
             @Valid @RequestBody AgendamentoRequestDto agendamentoRequest) {
             
         try {
-            // Chama o serviço para atualizar os dados
             agendamentoService.atualizarAgendamento(id, agendamentoRequest);
             
             return ResponseEntity.ok(
@@ -70,7 +72,7 @@ public class AgendamentoController {
             );
             
         } catch (Exception e) {
-            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao atualizar agendamento", e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -82,7 +84,7 @@ public class AgendamentoController {
             return ResponseEntity.noContent().build();
             
         } catch (Exception e) {
-            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao deletar agendamento", e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -93,7 +95,7 @@ public class AgendamentoController {
             return ResponseEntity.ok(agendamentoService.buscarPorId(id));
             
         } catch (Exception e) {
-            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao buscar agendamento", e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -104,7 +106,7 @@ public class AgendamentoController {
             return ResponseEntity.ok(agendamentoService.alertarAgendamento(id));
             
         } catch (Exception e) {
-            e.printStackTrace();
+            LogPersonalizado.getLogger(this.getClass()).error("Erro ao alertar agendamento", e);
             return ResponseEntity.internalServerError().build();
         }
     }
