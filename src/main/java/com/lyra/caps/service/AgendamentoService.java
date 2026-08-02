@@ -78,7 +78,7 @@ public class AgendamentoService implements IAgendamentoService {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public AgendamentoResponseDto buscarPorId(@PathVariable Long id) {
         Agendamento agendamento = agendamentoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));

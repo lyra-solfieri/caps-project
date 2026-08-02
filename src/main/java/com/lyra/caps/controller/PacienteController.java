@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pacientes")
-@PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR', 'EDITOR')")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class PacienteController {
 
     private final IPacienteService pacienteService;

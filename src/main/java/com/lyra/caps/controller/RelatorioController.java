@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/relatorios")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class RelatorioController {
 
     private final IRelatorioService relatorioService;

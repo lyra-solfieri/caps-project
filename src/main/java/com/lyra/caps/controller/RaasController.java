@@ -16,7 +16,7 @@ import com.lyra.caps.util.LogPersonalizado;
 
 @RestController
 @RequestMapping("/api/raas")
-@PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR', 'EDITOR')")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class RaasController {
 
     private final IRaasService raasService;

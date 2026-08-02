@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/evolucao")
-@PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR', 'EDITOR')")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class EvolucaoController {
 
     private final EvolucaoService evolucaoService;

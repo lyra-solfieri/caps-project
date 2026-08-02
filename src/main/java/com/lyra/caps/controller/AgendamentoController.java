@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/agendamentos")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR', 'EDITOR')")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class AgendamentoController {
 
     private final IAgendamentoService agendamentoService;

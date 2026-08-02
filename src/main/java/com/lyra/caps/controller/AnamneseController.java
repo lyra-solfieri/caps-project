@@ -18,7 +18,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/api/anamneses")
 @AllArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR', 'EDITOR')")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class AnamneseController {
 
     private final AnamneseService anamneseService;

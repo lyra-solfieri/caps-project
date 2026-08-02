@@ -19,7 +19,7 @@ import com.lyra.caps.util.LogPersonalizado;
 
 @RestController
 @RequestMapping("/api/raas/ocr")
-@PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR', 'EDITOR')")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class RaasOcrController {
 
     private final RaasOcrService raasOcrService;
