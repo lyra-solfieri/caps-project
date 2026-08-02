@@ -25,9 +25,9 @@ public class PacienteResponseDto {
     private String nomeMae;
     private String nomePai;
     private String profissao;
-    private Long numeroCartaoSUS;
+    private String numeroCartaoSUS;
     private Raca raca;
-    private Long numeroProntuario;
+    private String numeroProntuario;
     private boolean infantojuvenil;
     private boolean emSituacaoSocioeconomica;
 

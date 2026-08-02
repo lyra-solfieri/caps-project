@@ -43,9 +43,9 @@ public class PacienteDto {
     private String nomePai;
     private String profissao;
 
-    private Long numeroCartaoSUS;
+    private String numeroCartaoSUS;
     private Raca raca;
-    private Long numeroProntuario;
+    private String numeroProntuario;
 
     private boolean infantojuvenil;
     private boolean emSituacaoSocioeconomica;
@@ -63,7 +63,7 @@ public class PacienteDto {
     private String auxilioOuBeneficioSocial;
 
     private String responsavelLegal;
-    private String parentescoResponsavelLegal;
+    private String parentescoResponsavel;
     private String telefoneResponsavelLegal;
     private String profissaoResponsavelLegal;
 

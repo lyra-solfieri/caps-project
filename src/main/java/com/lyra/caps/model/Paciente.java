@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.validator.constraints.br.CPF;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lyra.caps.dto.PacienteDto;
 import com.lyra.caps.model.enums.Genero;
@@ -20,9 +18,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -35,17 +30,12 @@ public class Paciente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(min = 3, max = 100)
     private String nome;
 
-    @Email
     private String email;
 
-    @Size(min = 3, max = 100)
     private String telefone;
 
-    @CPF
     private String cpf;
 
     private String rg;
@@ -61,22 +51,20 @@ public class Paciente {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
 
-    @Size(min = 3, max = 100)
     private String nomeMae;
     private String profissaoMae;
 
     private String codIBGEMunicipio;
 
-    @Size(min = 3, max = 100)
     private String nomePai;
     private String profissaoPai;
 
     
     private String profissao;
 
-    private Long numeroCartaoSUS;
+    private String numeroCartaoSUS;
     private Raca raca;
-    private Long numeroProntuario;
+    private String numeroProntuario;
     private boolean infantojuvenil;
     private boolean emSituacaoSocioeconomica;
     private String contextoVulnerabilidadeSocioeconomica;
@@ -86,7 +74,7 @@ public class Paciente {
     private String rendaFamiliar;
     private String auxilioOuBeneficioSocial;
     private String responsavelLegal;
-    private String parentescoResponsavelLegal;
+    private String parentescoResponsavel;
     private String telefoneResponsavelLegal;
     private String profissaoResponsavelLegal;
     private String instituicaoEnsino;
@@ -142,7 +130,7 @@ public class Paciente {
         paciente.setRendaFamiliar(dto.getRendaFamiliar());
         paciente.setAuxilioOuBeneficioSocial(dto.getAuxilioOuBeneficioSocial());
         paciente.setResponsavelLegal(dto.getResponsavelLegal());
-        paciente.setParentescoResponsavelLegal(dto.getParentescoResponsavelLegal());
+        paciente.setParentescoResponsavel(dto.getParentescoResponsavel());
         paciente.setTelefoneResponsavelLegal(dto.getTelefoneResponsavelLegal());
         paciente.setProfissaoResponsavelLegal(dto.getProfissaoResponsavelLegal());
         paciente.setInstituicaoEnsino(dto.getInstituicaoEnsino());

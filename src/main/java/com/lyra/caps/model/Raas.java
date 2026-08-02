@@ -25,7 +25,7 @@ public class Raas {
     private String cnes;
 
     private String nomePaciente;
-    private Long cartaoSus;
+    private String cartaoSus;
     private String sexo;
     private String dataNascimento;
     private String nomeMae;

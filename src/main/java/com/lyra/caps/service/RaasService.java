@@ -95,10 +95,12 @@ public class RaasService implements IRaasService {
                 acao.setCodigoAcao(a.getCodigoAcao());
                 acao.setQuantidade(a.getQuantidade());
                 acao.setData(a.getData());
+                acao.setCid10(a.getCid10());
                 acao.setServico(a.getServico());
                 acao.setClassificacao(a.getClassificacao());
                 acao.setCboExecutor(a.getCboExecutor());
                 acao.setCartaoProfissional(a.getCartaoProfissional());
+                acao.setCodigoEquipe(a.getCodigoEquipe());
                 acao.setCaps(a.isCaps());
                 acao.setTerritorio(a.isTerritorio());
 
