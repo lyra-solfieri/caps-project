@@ -1,9 +1,10 @@
 package com.lyra.caps.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,12 +33,15 @@ public class AuthenticationController {
     private final TokenService tokenService;
 
     private final AuditoriaService auditoriaService;
-    
-    AuthenticationController(AuthenticationManager authenticationManager, UserRepository userRepository, TokenService tokenService, AuditoriaService auditoriaService) {
+
+    private final PasswordEncoder passwordEncoder;
+
+    AuthenticationController(AuthenticationManager authenticationManager, UserRepository userRepository, TokenService tokenService, AuditoriaService auditoriaService, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.tokenService = tokenService;
         this.auditoriaService = auditoriaService;
+        this.passwordEncoder = passwordEncoder;
     }
     
     @PostMapping("/login")
@@ -55,13 +59,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> register(@Valid @RequestBody RegisterDto register, HttpServletRequest request) {
         if(this.userRepository.findByEmail(register.email()) != null) {
             return ResponseEntity.badRequest().build();
         }
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(register.password());
-        User user = new User(register.email(), encryptedPassword, Role.USER);
+        Role role = register.role() != null ? register.role() : Role.USER;
+        String encryptedPassword = passwordEncoder.encode(register.password());
+        User user = new User(register.email(), encryptedPassword, role);
         user.setNome(register.nome());
         user.setProfissaoUsuario(register.profissao());
         this.userRepository.save(user);

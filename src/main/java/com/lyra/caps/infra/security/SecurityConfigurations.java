@@ -21,10 +21,9 @@ public class SecurityConfigurations {
 
     
     private final SecurityFilter securityFilter;
-
-    
     private final  LoginRateLimitingFilter rateLimitingFilter;
 
+    
     public SecurityConfigurations(SecurityFilter securityFilter, LoginRateLimitingFilter rateLimitingFilter) {
         this.securityFilter = securityFilter;
         this.rateLimitingFilter = rateLimitingFilter;
@@ -40,7 +39,6 @@ public class SecurityConfigurations {
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-            .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
             .anyRequest().authenticated()
         )
         .headers(headers -> headers

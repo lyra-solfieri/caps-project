@@ -2,7 +2,6 @@ package com.lyra.caps.infra.security;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +18,14 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-    @Autowired
+    
     private TokenService tokenService;
-
-    @Autowired
     private UserRepository userRepository;
+
+    public SecurityFilter(TokenService tokenService, UserRepository userRepository) {
+        this.tokenService = tokenService;
+        this.userRepository = userRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -32,7 +34,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // Ignora autenticação nas rotas públicas
-        if (path.equals("/auth/login") || path.equals("/auth/register") || path.equals("/error")) {
+        if (path.equals("/auth/login") || path.equals("/error")) {
             filterChain.doFilter(request, response);
             return;
         }
