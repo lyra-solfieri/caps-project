@@ -16,10 +16,10 @@ public class AdminInitializer implements ApplicationRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${ADMIN_EMAIL}")
+    @Value("${admin.email}")
     private String adminEmail;
 
-    @Value("${ADMIN_PASSWORD}")
+    @Value("${admin.password}")
     private String adminPassword;
 
     public AdminInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {

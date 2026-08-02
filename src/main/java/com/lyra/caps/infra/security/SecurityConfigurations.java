@@ -1,6 +1,5 @@
 package com.lyra.caps.infra.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,11 +19,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfigurations {
 
-    @Autowired
-    private SecurityFilter securityFilter;
+    
+    private final SecurityFilter securityFilter;
 
-    @Autowired
-    private LoginRateLimitingFilter rateLimitingFilter;
+    
+    private final  LoginRateLimitingFilter rateLimitingFilter;
+
+    public SecurityConfigurations(SecurityFilter securityFilter, LoginRateLimitingFilter rateLimitingFilter) {
+        this.securityFilter = securityFilter;
+        this.rateLimitingFilter = rateLimitingFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -37,14 +41,14 @@ public class SecurityConfigurations {
             .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-            .anyRequest().denyAll()
+            .anyRequest().authenticated()
         )
         .headers(headers -> headers
             .xssProtection(xss -> xss.disable())
             .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'; frame-ancestors 'none'"))
             .frameOptions(frame -> frame.deny())
         )
-        .addFilterBefore(rateLimitingFilter, SecurityFilter.class)
+        .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
     }
