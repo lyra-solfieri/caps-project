@@ -99,7 +99,7 @@ A API é **stateless** (sem sessão), protegida por **JWT** e exposta na porta *
 ### 1. Pré-requisitos
 
 - **Java 17** e **Maven 3.8+**
-- **MySQL** rodando (ex.: `localhost:3306`)
+- **MySQL** rodando (ex: `localhost:3306`)
 - **RabbitMQ** rodando (ex.: `localhost:5672`, usuário/senha `guest/guest`)
 - **MinIO** rodando (ex.: `http://localhost:9000`, acesso `minioadmin/minioadmin`)
 - Worker OCR externo consumindo a fila `raas.ocr.request` (para o fluxo completo de OCR)
