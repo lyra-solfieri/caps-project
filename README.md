@@ -30,7 +30,7 @@ Sistema desenvolvido como Trabalho de Conclusão de Curso (TCC) para o **cadastr
 
 ## 🏗️ Visão geral e arquitetura
 
-A API é **stateless** (sem sessão), protegida por **JWT** e exposta na porta **8080**. O processamento de OCR é **assíncrono**: o upload de documentos é feito via API, o arquivo é armazenado no **MinIO** e o processamento é enfileirado no **RabbitMQ**. Um **worker OCR externo** (não parte deste projeto) consome a fila de requisição, processa o documento e publica o resultado na fila de resposta, que a aplicação consome e persiste.
+A API é **stateless** (sem sessão), protegida por **JWT** e exposta na porta **8080**. O processamento de OCR é **síncrono**: o upload do documento é feito via API e o arquivo é enviado diretamente ao **microserviço de OCR** (FastAPI + Docling) via REST, que extrai os dados e os retorna para revisão e aceite.
 
 ```
                     ┌──────────────────────────────────────────────┐
@@ -42,32 +42,13 @@ A API é **stateless** (sem sessão), protegida por **JWT** e exposta na porta *
       ┌────────────┐ │  └──────────┘   └─────┬─────┘   └─────────┘  │
       │ JWT Bearer │ │                       │                     │
       │   token    │ │                       ▼                     │
-      └────────────┘ │            ┌──────────────────┐             │
-                     │            │ MinIO (arquivos) │             │
-                     │            └──────────────────┘             │
-                     └──────────────────┬──────────────────────────┘
-                                        │  publica em
-                                        ▼
-                    ┌──────────────────────────────────────┐
-                    │   RabbitMQ                            │
-                    │   fila: raas.ocr.request              │
-                    └──────────────────┬───────────────────┘
-                                       │ consome
-                                       ▼
-                    ┌───────────────────────────────┐
-                    │    WORKER OCR EXTERNO         │
-                    │  (Docling / OCRmyPDF /      │
-                    │   Ocr-service)           │
-                    └───────────────┬───────────────┘
-                                    │ publica em
-                                    ▼
-                    ┌──────────────────────────────────────┐
-                    │   RabbitMQ                            │
-                    │   fila: raas.ocr.response            │
-                    └──────────────────┬───────────────────┘
-                                       │ consome (OcrCallbackConsumer)
-                                       ▼
-                          OcrProcessamento atualizado no banco
+      └────────────┘ │           OcrClientService (REST)           │
+                     │                       ▼                     │
+                     │            ┌──────────────────────┐          │
+                     │            │  OCR SERVICE (8000)  │          │
+                     │            │  FastAPI + Docling   │          │
+                     │            └──────────────────────┘          │
+                     └──────────────────────────────────────────────┘
 ```
 
 ---
@@ -83,9 +64,7 @@ A API é **stateless** (sem sessão), protegida por **JWT** e exposta na porta *
 | Segurança | Spring Security + JWT (com.auth0/java-jwt) |
 | Autenticação | Stateless, token Bearer (HMAC256, expira em 2h) |
 | Mapeamento | MapStruct 1.5.5 + Lombok 1.18.36 |
-| Mensageria | RabbitMQ (filas OCR request/response) |
-| Armazenamento | MinIO 8.5.7 (bucket `raas-uploads`) |
-| OCR | Tess4J + JavaCV (dependências para o worker) |
+| OCR | Microserviço Python (FastAPI + Docling) chamado via REST |
 | Validação | Spring Boot Validation + Hibernate Validator |
 | Build | Maven, Docker multi-stage |
 | Frontend | Angular (CORS liberado para `http://localhost:4200`) |
@@ -100,9 +79,7 @@ A API é **stateless** (sem sessão), protegida por **JWT** e exposta na porta *
 
 - **Java 17** e **Maven 3.8+**
 - **MySQL** rodando (ex: `localhost:3306`)
-- **RabbitMQ** rodando (ex.: `localhost:5672`, usuário/senha `guest/guest`)
-- **MinIO** rodando (ex.: `http://localhost:9000`, acesso `minioadmin/minioadmin`)
-- Worker OCR externo consumindo a fila `raas.ocr.request` (para o fluxo completo de OCR)
+- **Microserviço de OCR** (FastAPI + Docling) rodando em `http://localhost:8000` — veja `../ocr-service/README.md` (fora deste repositório)
 
 ### 2. Variáveis de ambiente
 
@@ -115,11 +92,7 @@ A API é **stateless** (sem sessão), protegida por **JWT** e exposta na porta *
 | `JWT_SECRET` | `my-secret-key` | Chave de assinatura do JWT (**troque em produção!**) |
 | `ADMIN_EMAIL` | `lyrasolfieri@gmail.com` | E-mail do admin criado no startup |
 | `ADMIN_PASSWORD` | `12345678#` | Senha do admin criado no startup |
-| `RABBITMQ_HOST` | `localhost` | Host do RabbitMQ |
-| `MINIO_ENDPOINT` | `http://localhost:9000` | Endpoint do MinIO |
-| `MINIO_ACCESS_KEY` | `minioadmin` | Access key do MinIO |
-| `MINIO_SECRET_KEY` | `minioadmin` | Secret key do MinIO |
-| `MINIO_BUCKET` | `raas-uploads` | Bucket para os arquivos de OCR |
+| `OCR_SERVICE_URL` | `http://localhost:8000` | URL do microserviço de OCR (FastAPI + Docling) |
 
 Existe um arquivo `.env.example` na raiz com um subconjunto dessas variáveis.
 
@@ -650,7 +623,7 @@ Gera o PDF do RAAS (`application/pdf`), com `Content-Disposition: inline`.
 
 Base: `/api/raas/ocr` · Roles: `ADMIN`, `USER`
 
-Módulo de **digitalização automática**: o documento é processado por OCR de forma assíncrona, os dados extraídos ficam disponíveis para revisão e o RAAS só é persistido quando o usuário **aceita** os dados revisados.
+Módulo de **digitalização automática**: o documento é processado por OCR **de forma síncrona** via REST, os dados extraídos ficam disponíveis para revisão e o RAAS só é persistido quando o usuário **aceita** os dados revisados.
 
 #### `POST /api/raas/ocr/upload` — envia documento para OCR
 
@@ -663,15 +636,15 @@ file: <PDF>
 pacienteId: 1
 ```
 
-**Fluxo:** o serviço gera um `correlationId` (UUID), salva o arquivo no MinIO (bucket `raas-uploads`, caminho `<correlationId>/<nome-do-arquivo>`), publica a mensagem na fila `raas.ocr.request` e registra um `OcrProcessamento` com status `EM_PROCESSAMENTO`.
+**Fluxo:** o serviço gera um `correlationId` (UUID), envia o arquivo ao microserviço de OCR via REST (`OcrClientService`), registra um `OcrProcessamento` já com o resultado (`status`, `confidenceGeral`, `dadosExtraidosJson`, `resultadoJson`, `dataConclusao`) e retorna o `correlationId`.
 
 **Resposta `200 OK`** (`RaasOcrUploadResponse`):
 ```json
 {
   "correlationId": "9f1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
   "processamentoId": 1,
-  "status": "EM_PROCESSAMENTO",
-  "mensagem": "Documento enviado para processamento OCR"
+  "status": "CONCLUIDO",
+  "mensagem": "Documento processado"
 }
 ```
 
@@ -691,12 +664,12 @@ Consulta o status do processamento. Retorna a entidade `OcrProcessamento`:
   "pacienteCriadoId": null,
   "atendimentoCriadoId": null,
   "raasCriadoId": null,
-  "status": "EM_PROCESSAMENTO",
+  "status": "CONCLUIDO",
   "confidenceGeral": null,
   "dadosExtraidosJson": null,
   "resultadoJson": null,
   "dataCriacao": "2026-08-02T10:00:00",
-  "dataConclusao": null
+  "dataConclusao": "2026-08-02T10:00:01"
 }
 ```
 
@@ -932,17 +905,13 @@ Lista todos os usuários.
 O fluxo completo de digitalização de um RAAS é:
 
 1. **Upload** — o frontend envia o PDF em `POST /api/raas/ocr/upload`.
-2. **Armazenamento** — `OcrGatewayService` salva o arquivo no **MinIO** (bucket `raas-uploads`), em `<correlationId>/<nome-original>`.
-3. **Enfileiramento** — publica uma mensagem JSON na fila `raas.ocr.request` com `correlationId`, `filePath`, `originalFileName`, `pacienteId` e `timestamp`.
-4. **Registro** — cria um `OcrProcessamento` com status `EM_PROCESSAMENTO` e retorna `correlationId` e `processamentoId`.
-5. **Processamento externo** — o worker OCR consome a fila, extrai o texto do PDF (Tesseract/OCRmyPDF) e reconhece os campos.
-6. **Resultado** — o worker publica na fila `raas.ocr.response` um JSON (`OcrResultMessage`) com status, `confidenceGeral`, `dadosExtraidos`, `confidences`, `camposNaoReconhecidos`, `camposBaixaConfianca` e `erros`.
-7. **Callback** — `OcrCallbackConsumer` recebe a mensagem, atualiza o `OcrProcessamento` (status, `confidenceGeral`, `dadosExtraidosJson`, `resultadoJson`, `dataConclusao`).
-8. **Consulta** — o frontend faz *polling* em `GET /api/raas/ocr/status/{correlationId}` e, quando pronto, em `GET /api/raas/ocr/resultado/{correlationId}`.
-9. **Revisão** — o usuário confere/corrige os dados extraídos no formulário.
-10. **Aceite** — `POST /api/raas/ocr/aceitar` persiste, de forma **transacional**, o `Paciente` (novo ou reutilizado pelo cartão SUS), o `Atendimento` e o `Raas` com as ações.
+2. **Processamento** — `RaasOcrService` gera um `correlationId` e `OcrClientService` envia o arquivo ao **microserviço de OCR** (FastAPI + Docling) via REST (`POST /v1/raas/ocr`).
+3. **Registro** — o resultado (`OcrResultMessage`) é persistido em `OcrProcessamento` com status `CONCLUIDO`/`REVISAO_MANUAL`/`FALHA`, `confidenceGeral`, `dadosExtraidosJson` e `resultadoJson`.
+4. **Consulta** — o frontend consulta `GET /api/raas/ocr/status/{correlationId}` e `GET /api/raas/ocr/resultado/{correlationId}` (já prontos).
+5. **Revisão** — o usuário confere/corrige os dados extraídos no formulário.
+6. **Aceite** — `POST /api/raas/ocr/aceitar` persiste, de forma **transacional**, o `Paciente` (novo ou reutilizado pelo cartão SUS), o `Atendimento` e o `Raas` com as ações.
 
-> **Importante:** nada é persistido no momento do callback do OCR; a persistência dos dados de negócio ocorre **somente no aceite**.
+> **Importante:** o processamento de OCR ocorre no momento do upload (síncrono); a persistência dos dados de negócio ocorre **somente no aceite**.
 
 ---
 
@@ -1005,4 +974,5 @@ Além disso, alguns controllers tratam erros localmente e podem responder `409 C
 - `GET /api/raas/{id}/pdf` está sem implementação (JasperReports comentado no `RaasService`).
 - O sistema possui apenas duas roles (`USER` e `ADMIN`); ambos acessam os endpoints de negócio e `/api/auditoria`, `/api/usuarios` e `POST /auth/register` são exclusivos do `ADMIN`.
 - O schema é gerenciado por `ddl-auto=update` (Flyway presente, porém desabilitado).
-- O fluxo OCR depende de um **worker externo** consumindo `raas.ocr.request` e publicando em `raas.ocr.response` — não faz parte deste repositório.
+- O fluxo OCR depende do **microserviço Python** (`../ocr-service/`), FastAPI + Docling, chamado via REST em `POST /v1/raas/ocr`.
+- A extração de campos do formulário RAAS é baseada em regras/regex e **precisa ser calibrada com um PDF real do formulário** usado na região (veja `../ocr-service/README.md`).

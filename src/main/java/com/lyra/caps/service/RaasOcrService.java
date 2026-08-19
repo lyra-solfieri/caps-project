@@ -2,6 +2,7 @@ package com.lyra.caps.service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,37 +19,70 @@ import com.lyra.caps.util.LogPersonalizado;
 @Service
 public class RaasOcrService {
 
-    private final OcrGatewayService ocrGateway;
+    private final OcrClientService ocrClient;
     private final OcrProcessamentoRepository repository;
     private final ObjectMapper objectMapper;
 
-    public RaasOcrService(OcrGatewayService ocrGateway,
+    public RaasOcrService(OcrClientService ocrClient,
                           OcrProcessamentoRepository repository,
                           ObjectMapper objectMapper) {
-        this.ocrGateway = ocrGateway;
+        this.ocrClient = ocrClient;
         this.repository = repository;
         this.objectMapper = objectMapper;
     }
 
     public RaasOcrUploadResponse upload(MultipartFile file, Long pacienteId) {
-        
-        String correlationId = ocrGateway.enviarParaOcr(file, pacienteId);
+
+        String correlationId = UUID.randomUUID().toString();
+
+        // Processamento síncrono: envia o arquivo ao microserviço de OCR via REST.
+        OcrResultMessage resultado = ocrClient.processar(file, correlationId);
 
         OcrProcessamento proc = new OcrProcessamento();
         proc.setCorrelationId(correlationId);
         proc.setOriginalFileName(file.getOriginalFilename());
         proc.setPacienteId(pacienteId);
-        proc.setStatus(OcrStatus.EM_PROCESSAMENTO);
+        proc.setStatus(statusOuFalha(resultado));
+        proc.setConfidenceGeral(resultado.getConfidenceGeral());
         proc.setDataCriacao(LocalDateTime.now());
+        proc.setDataConclusao(LocalDateTime.now());
+
+        if (resultado.getDadosExtraidos() != null) {
+            try {
+                proc.setDadosExtraidosJson(
+                    objectMapper.writeValueAsString(resultado.getDadosExtraidos()));
+            } catch (JsonProcessingException e) {
+                LogPersonalizado.getLogger(this.getClass())
+                    .error("Erro ao serializar dados extraídos", e);
+            }
+        }
+        try {
+            proc.setResultadoJson(objectMapper.writeValueAsString(resultado));
+        } catch (JsonProcessingException e) {
+            LogPersonalizado.getLogger(this.getClass())
+                .error("Erro ao serializar resultado OCR", e);
+        }
         repository.save(proc);
 
         LogPersonalizado.getLogger(this.getClass())
-            .info(String.format("RAAS enviado para OCR: correlationId=%s, file=%s",
-                    correlationId, file.getOriginalFilename()));
+            .info(String.format("RAAS processado por OCR: correlationId=%s, file=%s, status=%s",
+                    correlationId, file.getOriginalFilename(), proc.getStatus()));
 
         return new RaasOcrUploadResponse(
-            correlationId, proc.getId(), OcrStatus.EM_PROCESSAMENTO,
-            "Documento enviado para processamento OCR");
+            correlationId, proc.getId(), proc.getStatus(),
+            "Documento processado");
+    }
+
+    private OcrStatus statusOuFalha(OcrResultMessage resultado) {
+        String status = resultado != null ? resultado.getStatus() : null;
+        if (status == null) {
+            return OcrStatus.FALHA;
+        }
+        try {
+            return OcrStatus.valueOf(status);
+        } catch (IllegalArgumentException e) {
+            return OcrStatus.FALHA;
+        }
     }
 
     public Optional<OcrProcessamento> consultarStatus(String correlationId) {
