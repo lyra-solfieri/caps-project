@@ -64,13 +64,18 @@ public class RaasOcrService {
         }
         repository.save(proc);
 
+        boolean sucesso = proc.getStatus() != OcrStatus.FALHA;
+        String mensagem = sucesso
+            ? "Documento processado com sucesso"
+            : "Não foi possível processar o documento. Revise o arquivo e tente novamente.";
+
         LogPersonalizado.getLogger(this.getClass())
-            .info(String.format("RAAS processado por OCR: correlationId=%s, file=%s, status=%s",
-                    correlationId, file.getOriginalFilename(), proc.getStatus()));
+            .info(String.format("RAAS processado por OCR: correlationId=%s, file=%s, status=%s, mensagem=%s, erros=%s",
+                    correlationId, file.getOriginalFilename(), proc.getStatus(), mensagem, resultado.getErros()));
 
         return new RaasOcrUploadResponse(
             correlationId, proc.getId(), proc.getStatus(),
-            "Documento processado");
+            mensagem, resultado.getErros());
     }
 
     private OcrStatus statusOuFalha(OcrResultMessage resultado) {

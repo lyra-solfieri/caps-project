@@ -33,14 +33,30 @@ public class RaasOcrController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> upload(
-            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "pacienteId", required = false) Long pacienteId) {
+        LogPersonalizado.getLogger(this.getClass())
+            .info(String.format("Recebido upload OCR | pacienteId=%s | nomeArquivo=%s | tamanho=%s | contentType=%s",
+                    pacienteId,
+                    file != null ? file.getOriginalFilename() : "null",
+                    file != null ? file.getSize() : "null",
+                    file != null ? file.getContentType() : "null"));
+
+        if (file == null || file.isEmpty()) {
+            LogPersonalizado.getLogger(this.getClass())
+                .warn("Upload OCR rejeitado: arquivo ausente ou vazio | pacienteId=" + pacienteId);
+            return ResponseEntity.badRequest().body(java.util.Map.of(
+                    "message", "Nenhum arquivo foi enviado ou o arquivo está vazio. Envie um PDF ou imagem."));
+        }
         try {
             RaasOcrUploadResponse response = raasOcrService.upload(file, pacienteId);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            LogPersonalizado.getLogger(this.getClass()).error("Erro no upload OCR", e);
-            return ResponseEntity.internalServerError().body("Erro ao processar upload: " + e.getMessage());
+            LogPersonalizado.getLogger(this.getClass())
+                .error("Erro no upload OCR | nomeArquivo=" + file.getOriginalFilename()
+                        + " | tamanho=" + file.getSize(), e);
+            return ResponseEntity.internalServerError().body(java.util.Map.of(
+                    "message", "Erro ao processar o upload: " + e.getMessage()));
         }
     }
 
