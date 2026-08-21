@@ -64,6 +64,15 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- HttpClient usado pelo RestClient do OcrClientService. Sem esta dependência,
+		     o RestClient usa o JDK HttpClient, que envia os headers 'Connection: Upgrade'
+		     e 'Upgrade: h2c' e faz o uvicorn do microserviço de OCR corromper o parsing
+		     do multipart (HTTP 422 "Field required"). -->
+		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
