@@ -114,6 +114,13 @@
 			<groupId>net.sourceforge.tess4j</groupId>
 			<artifactId>tess4j</artifactId>
 			<version>4.5.3</version>
+			<exclusions>
+				<!-- iText antigo conflita com o OpenPDF exigido pelo JasperReports -->
+				<exclusion>
+					<groupId>com.lowagie</groupId>
+					<artifactId>itext</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -160,11 +167,11 @@
 	
 		</dependency>
 
-		<!-- <dependency>
+		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>6.20.0</version>
-		</dependency> -->
+			<version>6.20.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>

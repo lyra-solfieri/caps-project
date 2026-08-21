@@ -14,6 +14,8 @@ import com.lyra.caps.dto.RaasRequestDTO;
 import com.lyra.caps.service.IRaasService;
 import com.lyra.caps.util.LogPersonalizado;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @RestController
 @RequestMapping("/api/raas")
 @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -39,6 +41,9 @@ public class RaasController {
     public ResponseEntity<?> buscar(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(raasService.buscarPorId(id));
+        } catch (EntityNotFoundException e) {
+            LogPersonalizado.getLogger(this.getClass()).warn("RAAS não encontrado: {}" + id);
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             LogPersonalizado.getLogger(this.getClass()).error("Erro ao buscar RAAS", e);
             return ResponseEntity.internalServerError().build();
@@ -73,6 +78,9 @@ public class RaasController {
             return ResponseEntity.ok()
                 .header("Content-Disposition", "inline; filename=raas_" + id + ".pdf")
                 .body(pdf);
+        } catch (EntityNotFoundException e) {
+            LogPersonalizado.getLogger(this.getClass()).warn("RAAS não encontrado para geração de PDF: {}" + id);
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             LogPersonalizado.getLogger(this.getClass()).error("Erro ao gerar PDF do RAAS", e);
             return ResponseEntity.internalServerError().build();

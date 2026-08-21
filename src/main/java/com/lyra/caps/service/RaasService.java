@@ -1,6 +1,9 @@
 package com.lyra.caps.service;
 
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,16 +20,21 @@ import com.lyra.caps.repository.AtendimentoRepository;
 import com.lyra.caps.repository.PacienteRepository;
 import com.lyra.caps.repository.RaasRepository;
 
-// import net.sf.jasperreports.engine.JREmptyDataSource;
-// import net.sf.jasperreports.engine.JasperCompileManager;
-// import net.sf.jasperreports.engine.JasperExportManager;
-// import net.sf.jasperreports.engine.JasperFillManager;
-// import net.sf.jasperreports.engine.JasperPrint;
-// import net.sf.jasperreports.engine.JasperReport;
-// import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import jakarta.persistence.EntityNotFoundException;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Service
 public class RaasService implements IRaasService {
+
+    private static final DateTimeFormatter DATA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final String TEMPLATE_PATH = "/reports/raas.jrxml";
 
     private final RaasRepository raasRepository;
     private final PacienteRepository pacienteRepository;
@@ -34,8 +42,9 @@ public class RaasService implements IRaasService {
     private final AuditoriaService auditoriaService;
     private final UserService userService;
 
+    private JasperReport templateCache;
 
-    public RaasService(RaasRepository raasRepository, PacienteRepository pacienteRepository, 
+    public RaasService(RaasRepository raasRepository, PacienteRepository pacienteRepository,
             AtendimentoRepository atendimentoRepository, AuditoriaService auditoriaService,
             UserService userService) {
 
@@ -67,21 +76,26 @@ public class RaasService implements IRaasService {
         raas.setNomeEstabelecimento(dto.getNomeEstabelecimento());
         raas.setCnes(dto.getCnes());
 
-        
+
         raas.setPaciente(paciente);
         raas.setAtendimento(atendimento);
 
-        
+
         raas.setNomePaciente(paciente.getNome());
         raas.setCartaoSus(paciente.getNumeroCartaoSUS());
         raas.setDataNascimento(paciente.getDataNascimento().toString());
         raas.setNomeMae(paciente.getNomeMae());
+        raas.setSexo(paciente.getGenero() != null ? paciente.getGenero().name() : null);
 
-        
+
         raas.setDataAdmissao(atendimento.getDataAdmissao());
         raas.setDataConclusao(atendimento.getDataConclusao());
         raas.setMesAtendimento(atendimento.getMesAtendimento());
         raas.setNumeroAutorizacao(atendimento.getNumeroAutorizacao());
+
+        raas.setStatus(true);
+        raas.setEnviadoSUS(false);
+        raas.setDataGeracao(LocalDate.now());
 
         // raas.setCidPrincipal(atendimento.getCidPrincipal());
         // raas.setDescricaoCidPrincipal(atendimento.getDescricaoCidPrincipal());
@@ -122,7 +136,7 @@ public class RaasService implements IRaasService {
     @Override
     public Raas buscarPorId(Long id) {
         return raasRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("RAAS não encontrado"));
+            .orElseThrow(() -> new EntityNotFoundException("RAAS não encontrado"));
     }
 
     @Override
@@ -136,79 +150,84 @@ public class RaasService implements IRaasService {
     }
 
     @Override
-        public void deletar(Long id) {
-            try {
-                raasRepository.deleteById(id);
+    public void deletar(Long id) {
+        try {
+            raasRepository.deleteById(id);
 
-                auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.EXCLUSAO, "Raas", id,
-                        "RAAS excluido - ID: " + id, null);
-            } catch (Exception e) {
-                throw new RuntimeException("Raas nao encontrado");
+            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.EXCLUSAO, "Raas", id,
+                    "RAAS excluido - ID: " + id, null);
+        } catch (Exception e) {
+            throw new RuntimeException("Raas nao encontrado");
+        }
+    }
+
+    @Override
+    public byte[] gerarPdf(Long raasId) {
+
+        Raas raas = raasRepository.findById(raasId)
+            .orElseThrow(() -> new EntityNotFoundException("RAAS não encontrado"));
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("nomeEstabelecimento", safe(raas.getNomeEstabelecimento()));
+        params.put("cnes", safe(raas.getCnes()));
+
+        params.put("nomePaciente", safe(raas.getNomePaciente()));
+        params.put("cartaoSus", safe(raas.getCartaoSus()));
+        params.put("sexo", safe(raas.getSexo()));
+        params.put("dataNascimento", formatarDataTexto(raas.getDataNascimento()));
+        params.put("nomeMae", safe(raas.getNomeMae()));
+
+        params.put("dataAdmissao", formatarData(raas.getDataAdmissao()));
+        params.put("dataConclusao", formatarData(raas.getDataConclusao()));
+        params.put("mesAtendimento", safe(raas.getMesAtendimento()));
+        params.put("numeroAutorizacao", raas.getNumeroAutorizacao() != null ? raas.getNumeroAutorizacao().toString() : "");
+
+        List<RaasAcao> acoes = raas.getAcoes() != null ? raas.getAcoes() : List.of();
+        params.put("acoesDataset", new JRBeanCollectionDataSource(acoes));
+
+        try {
+            JasperPrint jasperPrint = JasperFillManager.fillReport(template(), params, new JREmptyDataSource());
+            return JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (JRException e) {
+            throw new RuntimeException("Erro ao gerar PDF do RAAS", e);
+        }
+    }
+
+    private JasperReport template() {
+        if (templateCache == null) {
+            synchronized (this) {
+                if (templateCache == null) {
+                    try (InputStream reportStream = getClass().getResourceAsStream(TEMPLATE_PATH)) {
+                        if (reportStream == null) {
+                            throw new IllegalStateException("Template RAAS não encontrado em " + TEMPLATE_PATH);
+                        }
+                        templateCache = JasperCompileManager.compileReport(reportStream);
+                    } catch (JRException | java.io.IOException e) {
+                        throw new RuntimeException("Erro ao compilar template do RAAS", e);
+                    }
+                }
             }
         }
+        return templateCache;
+    }
 
-   @Override
-   public byte[] gerarPdf(Long raasId) {
+    private static String safe(String valor) {
+        return valor != null ? valor : "";
+    }
 
-//     try {
+    private static String formatarData(LocalDate data) {
+        return data != null ? data.format(DATA_FORMATTER) : "";
+    }
 
-//         Raas raas = raasRepository.findById(raasId).orElseThrow(
-//                  () -> new RuntimeException("Raas não encontrada") );
-
-//         Map<String, Object> params = new HashMap<>();
-
-
-//         params.put("nomeEstabelecimento", (raas.getNomeEstabelecimento()));
-//         params.put("cnes", (raas.getCnes()));
-
-
-//         params.put("nomePaciente", (raas.getNomePaciente()));
-//         params.put("cartaoSus", raas.getCartaoSus());
-//         params.put("dataNascimento", (raas.getDataNascimento()));
-//         params.put("nomeMae", (raas.getNomeMae()));
-
-
-//         params.put("dataAdmissao", raas.getDataAdmissao());
-//         params.put("dataConclusao", raas.getDataConclusao());
-//         params.put("mesAtendimento", (raas.getMesAtendimento()));
-//         params.put("numeroAutorizacao", raas.getNumeroAutorizacao());
-
-//         // params.put("cidPrincipal", safe(raas.getCidPrincipal()));
-//         // params.put("descricaoCidPrincipal", safe(raas.getDescricaoCidPrincipal()));
-
-//         // params.put("cidSecundario", safe(raas.getCidSecundario()));
-//         // params.put("descricaoCidSecundario", safe(raas.getDescricaoCidSecundario()));
-
-
-//         JRBeanCollectionDataSource acoesDataSource =
-//             new JRBeanCollectionDataSource(raas.getAcoes());
-
-//         params.put("acoesDataset", acoesDataSource);
-
-
-//         InputStream reportStream = getClass()
-//             .getResourceAsStream("/reports/raas.jrxml");
-
-//         if (reportStream == null) {
-//             throw new RuntimeException("Template RAAS não encontrado em /reports/raas.jrxml");
-//         }
-
-//         JasperReport jasperReport =
-//             JasperCompileManager.compileReport(reportStream);
-
-//         JasperPrint jasperPrint =
-//             JasperFillManager.fillReport(
-//                 jasperReport,
-//                 params,
-//                 new JREmptyDataSource()
-//             );
-
-//         return JasperExportManager.exportReportToPdf(jasperPrint);
-
-//     } catch (Exception e) {
-//         throw new RuntimeException("Erro ao gerar PDF do RAAS", e);
-//     }
-// }
-    return null;
+    private static String formatarDataTexto(String textoIso) {
+        if (textoIso == null || textoIso.isBlank()) {
+            return "";
+        }
+        try {
+            return LocalDate.parse(textoIso).format(DATA_FORMATTER);
+        } catch (DateTimeParseException e) {
+            return textoIso;
+        }
     }
 }

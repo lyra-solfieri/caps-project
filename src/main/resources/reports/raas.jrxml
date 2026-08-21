@@ -1,144 +1,417 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
-    http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+    xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+    xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd
+    http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
     name="raas" pageWidth="595" pageHeight="842" columnWidth="555"
     leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <!-- ================= SUBDATASET DAS ACOES ================= -->
+    <subDataset name="acoes">
+        <field name="codigoAcao" class="java.lang.String"/>
+        <field name="quantidade" class="java.lang.Integer"/>
+        <field name="data" class="java.time.LocalDate"/>
+        <field name="cid10" class="java.lang.String"/>
+        <field name="servico" class="java.lang.String"/>
+        <field name="classificacao" class="java.lang.String"/>
+        <field name="cboExecutor" class="java.lang.String"/>
+        <field name="cartaoProfissional" class="java.lang.String"/>
+        <field name="codigoEquipe" class="java.lang.String"/>
+        <field name="caps" class="java.lang.Boolean"/>
+        <field name="territorio" class="java.lang.Boolean"/>
+    </subDataset>
 
     <!-- ================= PARAMETROS ================= -->
     <parameter name="nomeEstabelecimento" class="java.lang.String"/>
     <parameter name="cnes" class="java.lang.String"/>
     <parameter name="nomePaciente" class="java.lang.String"/>
-    <parameter name="cartaoSus" class="java.lang.Long"/>
+    <parameter name="cartaoSus" class="java.lang.String"/>
+    <parameter name="sexo" class="java.lang.String"/>
     <parameter name="dataNascimento" class="java.lang.String"/>
     <parameter name="nomeMae" class="java.lang.String"/>
-    <parameter name="dataAdmissao" class="java.time.LocalDate"/>
-    <parameter name="dataConclusao" class="java.time.LocalDate"/>
+    <parameter name="dataAdmissao" class="java.lang.String"/>
+    <parameter name="dataConclusao" class="java.lang.String"/>
     <parameter name="mesAtendimento" class="java.lang.String"/>
-    <parameter name="numeroAutorizacao" class="java.lang.Long"/>
+    <parameter name="numeroAutorizacao" class="java.lang.String"/>
 
     <parameter name="acoesDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 
     <!-- ================= TITULO ================= -->
     <title>
-        <band height="60">
+        <band height="70">
             <staticText>
-                <reportElement x="0" y="0" width="555" height="20"/>
-                <textElement textAlignment="Center">
+                <reportElement x="0" y="0" width="555" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="12" isBold="true"/>
                 </textElement>
                 <text><![CDATA[MINISTÉRIO DA SAÚDE]]></text>
             </staticText>
 
             <staticText>
-                <reportElement x="0" y="20" width="555" height="20"/>
-                <textElement textAlignment="Center">
+                <reportElement x="0" y="25" width="555" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
                 </textElement>
-                <text><![CDATA[RAAS - REGISTRO DAS AÇÕES AMBULATORIAIS]]></text>
+                <text><![CDATA[RAAS - REGISTRO DAS AÇÕES AMBULATORIAIS DE SAÚDE]]></text>
             </staticText>
         </band>
     </title>
 
     <!-- ================= DETALHE ================= -->
     <detail>
-        <band height="400">
+        <band height="280">
 
             <!-- ESTABELECIMENTO -->
             <staticText>
                 <reportElement x="0" y="0" width="300" height="15"/>
-                <text><![CDATA[NOME ESTABELECIMENTO]]></text>
+                <textElement><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[NOME DO ESTABELECIMENTO]]></text>
             </staticText>
-
-            <textField>
+            <textField isBlankWhenNull="true">
                 <reportElement x="0" y="15" width="300" height="15"/>
+                <textElement><font size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{nomeEstabelecimento}]]></textFieldExpression>
             </textField>
 
             <staticText>
                 <reportElement x="310" y="0" width="100" height="15"/>
+                <textElement><font size="7" isBold="true"/></textElement>
                 <text><![CDATA[CNES]]></text>
             </staticText>
-
-            <textField>
+            <textField isBlankWhenNull="true">
                 <reportElement x="310" y="15" width="100" height="15"/>
+                <textElement><font size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{cnes}]]></textFieldExpression>
             </textField>
 
             <!-- PACIENTE -->
             <staticText>
-                <reportElement x="0" y="40" width="300" height="15"/>
-                <text><![CDATA[NOME PACIENTE]]></text>
+                <reportElement x="0" y="40" width="400" height="15"/>
+                <textElement><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[NOME DO PACIENTE]]></text>
             </staticText>
-
-            <textField>
-                <reportElement x="0" y="55" width="300" height="15"/>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="55" width="400" height="15"/>
+                <textElement><font size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{nomePaciente}]]></textFieldExpression>
             </textField>
 
             <staticText>
-                <reportElement x="0" y="75" width="200" height="15"/>
-                <text><![CDATA[CARTÃO SUS]]></text>
+                <reportElement x="0" y="75" width="160" height="15"/>
+                <textElement><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[CARTÃO NACIONAL DE SAÚDE]]></text>
             </staticText>
-
-            <textField>
-                <reportElement x="0" y="90" width="200" height="15"/>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="90" width="160" height="15"/>
+                <textElement><font size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{cartaoSus}]]></textFieldExpression>
             </textField>
 
             <staticText>
-                <reportElement x="210" y="75" width="200" height="15"/>
-                <text><![CDATA[DATA NASCIMENTO]]></text>
+                <reportElement x="170" y="75" width="110" height="15"/>
+                <textElement><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[DATA DE NASCIMENTO]]></text>
             </staticText>
-
-            <textField>
-                <reportElement x="210" y="90" width="200" height="15"/>
+            <textField isBlankWhenNull="true">
+                <reportElement x="170" y="90" width="110" height="15"/>
+                <textElement><font size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{dataNascimento}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="290" y="75" width="110" height="15"/>
+                <textElement><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[SEXO]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="290" y="90" width="110" height="15"/>
+                <textElement><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{sexo}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="110" width="400" height="15"/>
+                <textElement><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[NOME DA MÃE]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="125" width="400" height="15"/>
+                <textElement><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{nomeMae}]]></textFieldExpression>
             </textField>
 
             <!-- ATENDIMENTO -->
             <staticText>
-                <reportElement x="0" y="120" width="150" height="15"/>
-                <text><![CDATA[DATA ADMISSÃO]]></text>
+                <reportElement x="0" y="145" width="130" height="15"/>
+                <textElement><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[DATA DE ADMISSÃO]]></text>
             </staticText>
-
-            <textField>
-                <reportElement x="0" y="135" width="150" height="15"/>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="160" width="130" height="15"/>
+                <textElement><font size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{dataAdmissao}]]></textFieldExpression>
             </textField>
 
             <staticText>
-                <reportElement x="160" y="120" width="150" height="15"/>
-                <text><![CDATA[MÊS ATENDIMENTO]]></text>
+                <reportElement x="140" y="145" width="130" height="15"/>
+                <textElement><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[DATA DE CONCLUSÃO]]></text>
             </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="140" y="160" width="130" height="15"/>
+                <textElement><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{dataConclusao}]]></textFieldExpression>
+            </textField>
 
-            <textField>
-                <reportElement x="160" y="135" width="150" height="15"/>
+            <staticText>
+                <reportElement x="280" y="145" width="120" height="15"/>
+                <textElement><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[MÊS DE ATENDIMENTO]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="280" y="160" width="120" height="15"/>
+                <textElement><font size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{mesAtendimento}]]></textFieldExpression>
             </textField>
 
             <staticText>
-                <reportElement x="320" y="120" width="150" height="15"/>
+                <reportElement x="410" y="145" width="145" height="15"/>
+                <textElement><font size="7" isBold="true"/></textElement>
                 <text><![CDATA[Nº AUTORIZAÇÃO]]></text>
             </staticText>
-
-            <textField>
-                <reportElement x="320" y="135" width="150" height="15"/>
+            <textField isBlankWhenNull="true">
+                <reportElement x="410" y="160" width="145" height="15"/>
+                <textElement><font size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{numeroAutorizacao}]]></textFieldExpression>
             </textField>
 
-        </band>
-    </detail>
+            <!-- ACOES -->
+            <staticText>
+                <reportElement x="0" y="185" width="555" height="15"/>
+                <textElement textAlignment="Center"><font size="8" isBold="true"/></textElement>
+                <text><![CDATA[AÇÕES REGISTRADAS]]></text>
+            </staticText>
 
-    <!-- ================= AÇÕES ================= -->
-    <detail>
-        <band height="20">
-            <subreport>
-                <reportElement x="0" y="0" width="555" height="20"/>
-                <dataSourceExpression><![CDATA[$P{acoesDataset}]]></dataSourceExpression>
-                <subreportExpression><![CDATA["subreport_acoes.jasper"]]></subreportExpression>
-            </subreport>
+            <componentElement>
+                <reportElement x="0" y="200" width="555" height="80"/>
+                <jr:table>
+                    <datasetRun subDataset="acoes">
+                        <dataSourceExpression><![CDATA[$P{acoesDataset}]]></dataSourceExpression>
+                    </datasetRun>
+
+                    <jr:column width="60">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="60" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[CÓDIGO]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="60" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{codigoAcao}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                    <jr:column width="35">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="35" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement textAlignment="Center"><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[QTD]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="35" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement textAlignment="Center"><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                    <jr:column width="60">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="60" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[DATA]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="60" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{data} != null ? $F{data}.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) : ""]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                    <jr:column width="50">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="50" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[CID-10]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="50" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{cid10}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                    <jr:column width="70">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="70" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[SERVIÇO]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="70" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{servico}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                    <jr:column width="55">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="55" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[CLASSIF.]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="55" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{classificacao}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                    <jr:column width="45">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="45" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[CBO EXEC.]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="45" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{cboExecutor}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                    <jr:column width="75">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="75" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[CARTÃO PROF.]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="75" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{cartaoProfissional}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                    <jr:column width="45">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="45" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[EQUIPE]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="45" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{codigoEquipe}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                    <jr:column width="30">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="30" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement textAlignment="Center"><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[CAPS]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="30" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement textAlignment="Center"><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{caps} ? "SIM" : ""]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                    <jr:column width="30">
+                        <jr:columnHeader height="16">
+                            <staticText>
+                                <reportElement x="0" y="0" width="30" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement textAlignment="Center"><font size="7" isBold="true"/></textElement>
+                                <text><![CDATA[TERRIT.]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell height="16">
+                            <textField isBlankWhenNull="true">
+                                <reportElement x="0" y="0" width="30" height="16"/>
+                                <box><pen lineWidth="0.5"/></box>
+                                <textElement textAlignment="Center"><font size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{territorio} ? "SIM" : ""]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+
+                </jr:table>
+            </componentElement>
+
         </band>
     </detail>
 
