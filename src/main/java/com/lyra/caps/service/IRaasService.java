@@ -2,19 +2,28 @@ package com.lyra.caps.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
+import com.lyra.caps.dto.RaasPageResponse;
 import com.lyra.caps.dto.RaasRequestDTO;
-import com.lyra.caps.model.Raas;
+import com.lyra.caps.dto.RaasResponseDTO;
 
 public interface IRaasService {
 
 
-    Raas gerarRaas(RaasRequestDTO dto);
+    RaasResponseDTO gerarRaas(RaasRequestDTO dto);
 
 
-    Raas buscarPorId(Long id);
+    RaasResponseDTO atualizar(Long id, RaasRequestDTO dto);
 
 
-    List<Raas> listarPorPaciente(Long pacienteId);
+    RaasResponseDTO buscarPorId(Long id);
+
+
+    List<RaasResponseDTO> listarPorPaciente(Long pacienteId);
+
+
+    RaasPageResponse listarPaginado(Pageable pageable);
 
 
     void deletar(Long id);

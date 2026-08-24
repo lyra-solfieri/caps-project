@@ -77,7 +77,7 @@ public class RaasOcrController {
     @PostMapping("/aceitar")
     public ResponseEntity<?> aceitar(@RequestBody RaasAceitarDTO dto) {
         try {
-            return ResponseEntity.ok(raasAceiteService.aceitar(dto));
+            return ResponseEntity.ok(com.lyra.caps.dto.RaasResponseDTO.fromEntity(raasAceiteService.aceitar(dto)));
         } catch (IllegalArgumentException | IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
