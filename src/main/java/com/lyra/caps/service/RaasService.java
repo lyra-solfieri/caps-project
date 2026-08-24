@@ -1,5 +1,6 @@
 package com.lyra.caps.service;
 
+import java.awt.Image;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,6 +8,8 @@ import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,6 +44,7 @@ public class RaasService implements IRaasService {
 
     private static final DateTimeFormatter DATA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final String TEMPLATE_PATH = "/reports/raas.jrxml";
+    private static final String HEADER_ICONES_PATH = "/reports/images/header_raas_icones.png";
 
     private final RaasRepository raasRepository;
     private final PacienteRepository pacienteRepository;
@@ -289,6 +293,7 @@ public class RaasService implements IRaasService {
 
         Map<String, Object> params = new HashMap<>();
 
+        params.put("headerIcones", carregarImagemCabecalho());
         params.put("nomeEstabelecimento", safe(raas.getNomeEstabelecimento()));
         params.put("cnes", safe(raas.getCnes()));
 
@@ -387,6 +392,14 @@ public class RaasService implements IRaasService {
 
     private static String safe(String valor) {
         return valor != null ? valor : "";
+    }
+
+    private static Image carregarImagemCabecalho() {
+        try (InputStream is = RaasService.class.getResourceAsStream(HEADER_ICONES_PATH)) {
+            return is != null ? ImageIO.read(is) : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static String marcar(boolean valor) {

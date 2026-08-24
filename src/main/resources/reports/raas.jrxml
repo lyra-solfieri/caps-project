@@ -74,6 +74,8 @@
 
     <parameter name="acoesDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 
+    <parameter name="headerIcones" class="java.awt.Image"/>
+
     <!-- ================= CABECALHO + ESTABELECIMENTO ================= -->
     <title>
         <band height="88">
@@ -83,38 +85,31 @@
                 <graphicElement><pen lineWidth="2"/></graphicElement>
             </rectangle>
 
-            <rectangle>
-                <reportElement x="8" y="8" width="62" height="28"/>
-                <graphicElement><pen lineWidth="1.5"/></graphicElement>
-            </rectangle>
-            <staticText>
-                <reportElement x="8" y="8" width="62" height="28"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="15" isBold="true"/>
-                </textElement>
-                <text><![CDATA[SUS]]></text>
-            </staticText>
+            <image scaleImage="RetainShape" onErrorType="Blank">
+                <reportElement x="8" y="6" width="127" height="32"/>
+                <imageExpression><![CDATA[$P{headerIcones}]]></imageExpression>
+            </image>
 
             <staticText>
-                <reportElement x="75" y="2" width="405" height="14"/>
+                <reportElement x="139" y="2" width="408" height="14"/>
                 <textElement textAlignment="Center">
                     <font fontName="Arial" size="10" isBold="true"/>
                 </textElement>
                 <text><![CDATA[MINISTÉRIO DA SAÚDE]]></text>
             </staticText>
             <staticText>
-                <reportElement x="75" y="16" width="405" height="18"/>
+                <reportElement x="139" y="16" width="408" height="18"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font fontName="Arial" size="12" isBold="true"/>
                 </textElement>
-                <text><![CDATA[RAAS — REGISTRO DAS AÇÕES AMBULATORIAIS ESPECIALIZADAS]]></text>
+                <text><![CDATA[RAAS — Registro das Ações Ambulatoriais de Saúde]]></text>
             </staticText>
             <staticText>
-                <reportElement x="75" y="34" width="405" height="11" forecolor="#444444"/>
+                <reportElement x="139" y="34" width="408" height="11" forecolor="#444444"/>
                 <textElement textAlignment="Center">
                     <font fontName="Arial" size="7"/>
                 </textElement>
-                <text><![CDATA[(PSICOSSOCIAL E ATENÇÃO ESPECIALIZADA)]]></text>
+                <text><![CDATA[(Formulário da Atenção Psicossocial no CAPS))]]></text>
             </staticText>
 
             <rectangle>
