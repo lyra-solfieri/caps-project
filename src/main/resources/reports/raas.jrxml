@@ -25,225 +25,622 @@
     <!-- ================= PARAMETROS ================= -->
     <parameter name="nomeEstabelecimento" class="java.lang.String"/>
     <parameter name="cnes" class="java.lang.String"/>
+
+    <parameter name="numeroProntuario" class="java.lang.String"/>
     <parameter name="nomePaciente" class="java.lang.String"/>
     <parameter name="cartaoSus" class="java.lang.String"/>
     <parameter name="sexo" class="java.lang.String"/>
     <parameter name="dataNascimento" class="java.lang.String"/>
+    <parameter name="racaCor" class="java.lang.String"/>
+    <parameter name="nacionalidade" class="java.lang.String"/>
+    <parameter name="etniaIndigena" class="java.lang.String"/>
     <parameter name="nomeMae" class="java.lang.String"/>
+    <parameter name="nomeResponsavel" class="java.lang.String"/>
+    <parameter name="municipio" class="java.lang.String"/>
+    <parameter name="uf" class="java.lang.String"/>
+    <parameter name="codigoIbge" class="java.lang.String"/>
+    <parameter name="cep" class="java.lang.String"/>
+    <parameter name="telefoneCelular" class="java.lang.String"/>
+    <parameter name="endereco" class="java.lang.String"/>
+    <parameter name="complemento" class="java.lang.String"/>
+    <parameter name="telefoneContato" class="java.lang.String"/>
+
     <parameter name="dataAdmissao" class="java.lang.String"/>
-    <parameter name="dataConclusao" class="java.lang.String"/>
     <parameter name="mesAtendimento" class="java.lang.String"/>
     <parameter name="numeroAutorizacao" class="java.lang.String"/>
+    <parameter name="usoDrogasSim" class="java.lang.String"/>
+    <parameter name="usoDrogasNao" class="java.lang.String"/>
+    <parameter name="alcool" class="java.lang.String"/>
+    <parameter name="crack" class="java.lang.String"/>
+    <parameter name="outrasDrogas" class="java.lang.String"/>
+    <parameter name="origemDemanda" class="java.lang.String"/>
+    <parameter name="origemAtencaoBasica" class="java.lang.String"/>
+    <parameter name="origemUrgencia" class="java.lang.String"/>
+    <parameter name="origemCaps" class="java.lang.String"/>
+    <parameter name="origemHospital" class="java.lang.String"/>
+    <parameter name="origemPsiquiatrico" class="java.lang.String"/>
+    <parameter name="cidPrincipal" class="java.lang.String"/>
+    <parameter name="descricaoCidPrincipal" class="java.lang.String"/>
+    <parameter name="cidSecundario" class="java.lang.String"/>
+    <parameter name="descricaoCidSecundario" class="java.lang.String"/>
+    <parameter name="esfSim" class="java.lang.String"/>
+    <parameter name="esfNao" class="java.lang.String"/>
+    <parameter name="cnesAtendimento" class="java.lang.String"/>
+    <parameter name="encaminhamentoCaps" class="java.lang.String"/>
+    <parameter name="encaminhamentoAB" class="java.lang.String"/>
+    <parameter name="alta" class="java.lang.String"/>
+    <parameter name="obito" class="java.lang.String"/>
+    <parameter name="dataConclusao" class="java.lang.String"/>
 
     <parameter name="acoesDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 
-    <!-- ================= TITULO ================= -->
+    <!-- ================= CABECALHO + ESTABELECIMENTO ================= -->
     <title>
-        <band height="70">
+        <band height="88">
+
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="44"/>
+                <graphicElement><pen lineWidth="2"/></graphicElement>
+            </rectangle>
+
+            <rectangle>
+                <reportElement x="8" y="8" width="62" height="28"/>
+                <graphicElement><pen lineWidth="1.5"/></graphicElement>
+            </rectangle>
             <staticText>
-                <reportElement x="0" y="0" width="555" height="25"/>
+                <reportElement x="8" y="8" width="62" height="28"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="12" isBold="true"/>
+                    <font fontName="Arial" size="15" isBold="true"/>
+                </textElement>
+                <text><![CDATA[SUS]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="75" y="2" width="405" height="14"/>
+                <textElement textAlignment="Center">
+                    <font fontName="Arial" size="10" isBold="true"/>
                 </textElement>
                 <text><![CDATA[MINISTÉRIO DA SAÚDE]]></text>
             </staticText>
-
             <staticText>
-                <reportElement x="0" y="25" width="555" height="25"/>
+                <reportElement x="75" y="16" width="405" height="18"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="10" isBold="true"/>
+                    <font fontName="Arial" size="12" isBold="true"/>
                 </textElement>
-                <text><![CDATA[RAAS - REGISTRO DAS AÇÕES AMBULATORIAIS DE SAÚDE]]></text>
+                <text><![CDATA[RAAS — REGISTRO DAS AÇÕES AMBULATORIAIS ESPECIALIZADAS]]></text>
             </staticText>
-        </band>
-    </title>
-
-    <!-- ================= DETALHE ================= -->
-    <detail>
-        <band height="280">
-
-            <!-- ESTABELECIMENTO -->
             <staticText>
-                <reportElement x="0" y="0" width="300" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
-                <text><![CDATA[NOME DO ESTABELECIMENTO]]></text>
+                <reportElement x="75" y="34" width="405" height="11" forecolor="#444444"/>
+                <textElement textAlignment="Center">
+                    <font fontName="Arial" size="7"/>
+                </textElement>
+                <text><![CDATA[(PSICOSSOCIAL E ATENÇÃO ESPECIALIZADA)]]></text>
+            </staticText>
+
+            <rectangle>
+                <reportElement mode="Opaque" backcolor="#17365D" x="0" y="50" width="555" height="13"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="0" y="50" width="555" height="13" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Arial" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[IDENTIFICAÇÃO DO ESTABELECIMENTO DE SAÚDE]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="0" y="63" width="416" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[NOME DO ESTABELECIMENTO DE SAÚDE (DESTINO)]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement x="0" y="15" width="300" height="15"/>
-                <textElement><font size="8"/></textElement>
+                <reportElement x="0" y="72" width="416" height="13"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{nomeEstabelecimento}]]></textFieldExpression>
             </textField>
 
             <staticText>
-                <reportElement x="310" y="0" width="100" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
+                <reportElement x="416" y="63" width="139" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
                 <text><![CDATA[CNES]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement x="310" y="15" width="100" height="15"/>
-                <textElement><font size="8"/></textElement>
+                <reportElement x="416" y="72" width="139" height="13"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{cnes}]]></textFieldExpression>
             </textField>
 
-            <!-- PACIENTE -->
+        </band>
+    </title>
+
+    <!-- ================= USUARIO SUS + ATENDIMENTO + ACOES ================= -->
+    <detail>
+        <band height="345">
+
+            <rectangle>
+                <reportElement mode="Opaque" backcolor="#17365D" x="0" y="0" width="555" height="13"/>
+            </rectangle>
             <staticText>
-                <reportElement x="0" y="40" width="400" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
+                <reportElement x="0" y="0" width="555" height="13" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Arial" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[IDENTIFICAÇÃO DO USUÁRIO SUS]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="0" y="13" width="139" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[Nº DO PRONTUÁRIO]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="22" width="139" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{numeroProntuario}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="139" y="13" width="416" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
                 <text><![CDATA[NOME DO PACIENTE]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement x="0" y="55" width="400" height="15"/>
-                <textElement><font size="8"/></textElement>
+                <reportElement x="139" y="22" width="416" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{nomePaciente}]]></textFieldExpression>
             </textField>
 
             <staticText>
-                <reportElement x="0" y="75" width="160" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
-                <text><![CDATA[CARTÃO NACIONAL DE SAÚDE]]></text>
+                <reportElement x="0" y="37" width="185" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[CARTÃO NACIONAL DE SAÚDE (CNS)]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement x="0" y="90" width="160" height="15"/>
-                <textElement><font size="8"/></textElement>
+                <reportElement x="0" y="46" width="185" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{cartaoSus}]]></textFieldExpression>
             </textField>
-
             <staticText>
-                <reportElement x="170" y="75" width="110" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
-                <text><![CDATA[DATA DE NASCIMENTO]]></text>
-            </staticText>
-            <textField isBlankWhenNull="true">
-                <reportElement x="170" y="90" width="110" height="15"/>
-                <textElement><font size="8"/></textElement>
-                <textFieldExpression><![CDATA[$P{dataNascimento}]]></textFieldExpression>
-            </textField>
-
-            <staticText>
-                <reportElement x="290" y="75" width="110" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
+                <reportElement x="185" y="37" width="46" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
                 <text><![CDATA[SEXO]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement x="290" y="90" width="110" height="15"/>
-                <textElement><font size="8"/></textElement>
+                <reportElement x="185" y="46" width="46" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{sexo}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="231" y="37" width="93" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[DATA NASC.]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="231" y="46" width="93" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{dataNascimento}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="324" y="37" width="93" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[RAÇA/COR]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="324" y="46" width="93" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{racaCor}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="417" y="37" width="138" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[NACIONALIDADE]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="417" y="46" width="138" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{nacionalidade}]]></textFieldExpression>
             </textField>
 
             <staticText>
-                <reportElement x="0" y="110" width="400" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
+                <reportElement x="0" y="61" width="139" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[ETNIA INDÍGENA]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="70" width="139" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{etniaIndigena}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="139" y="61" width="185" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
                 <text><![CDATA[NOME DA MÃE]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement x="0" y="125" width="400" height="15"/>
-                <textElement><font size="8"/></textElement>
+                <reportElement x="139" y="70" width="185" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{nomeMae}]]></textFieldExpression>
             </textField>
-
-            <!-- ATENDIMENTO -->
             <staticText>
-                <reportElement x="0" y="145" width="130" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
+                <reportElement x="324" y="61" width="231" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[NOME DO RESPONSÁVEL]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="324" y="70" width="231" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{nomeResponsavel}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="85" width="185" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[MUNICÍPIO DE RESIDÊNCIA]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="94" width="185" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{municipio}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="185" y="85" width="37" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[UF]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="185" y="94" width="37" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{uf}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="222" y="85" width="111" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[CÓD. IBGE MUNICÍPIO]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="222" y="94" width="111" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{codigoIbge}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="333" y="85" width="93" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[CEP DE RESIDÊNCIA]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="333" y="94" width="93" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{cep}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="426" y="85" width="129" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[TELEFONE CELULAR]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="426" y="94" width="129" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{telefoneCelular}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="109" width="278" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[ENDEREÇO (RUA, NÚMERO)]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="118" width="278" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{endereco}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="278" y="109" width="139" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[COMPLEMENTO]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="278" y="118" width="139" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{complemento}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="417" y="109" width="138" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[TELEFONE DE CONTATO]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="417" y="118" width="138" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{telefoneContato}]]></textFieldExpression>
+            </textField>
+
+            <rectangle>
+                <reportElement mode="Opaque" backcolor="#17365D" x="0" y="133" width="555" height="13"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="0" y="133" width="555" height="13" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Arial" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[DADOS DO ATENDIMENTO]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="0" y="146" width="139" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
                 <text><![CDATA[DATA DE ADMISSÃO]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement x="0" y="160" width="130" height="15"/>
-                <textElement><font size="8"/></textElement>
+                <reportElement x="0" y="155" width="139" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{dataAdmissao}]]></textFieldExpression>
             </textField>
-
             <staticText>
-                <reportElement x="140" y="145" width="130" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
-                <text><![CDATA[DATA DE CONCLUSÃO]]></text>
+                <reportElement x="139" y="146" width="139" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[MÊS ATENDIMENTO]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement x="140" y="160" width="130" height="15"/>
-                <textElement><font size="8"/></textElement>
-                <textFieldExpression><![CDATA[$P{dataConclusao}]]></textFieldExpression>
-            </textField>
-
-            <staticText>
-                <reportElement x="280" y="145" width="120" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
-                <text><![CDATA[MÊS DE ATENDIMENTO]]></text>
-            </staticText>
-            <textField isBlankWhenNull="true">
-                <reportElement x="280" y="160" width="120" height="15"/>
-                <textElement><font size="8"/></textElement>
+                <reportElement x="139" y="155" width="139" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{mesAtendimento}]]></textFieldExpression>
             </textField>
-
             <staticText>
-                <reportElement x="410" y="145" width="145" height="15"/>
-                <textElement><font size="7" isBold="true"/></textElement>
-                <text><![CDATA[Nº AUTORIZAÇÃO]]></text>
+                <reportElement x="278" y="146" width="277" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[NÚMERO DA AUTORIZAÇÃO]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement x="410" y="160" width="145" height="15"/>
-                <textElement><font size="8"/></textElement>
+                <reportElement x="278" y="155" width="277" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{numeroAutorizacao}]]></textFieldExpression>
             </textField>
 
-            <!-- ACOES -->
             <staticText>
-                <reportElement x="0" y="185" width="555" height="15"/>
-                <textElement textAlignment="Center"><font size="8" isBold="true"/></textElement>
-                <text><![CDATA[AÇÕES REGISTRADAS]]></text>
+                <reportElement x="0" y="170" width="300" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[USUÁRIO DE ÁLCOOL E/OU OUTRAS DROGAS?]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="179" width="300" height="10"/>
+                <box><leftPen lineWidth="0.5"/><rightPen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textFieldExpression><![CDATA["NÃO ( " + $P{usoDrogasNao} + " )      SIM ( " + $P{usoDrogasSim} + " )"]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="189" width="300" height="8" forecolor="#555555"/>
+                <box><leftPen lineWidth="0.5"/><rightPen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isItalic="true"/></textElement>
+                <text><![CDATA[Em caso positivo marque uma ou mais alternativas]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="197" width="300" height="25"/>
+                <box><leftPen lineWidth="0.5"/><bottomPen lineWidth="0.5"/><rightPen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="6.5"/></textElement>
+                <textFieldExpression><![CDATA["( " + $P{alcool} + " ) Álcool\n( " + $P{crack} + " ) Crack\n( " + $P{outrasDrogas} + " ) Outras Drogas"]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="300" y="170" width="255" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[ORIGEM DO PACIENTE]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="300" y="179" width="255" height="43"/>
+                <box><leftPen lineWidth="0.5"/><bottomPen lineWidth="0.5"/><rightPen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="6.5"/></textElement>
+                <textFieldExpression><![CDATA["( " + $P{origemDemanda} + " ) Demanda Espontânea    ( " + $P{origemAtencaoBasica} + " ) Atenção Básica\n( " + $P{origemUrgencia} + " ) Serviço de Urgência    ( " + $P{origemCaps} + " ) Outro CAPS\n( " + $P{origemHospital} + " ) Hospital Geral    ( " + $P{origemPsiquiatrico} + " ) Hospital Psiquiátrico"]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="222" width="111" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[CID10 PRINCIPAL]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="231" width="111" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{cidPrincipal}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="111" y="222" width="444" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[DESCRIÇÃO DO DIAGNÓSTICO PRINCIPAL]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="111" y="231" width="444" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{descricaoCidPrincipal}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="246" width="111" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[CID10 CAUSAS ASS.]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="255" width="111" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{cidSecundario}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="111" y="246" width="444" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[DESCRIÇÃO DO DIAGNÓSTICO — CAUSAS ASSOCIADAS]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="111" y="255" width="444" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{descricaoCidSecundario}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="270" width="333" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[EXISTE COBERTURA DE ESTRATÉGIA SAÚDE DA FAMÍLIA?]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="279" width="333" height="15"/>
+                <box><leftPen lineWidth="0.5"/><bottomPen lineWidth="0.5"/><rightPen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
+                <textFieldExpression><![CDATA["NÃO ( " + $P{esfNao} + " )      SIM ( " + $P{esfSim} + " )"]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="333" y="270" width="222" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[CNES]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="333" y="279" width="222" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{cnesAtendimento}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="294" width="416" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[ENCAMINHAMENTO]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="303" width="416" height="15"/>
+                <box><leftPen lineWidth="0.5"/><bottomPen lineWidth="0.5"/><rightPen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="6"/></textElement>
+                <textFieldExpression><![CDATA["( " + $P{encaminhamentoCaps} + " ) Continuidade em outro CAPS    ( " + $P{encaminhamentoAB} + " ) Continuidade na Atenção Básica\n( " + $P{alta} + " ) Alta    ( " + $P{obito} + " ) Óbito"]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="416" y="294" width="139" height="9"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                <text><![CDATA[DATA DE CONCLUSÃO]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="416" y="303" width="139" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="Arial" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{dataConclusao}]]></textFieldExpression>
+            </textField>
+
+            <rectangle>
+                <reportElement mode="Opaque" backcolor="#17365D" x="0" y="318" width="555" height="13"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="0" y="318" width="555" height="13" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="Arial" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[AÇÕES REALIZADAS]]></text>
             </staticText>
 
             <componentElement>
-                <reportElement x="0" y="200" width="555" height="80"/>
+                <reportElement x="0" y="331" width="555" height="14"/>
                 <jr:table>
                     <datasetRun subDataset="acoes">
                         <dataSourceExpression><![CDATA[$P{acoesDataset}]]></dataSourceExpression>
                     </datasetRun>
 
                     <jr:column width="60">
-                        <jr:columnHeader height="16">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="60" height="16"/>
+                                <reportElement x="0" y="0" width="60" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7" isBold="true"/></textElement>
-                                <text><![CDATA[CÓDIGO]]></text>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                                <text><![CDATA[CÓDIGO DA AÇÃO REALIZADA]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell height="16">
                             <textField isBlankWhenNull="true">
                                 <reportElement x="0" y="0" width="60" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7"/></textElement>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
                                 <textFieldExpression><![CDATA[$F{codigoAcao}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
 
                     <jr:column width="35">
-                        <jr:columnHeader height="16">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="35" height="16"/>
+                                <reportElement x="0" y="0" width="35" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement textAlignment="Center"><font size="7" isBold="true"/></textElement>
-                                <text><![CDATA[QTD]]></text>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                                <text><![CDATA[QTDE.]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell height="16">
                             <textField isBlankWhenNull="true">
                                 <reportElement x="0" y="0" width="35" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement textAlignment="Center"><font size="7"/></textElement>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
                                 <textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
 
                     <jr:column width="60">
-                        <jr:columnHeader height="16">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="60" height="16"/>
+                                <reportElement x="0" y="0" width="60" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7" isBold="true"/></textElement>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
                                 <text><![CDATA[DATA]]></text>
                             </staticText>
                         </jr:columnHeader>
@@ -251,37 +648,37 @@
                             <textField isBlankWhenNull="true">
                                 <reportElement x="0" y="0" width="60" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7"/></textElement>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
                                 <textFieldExpression><![CDATA[$F{data} != null ? $F{data}.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) : ""]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
 
                     <jr:column width="50">
-                        <jr:columnHeader height="16">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="50" height="16"/>
+                                <reportElement x="0" y="0" width="50" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7" isBold="true"/></textElement>
-                                <text><![CDATA[CID-10]]></text>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                                <text><![CDATA[CID10]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell height="16">
                             <textField isBlankWhenNull="true">
                                 <reportElement x="0" y="0" width="50" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7"/></textElement>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
                                 <textFieldExpression><![CDATA[$F{cid10}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
 
                     <jr:column width="70">
-                        <jr:columnHeader height="16">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="70" height="16"/>
+                                <reportElement x="0" y="0" width="70" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7" isBold="true"/></textElement>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
                                 <text><![CDATA[SERVIÇO]]></text>
                             </staticText>
                         </jr:columnHeader>
@@ -289,94 +686,94 @@
                             <textField isBlankWhenNull="true">
                                 <reportElement x="0" y="0" width="70" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7"/></textElement>
+                                <textElement verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
                                 <textFieldExpression><![CDATA[$F{servico}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
 
                     <jr:column width="55">
-                        <jr:columnHeader height="16">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="55" height="16"/>
+                                <reportElement x="0" y="0" width="55" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7" isBold="true"/></textElement>
-                                <text><![CDATA[CLASSIF.]]></text>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                                <text><![CDATA[CLASSIFICAÇÃO]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell height="16">
                             <textField isBlankWhenNull="true">
                                 <reportElement x="0" y="0" width="55" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7"/></textElement>
+                                <textElement verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
                                 <textFieldExpression><![CDATA[$F{classificacao}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
 
                     <jr:column width="45">
-                        <jr:columnHeader height="16">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="45" height="16"/>
+                                <reportElement x="0" y="0" width="45" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7" isBold="true"/></textElement>
-                                <text><![CDATA[CBO EXEC.]]></text>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                                <text><![CDATA[CBO DO EXECUTANTE]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell height="16">
                             <textField isBlankWhenNull="true">
                                 <reportElement x="0" y="0" width="45" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7"/></textElement>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
                                 <textFieldExpression><![CDATA[$F{cboExecutor}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
 
-                    <jr:column width="75">
-                        <jr:columnHeader height="16">
+                    <jr:column width="70">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="75" height="16"/>
+                                <reportElement x="0" y="0" width="70" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7" isBold="true"/></textElement>
-                                <text><![CDATA[CARTÃO PROF.]]></text>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                                <text><![CDATA[CNS DO PROFISSIONAL EXECUTANTE]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell height="16">
                             <textField isBlankWhenNull="true">
-                                <reportElement x="0" y="0" width="75" height="16"/>
+                                <reportElement x="0" y="0" width="70" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7"/></textElement>
+                                <textElement verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
                                 <textFieldExpression><![CDATA[$F{cartaoProfissional}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
 
                     <jr:column width="45">
-                        <jr:columnHeader height="16">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="45" height="16"/>
+                                <reportElement x="0" y="0" width="45" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7" isBold="true"/></textElement>
-                                <text><![CDATA[EQUIPE]]></text>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                                <text><![CDATA[CÓD. DA EQUIPE]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell height="16">
                             <textField isBlankWhenNull="true">
                                 <reportElement x="0" y="0" width="45" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement><font size="7"/></textElement>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
                                 <textFieldExpression><![CDATA[$F{codigoEquipe}]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
 
                     <jr:column width="30">
-                        <jr:columnHeader height="16">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="30" height="16"/>
+                                <reportElement x="0" y="0" width="30" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement textAlignment="Center"><font size="7" isBold="true"/></textElement>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
                                 <text><![CDATA[CAPS]]></text>
                             </staticText>
                         </jr:columnHeader>
@@ -384,35 +781,53 @@
                             <textField isBlankWhenNull="true">
                                 <reportElement x="0" y="0" width="30" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement textAlignment="Center"><font size="7"/></textElement>
-                                <textFieldExpression><![CDATA[$F{caps} ? "SIM" : ""]]></textFieldExpression>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{caps} ? "X" : ""]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
 
-                    <jr:column width="30">
-                        <jr:columnHeader height="16">
+                    <jr:column width="35">
+                        <jr:columnHeader height="26">
                             <staticText>
-                                <reportElement x="0" y="0" width="30" height="16"/>
+                                <reportElement x="0" y="0" width="35" height="26"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement textAlignment="Center"><font size="7" isBold="true"/></textElement>
-                                <text><![CDATA[TERRIT.]]></text>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="5.5" isBold="true"/></textElement>
+                                <text><![CDATA[TERRITÓRIO]]></text>
                             </staticText>
                         </jr:columnHeader>
                         <jr:detailCell height="16">
                             <textField isBlankWhenNull="true">
-                                <reportElement x="0" y="0" width="30" height="16"/>
+                                <reportElement x="0" y="0" width="35" height="16"/>
                                 <box><pen lineWidth="0.5"/></box>
-                                <textElement textAlignment="Center"><font size="7"/></textElement>
-                                <textFieldExpression><![CDATA[$F{territorio} ? "SIM" : ""]]></textFieldExpression>
+                                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Arial" size="7"/></textElement>
+                                <textFieldExpression><![CDATA[$F{territorio} ? "X" : ""]]></textFieldExpression>
                             </textField>
                         </jr:detailCell>
                     </jr:column>
-
                 </jr:table>
             </componentElement>
 
         </band>
     </detail>
+
+    <pageFooter>
+        <band height="18">
+            <line>
+                <reportElement x="0" y="2" width="555" height="1"/>
+                <graphicElement><pen lineWidth="0.5"/></graphicElement>
+            </line>
+            <textField evaluationTime="Now">
+                <reportElement x="400" y="4" width="125" height="10"/>
+                <textElement textAlignment="Right"><font fontName="Arial" size="7"/></textElement>
+                <textFieldExpression><![CDATA["pg. " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="527" y="4" width="28" height="10"/>
+                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textFieldExpression><![CDATA["/ " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
 
 </jasperReport>

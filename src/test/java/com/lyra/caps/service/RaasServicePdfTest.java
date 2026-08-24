@@ -13,9 +13,12 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.lyra.caps.model.Atendimento;
+import com.lyra.caps.model.Endereco;
 import com.lyra.caps.model.Paciente;
 import com.lyra.caps.model.Raas;
 import com.lyra.caps.model.RaasAcao;
+import com.lyra.caps.model.enums.Raca;
 import com.lyra.caps.repository.AtendimentoRepository;
 import com.lyra.caps.repository.PacienteRepository;
 import com.lyra.caps.repository.RaasRepository;
@@ -74,15 +77,46 @@ class RaasServicePdfTest {
     }
 
     private Raas raasCompleto() {
+        Endereco endereco = new Endereco();
+        endereco.setLogradouro("RUA DAS FLORES");
+        endereco.setNumero("123");
+        endereco.setComplemento("APTO 101");
+        endereco.setCidade("BELO HORIZONTE");
+        endereco.setEstado("MG");
+        endereco.setCep("30140071");
+
         Paciente paciente = new Paciente();
         paciente.setId(10L);
         paciente.setNome("MARIA DA SILVA");
+        paciente.setNumeroProntuario("PRT-001");
+        paciente.setRaca(Raca.PARDA);
+        paciente.setNacionalidade("BRASILEIRA");
+        paciente.setEtniaIndigena("");
+        paciente.setResponsavelLegal("JOAO DA SILVA");
+        paciente.setTelefone("(31) 98888-7777");
+        paciente.setCodIBGEMunicipio("3106200");
+        paciente.setEndereco(endereco);
+
+        Atendimento atendimento = new Atendimento();
+        atendimento.setId(20L);
+        atendimento.setPaciente(paciente);
+        atendimento.setUsoDrogas("SIM");
+        atendimento.setAlcool(true);
+        atendimento.setOrigemDemandaEspontanea(true);
+        atendimento.setCidPrincipal("F20");
+        atendimento.setDescricaoCidPrincipal("ESQUIZOFRENIA");
+        atendimento.setCidSecundario("F10");
+        atendimento.setDescricaoCidSecundario("USO NOCIVO DE ALCOOL");
+        atendimento.setEsf("SIM");
+        atendimento.setCnesAtendimento("7654321");
+        atendimento.setEncaminhamentoAtencaoBasica(true);
 
         Raas raas = new Raas();
         raas.setId(30L);
         raas.setNomeEstabelecimento("CAPS EXEMPLO");
         raas.setCnes("1234567");
         raas.setPaciente(paciente);
+        raas.setAtendimento(atendimento);
         raas.setNomePaciente("MARIA DA SILVA");
         raas.setCartaoSus("123456789012345");
         raas.setSexo("FEMININO");
