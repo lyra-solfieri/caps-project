@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 import com.lyra.caps.dto.AnamneseDto;
 import com.lyra.caps.model.Anamnese;
 import com.lyra.caps.model.Paciente;
@@ -35,6 +37,7 @@ public class AnamneseService  implements IAnamneseService {
 
             Anamnese anamnese = Anamnese.fromDto(anamneseDto);
             anamnese.setPaciente(paciente);
+            anamnese.setDataRegistro(LocalDateTime.now());
             anamnese = anamneseRepository.save(anamnese);
 
             auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.CRIACAO, "Anamnese", anamnese.getId(),
