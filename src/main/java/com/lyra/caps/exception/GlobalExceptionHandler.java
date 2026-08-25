@@ -23,6 +23,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(Map.of("message", errorMessage));
     }
 
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    public ResponseEntity<Map<String, String>> handleConstraintViolation(jakarta.validation.ConstraintViolationException ex) {
+        String errorMessage = ex.getConstraintViolations().iterator().next().getMessage();
+        return ResponseEntity.badRequest().body(Map.of("message", errorMessage));
+    }
+
     @ExceptionHandler(jakarta.persistence.EntityNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleEntityNotFound(jakarta.persistence.EntityNotFoundException ex) {
         String message = (ex.getMessage() != null && !ex.getMessage().isBlank())
