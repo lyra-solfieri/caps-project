@@ -39,6 +39,7 @@ public class SecurityConfigurations {
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+            .requestMatchers("/error", "/health").permitAll()
             .anyRequest().authenticated()
         )
         .headers(headers -> headers
