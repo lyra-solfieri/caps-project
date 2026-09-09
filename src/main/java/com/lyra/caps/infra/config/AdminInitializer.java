@@ -30,9 +30,10 @@ public class AdminInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         if (userRepository.findByRole(Role.ADMIN).isEmpty()) {
-            var user = new User(adminEmail, passwordEncoder.encode(adminPassword), Role.ADMIN);
-            user.setNome("Administrador do Sistema");
+            User user = new User(adminEmail, passwordEncoder.encode(adminPassword), Role.ADMIN);
+            user.setNome("Bruno Lyra");
             user.setBloqueado(false);
+            user.setProfissaoUsuario("Administrador do Sistema");
             userRepository.save(user);
         }
     }
