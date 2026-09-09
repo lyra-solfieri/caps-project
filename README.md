@@ -9,6 +9,7 @@ API REST para **gestão de pacientes** em Centros de Atenção Psicossocial (CAP
 - **Java 17** + Spring Boot 3.4.3 (Maven)
 - **MySQL 8** + Spring Data JPA
 - **Spring Security** + JWT
+- **SpringDoc OpenAPI** (Swagger UI + `/v3/api-docs`)
 - **Microserviço de OCR**: Python (FastAPI + Docling), chamado via REST
 - Frontend: Angular (`localhost:4200`)
 
@@ -51,6 +52,32 @@ docker run -p 8080:8080 -e DB_HOST=host.docker.internal caps
 ```
 
 > O schema é criado/atualizado automaticamente pelo Hibernate (`ddl-auto=update`). Não é preciso criar tabelas manualmente.
+
+---
+
+## 📖 Documentação (Swagger/OpenAPI)
+
+A API expõe documentação interativa via **SpringDoc** (`springdoc-openapi-starter-webmvc-ui`), com autenticação **Bearer JWT** configurada para testar os endpoints protegidos.
+
+- **Swagger UI:** `http://localhost:8080/swagger-ui/index.html`
+- **Spec JSON:** `http://localhost:8080/v3/api-docs`
+- **Spec YAML:** `http://localhost:8080/v3/api-docs.yaml`
+
+A documentação e a spec são **públicas**; os demais endpoints continuam exigindo autenticação.
+
+### Como usar
+
+1. Suba a aplicação e abra o Swagger UI no navegador.
+2. Em **Auth**, execute `POST /auth/login` (Try it out) com as credenciais do admin:
+   ```json
+   { "email": "lyrasolfieri@gmail.com", "password": "12345678#" }
+   ```
+   (ajuste conforme `ADMIN_EMAIL` / `ADMIN_PASSWORD`).
+3. Copie o `token` retornado e clique em **Authorize** (topo da página).
+4. Cole no formato `Bearer <seu_token>` e confirme.
+5. Execute qualquer endpoint de `/api/pacientes`, `/api/agendamentos`, etc. — devem responder 200.
+
+Sem o token, os endpoints protegidos retornam `401`.
 
 ---
 
@@ -169,6 +196,5 @@ Operações auditadas: login, criação/atualização/exclusão de pacientes, ag
 
 ## 📝 Limitações conhecidas
 
-- Sem Swagger/OpenAPI — esta documentação é a referência.
 - `GET /api/raas/{id}/pdf` não está implementado (JasperReports comentado no código).
 - A extração OCR depende de calibração com um PDF real do formulário RAAS da região (veja `../ocr-service/README.md`).
