@@ -12,6 +12,9 @@ import com.lyra.caps.dto.AnamneseDto;
 import com.lyra.caps.service.AnamneseService;
 import com.lyra.caps.util.LogPersonalizado;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -24,6 +27,9 @@ public class AnamneseController {
     private final AnamneseService anamneseService;
 
     @PostMapping
+    @Operation(summary = "Salvar anamnese")
+    @ApiResponse(responseCode = "201", description = "Anamnese criada com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<AnamneseDto> save(@RequestBody @Valid AnamneseDto anamneseDto) {
         try {
             AnamneseDto savedAnamnese = anamneseService.save(anamneseDto);
@@ -35,6 +41,9 @@ public class AnamneseController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar anamnese por ID")
+    @ApiResponse(responseCode = "200", description = "Anamnese encontrada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<AnamneseDto> findById(@PathVariable Long id) {
         try {
             AnamneseDto anamnese = anamneseService.findById(id);
@@ -46,6 +55,9 @@ public class AnamneseController {
     }
 
     @GetMapping("/paciente/{pacienteId}")
+    @Operation(summary = "Buscar anamnese por ID do paciente")
+    @ApiResponse(responseCode = "200", description = "Anamnese encontrada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<AnamneseDto> findByPacienteId(@PathVariable Long pacienteId) {
         try {
             AnamneseDto anamnese = anamneseService.findByPacienteId(pacienteId);
@@ -57,6 +69,9 @@ public class AnamneseController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar anamnese")
+    @ApiResponse(responseCode = "200", description = "Anamnese atualizada com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<AnamneseDto> update(
             @PathVariable Long id, 
             @RequestBody @Valid AnamneseDto anamneseDto) {
@@ -71,6 +86,9 @@ public class AnamneseController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar anamnese")
+    @ApiResponse(responseCode = "204", description = "Anamnese deletada com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
             anamneseService.delete(id);
@@ -82,6 +100,9 @@ public class AnamneseController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar anamneses")
+    @ApiResponse(responseCode = "200", description = "Lista de anamneses retornada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<List<AnamneseDto>> listarAnamneses(Pageable pageable) {
         try {
             List<AnamneseDto> anamneses = anamneseService.listarAnamneses(pageable).getContent();
@@ -93,6 +114,9 @@ public class AnamneseController {
     }
 
     @GetMapping("/quantidade")
+    @Operation(summary = "Contar anamneses")
+    @ApiResponse(responseCode = "200", description = "Quantidade de anamneses")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Long> listarQuantidade() {
         try {            
             Long quantidade = anamneseService.listarQuantidade();

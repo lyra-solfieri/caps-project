@@ -12,6 +12,9 @@ import com.lyra.caps.dto.UserDto;
 import com.lyra.caps.service.IUserService;
 import com.lyra.caps.util.LogPersonalizado;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/api/usuarios")
 @PreAuthorize("hasRole('ADMIN')")
@@ -24,6 +27,10 @@ public class UserController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar usuários", description = "Lista todos os usuários do sistema. Requer perfil ADMIN.")
+    @ApiResponse(responseCode = "200", description = "Lista de usuários retornada")
+    @ApiResponse(responseCode = "403", description = "Acesso negado")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<List<UserDto>> listarUsuarios() {
         try {
             var usuarios = userService.getAllUsers().stream()

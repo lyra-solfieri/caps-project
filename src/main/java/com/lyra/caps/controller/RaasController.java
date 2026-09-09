@@ -15,6 +15,10 @@ import com.lyra.caps.dto.RaasRequestDTO;
 import com.lyra.caps.service.IRaasService;
 import com.lyra.caps.util.LogPersonalizado;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import jakarta.persistence.EntityNotFoundException;
 
 @RestController
@@ -29,11 +33,17 @@ public class RaasController {
     }
 
     @PostMapping
+    @Operation(summary = "Gerar RAAS")
+    @ApiResponse(responseCode = "200", description = "RAAS gerado com sucesso")
+    @ApiResponse(responseCode = "400", description = "Dados inválidos")
     public ResponseEntity<?> criar(@RequestBody RaasRequestDTO dto) {
         return ResponseEntity.ok(raasService.gerarRaas(dto));
     }
 
     @GetMapping
+    @Operation(summary = "Listar RAAS paginado")
+    @ApiResponse(responseCode = "200", description = "Lista de RAAS retornada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<?> listarPaginado(
             @org.springframework.data.web.PageableDefault(size = 5, sort = "dataGeracao", direction = org.springframework.data.domain.Sort.Direction.DESC) org.springframework.data.domain.Pageable pageable) {
         try {
@@ -45,11 +55,18 @@ public class RaasController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar RAAS")
+    @ApiResponse(responseCode = "200", description = "RAAS atualizado com sucesso")
+    @ApiResponse(responseCode = "400", description = "Dados inválidos")
     public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody RaasRequestDTO dto) {
         return ResponseEntity.ok(raasService.atualizar(id, dto));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar RAAS por ID")
+    @ApiResponse(responseCode = "200", description = "RAAS encontrado")
+    @ApiResponse(responseCode = "404", description = "RAAS não encontrado")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<?> buscar(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(raasService.buscarPorId(id));
@@ -63,6 +80,9 @@ public class RaasController {
     }
 
     @GetMapping("/paciente/{pacienteId}")
+    @Operation(summary = "Listar RAAS por paciente")
+    @ApiResponse(responseCode = "200", description = "Lista de RAAS retornada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<?> listar(@PathVariable Long pacienteId) {
         try {
             return ResponseEntity.ok(raasService.listarPorPaciente(pacienteId));
@@ -73,6 +93,9 @@ public class RaasController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar RAAS")
+    @ApiResponse(responseCode = "204", description = "RAAS deletado com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<?> deletar(@PathVariable Long id) {
         try {
             raasService.deletar(id);
@@ -85,6 +108,10 @@ public class RaasController {
 
     
     @GetMapping(value = "/{id}/pdf", produces = "application/pdf")
+    @Operation(summary = "Gerar PDF do RAAS")
+    @ApiResponse(responseCode = "200", description = "PDF gerado com sucesso", content = @Content(mediaType = "application/pdf"))
+    @ApiResponse(responseCode = "404", description = "RAAS não encontrado")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<byte[]> gerarPdf(@PathVariable Long id) {
         try {
             byte[] pdf = raasService.gerarPdf(id);

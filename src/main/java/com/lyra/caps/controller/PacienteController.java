@@ -5,6 +5,9 @@ import com.lyra.caps.dto.PacienteResponseDto;
 import com.lyra.caps.service.IPacienteService;
 import com.lyra.caps.util.LogPersonalizado;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -29,6 +32,10 @@ public class PacienteController {
 
     
     @PostMapping
+    @Operation(summary = "Criar paciente", description = "Cadastra um novo paciente no sistema.")
+    @ApiResponse(responseCode = "200", description = "Paciente criado com sucesso")
+    @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<?> criarPaciente(@Valid @RequestBody PacienteDto pacienteDto) {
         try {
             PacienteResponseDto salvo = pacienteService.criarPaciente(pacienteDto);
@@ -48,6 +55,9 @@ public class PacienteController {
 
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar paciente por ID")
+    @ApiResponse(responseCode = "200", description = "Paciente encontrado")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<PacienteResponseDto> buscarPacientePorId(@PathVariable Long id) {
 
         try {
@@ -59,6 +69,9 @@ public class PacienteController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar pacientes", description = "Lista pacientes em páginas, com ordenação.")
+    @ApiResponse(responseCode = "200", description = "Lista de pacientes retornada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Page<PacienteResponseDto>> listarTodos(
          @RequestParam(defaultValue = "0") int pageNo,
          @RequestParam(defaultValue = "10") int pageSize, 
@@ -77,6 +90,9 @@ public class PacienteController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar paciente")
+    @ApiResponse(responseCode = "204", description = "Paciente atualizado com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Void> atualizarPaciente(@PathVariable Long id, @RequestBody  PacienteDto pacienteDto) {
         try {
             pacienteService.atualizarPaciente(id, pacienteDto);
@@ -89,6 +105,9 @@ public class PacienteController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar paciente")
+    @ApiResponse(responseCode = "204", description = "Paciente deletado com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Void> deletarPaciente(@PathVariable Long id) {
         try{
             pacienteService.deletarPaciente(id);
@@ -102,6 +121,9 @@ public class PacienteController {
     }
 
     @GetMapping("/filtrar")
+    @Operation(summary = "Filtrar pacientes", description = "Busca pacientes por nome e/ou CPF, com paginação.")
+    @ApiResponse(responseCode = "200", description = "Lista de pacientes retornada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Page<PacienteResponseDto>> filtrar(
         @RequestParam (defaultValue = "0") int pageNo,
         @RequestParam (defaultValue = "10") int pageSize,

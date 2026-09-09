@@ -19,6 +19,9 @@ import com.lyra.caps.dto.AgendamentoResponseDto;
 import com.lyra.caps.service.IAgendamentoService;
 import com.lyra.caps.util.LogPersonalizado;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +34,10 @@ public class AgendamentoController {
     private final IAgendamentoService agendamentoService;
 
     @PostMapping
+    @Operation(summary = "Criar agendamento")
+    @ApiResponse(responseCode = "200", description = "Agendamento realizado com sucesso")
+    @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Map<String, String>> agendar(
             @Valid @RequestBody AgendamentoRequestDto agendamentoRequest) {
 
@@ -49,6 +56,9 @@ public class AgendamentoController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar agendamentos")
+    @ApiResponse(responseCode = "200", description = "Lista de agendamentos retornada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<List<AgendamentoResponseDto>> listarAgendamentos() {
         try {
             return ResponseEntity.ok(agendamentoService.listarAgendamentos());
@@ -60,6 +70,9 @@ public class AgendamentoController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar agendamento")
+    @ApiResponse(responseCode = "200", description = "Agendamento atualizado com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Map<String, String>> atualizarAgendamento(
             @PathVariable Long id, 
             @Valid @RequestBody AgendamentoRequestDto agendamentoRequest) {
@@ -78,6 +91,9 @@ public class AgendamentoController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar agendamento")
+    @ApiResponse(responseCode = "204", description = "Agendamento deletado com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Void> deletarAgendamento(@PathVariable Long id) {
         try {
             agendamentoService.deletarAgendamento(id);
@@ -90,6 +106,9 @@ public class AgendamentoController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar agendamento por ID")
+    @ApiResponse(responseCode = "200", description = "Agendamento encontrado")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<AgendamentoResponseDto> listarAgendamentosPorId(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(agendamentoService.buscarPorId(id));
@@ -101,6 +120,9 @@ public class AgendamentoController {
     }
 
     @GetMapping("/alertar/{id}")
+    @Operation(summary = "Alertar agendamento")
+    @ApiResponse(responseCode = "200", description = "Alerta gerado")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<String> alertarAgendamento(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(agendamentoService.alertarAgendamento(id));

@@ -7,6 +7,9 @@ import com.lyra.caps.dto.EvolucaoDto;
 import com.lyra.caps.service.EvolucaoService;
 import com.lyra.caps.util.LogPersonalizado;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -36,6 +39,9 @@ public class EvolucaoController {
     }
 
     @PostMapping
+    @Operation(summary = "Criar evolução")
+    @ApiResponse(responseCode = "200", description = "Evolução criada com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<EvolucaoDto> create(@Valid @RequestBody EvolucaoDto entity) {
         try {
             entity = evolucaoService.save(entity);
@@ -47,6 +53,9 @@ public class EvolucaoController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar evolução")
+    @ApiResponse(responseCode = "200", description = "Evolução atualizada com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<EvolucaoDto> update(@PathVariable Long id, @Valid @RequestBody EvolucaoDto entity) {
         try {
             entity = evolucaoService.update(id, entity);
@@ -58,6 +67,9 @@ public class EvolucaoController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar evolução")
+    @ApiResponse(responseCode = "204", description = "Evolução deletada com sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
             evolucaoService.delete(id);
@@ -69,6 +81,9 @@ public class EvolucaoController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar evolução por ID")
+    @ApiResponse(responseCode = "200", description = "Evolução encontrada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<EvolucaoDto> findById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(evolucaoService.findById(id));
@@ -79,6 +94,9 @@ public class EvolucaoController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar evoluções", description = "Lista evoluções opcionalmente filtradas por paciente.")
+    @ApiResponse(responseCode = "200", description = "Lista de evoluções retornada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<List<EvolucaoDto>> listar(
             @RequestParam(required = false) Long pacienteId,
             Pageable pageable) {

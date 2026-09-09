@@ -17,6 +17,9 @@ import com.lyra.caps.service.RaasAceiteService;
 import com.lyra.caps.service.RaasOcrService;
 import com.lyra.caps.util.LogPersonalizado;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/api/raas/ocr")
 @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -32,6 +35,10 @@ public class RaasOcrController {
     }
 
     @PostMapping("/upload")
+    @Operation(summary = "Upload de documento para OCR", description = "Envia um PDF ou imagem para o microserviço de OCR extrair os dados do RAAS.")
+    @ApiResponse(responseCode = "200", description = "Documento processado, retorna o resultado do OCR")
+    @ApiResponse(responseCode = "400", description = "Nenhum arquivo foi enviado ou o arquivo está vazio")
+    @ApiResponse(responseCode = "500", description = "Erro ao processar o upload")
     public ResponseEntity<?> upload(
             @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "pacienteId", required = false) Long pacienteId) {
@@ -61,6 +68,9 @@ public class RaasOcrController {
     }
 
     @GetMapping("/status/{correlationId}")
+    @Operation(summary = "Consultar status do processamento OCR")
+    @ApiResponse(responseCode = "200", description = "Status retornado")
+    @ApiResponse(responseCode = "404", description = "Processamento não encontrado")
     public ResponseEntity<?> status(@PathVariable String correlationId) {
         return raasOcrService.consultarStatus(correlationId)
                 .map(ResponseEntity::ok)
@@ -68,6 +78,9 @@ public class RaasOcrController {
     }
 
     @GetMapping("/resultado/{correlationId}")
+    @Operation(summary = "Obter resultado do processamento OCR")
+    @ApiResponse(responseCode = "200", description = "Resultado retornado")
+    @ApiResponse(responseCode = "404", description = "Resultado não encontrado")
     public ResponseEntity<?> resultado(@PathVariable String correlationId) {
         return raasOcrService.getResultado(correlationId)
                 .map(ResponseEntity::ok)
@@ -75,6 +88,10 @@ public class RaasOcrController {
     }
 
     @PostMapping("/aceitar")
+    @Operation(summary = "Aceitar RAAS extraído via OCR")
+    @ApiResponse(responseCode = "200", description = "RAAS aceito com sucesso")
+    @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<?> aceitar(@RequestBody RaasAceitarDTO dto) {
         try {
             return ResponseEntity.ok(com.lyra.caps.dto.RaasResponseDTO.fromEntity(raasAceiteService.aceitar(dto)));

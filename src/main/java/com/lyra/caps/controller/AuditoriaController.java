@@ -16,6 +16,9 @@ import com.lyra.caps.model.enums.AcaoAuditoria;
 import com.lyra.caps.service.IAuditoriaService;
 import com.lyra.caps.util.LogPersonalizado;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/api/auditoria")
 @PreAuthorize("hasRole('ADMIN')")
@@ -28,6 +31,10 @@ public class AuditoriaController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar logs de auditoria", description = "Lista logs com filtros opcionais. Requer perfil ADMIN.")
+    @ApiResponse(responseCode = "200", description = "Logs retornados")
+    @ApiResponse(responseCode = "403", description = "Acesso negado")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<Page<AuditoriaLogResponse>> listarLogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size,
@@ -46,6 +53,9 @@ public class AuditoriaController {
     }
 
     @GetMapping("/usuarios")
+    @Operation(summary = "Listar usuários da auditoria")
+    @ApiResponse(responseCode = "200", description = "Lista de usuários retornada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<List<String>> listarUsuarios() {
         try {
             List<String> usuarios = auditoriaService.listarUsuarios();
@@ -57,6 +67,9 @@ public class AuditoriaController {
     }
 
     @GetMapping("/entidades")
+    @Operation(summary = "Listar entidades da auditoria")
+    @ApiResponse(responseCode = "200", description = "Lista de entidades retornada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<List<String>> listarEntidades() {
         try {
             List<String> entidades = auditoriaService.listarEntidades();

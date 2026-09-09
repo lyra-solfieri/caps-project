@@ -14,6 +14,9 @@ import com.lyra.caps.dto.relatorio.AtendimentoPorProfissionalDto;
 import com.lyra.caps.service.IRelatorioService;
 import com.lyra.caps.util.LogPersonalizado;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,6 +28,9 @@ public class RelatorioController {
     private final IRelatorioService relatorioService;
 
     @GetMapping("/indicadores")
+    @Operation(summary = "Obter indicadores de desempenho")
+    @ApiResponse(responseCode = "200", description = "Indicadores retornados")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<IndicadoresDesempenhoDto> obterIndicadores(
             @RequestParam(required = false) String inicio,
             @RequestParam(required = false) String fim) {
@@ -37,6 +43,9 @@ public class RelatorioController {
     }
 
     @GetMapping("/atendimentos/por-profissional")
+    @Operation(summary = "Obter atendimentos por profissional")
+    @ApiResponse(responseCode = "200", description = "Lista de atendimentos retornada")
+    @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<List<AtendimentoPorProfissionalDto>> obterAtendimentosPorProfissional(
             @RequestParam(required = false) String inicio,
             @RequestParam(required = false) String fim) {

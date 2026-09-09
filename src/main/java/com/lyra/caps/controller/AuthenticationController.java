@@ -19,6 +19,8 @@ import com.lyra.caps.model.enums.AcaoAuditoria;
 import com.lyra.caps.model.enums.Role;
 import com.lyra.caps.repository.UserRepository;
 import com.lyra.caps.service.AuditoriaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
@@ -45,6 +47,10 @@ public class AuthenticationController {
     }
     
     @PostMapping("/login")
+    @Operation(summary = "Autenticar usuário", description = "Realiza o login e retorna um token JWT para acesso aos demais endpoints.")
+    @ApiResponse(responseCode = "200", description = "Login realizado com sucesso, retorna o token JWT")
+    @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+    @ApiResponse(responseCode = "429", description = "Muitas tentativas de login. Tente novamente em 15 minutos")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody AuthenticationDto authentication, HttpServletRequest request) {
 
         var userEmailPassword = new UsernamePasswordAuthenticationToken(authentication.email(), authentication.password());
@@ -60,6 +66,10 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Registrar usuário", description = "Cria um novo usuário no sistema. Requer perfil ADMIN.")
+    @ApiResponse(responseCode = "200", description = "Usuário registrado com sucesso")
+    @ApiResponse(responseCode = "400", description = "Usuário já existente")
+    @ApiResponse(responseCode = "403", description = "Acesso negado")
     public ResponseEntity<Void> register(@Valid @RequestBody RegisterDto register, HttpServletRequest request) {
         if(this.userRepository.findByEmail(register.email()) != null) {
             return ResponseEntity.badRequest().build();
