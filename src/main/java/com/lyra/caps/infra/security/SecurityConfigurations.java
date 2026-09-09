@@ -54,6 +54,7 @@ public class SecurityConfigurations {
             .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
             .requestMatchers("/error", "/health").permitAll()
+            .requestMatchers("/v3/api-docs*", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll()
             .anyRequest().authenticated()
         )
         .headers(headers -> headers
