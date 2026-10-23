@@ -23,16 +23,6 @@ API REST para **gestão de pacientes** em Centros de Atenção Psicossocial (CAP
 - MySQL rodando (ex: `localhost:3306`)
 - Microserviço de OCR em `http://localhost:8000` (repositório `../ocr-service`)
 
-### Variáveis de ambiente
-
-| Variável | Padrão | Descrição |
-|---|---|---|
-| `DB_HOST` | `localhost` | Host do MySQL |
-| `DB_SCHEMA` | `CAPS` | Nome do banco |
-| `DB_USER` / `DB_PASSWORD` | `root` / `1234` | Credenciais do banco |
-| `JWT_SECRET` | `my-secret-key` | Chave JWT (**troque em produção!**) |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | ver `.env.example` | Credenciais do admin criado no startup |
-| `OCR_SERVICE_URL` | `http://localhost:8000` | URL do serviço de OCR |
 
 ### Rodando
 
