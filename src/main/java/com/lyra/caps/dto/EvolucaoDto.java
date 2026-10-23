@@ -25,7 +25,7 @@ public class EvolucaoDto {
     private String nomeProfissional;
 
     @NotBlank(message = "Texto da evolução é obrigatório")
-    @Size(min = 10, max = 1000, message = "Texto deve ter entre 10 e 1000 caracteres")
+    @Size(min = 10, max = 5000, message = "Texto deve ter entre 10 e 5000 caracteres")
     private String texto;
 
     public static EvolucaoDto fromEntity(Evolucao evolucao) {

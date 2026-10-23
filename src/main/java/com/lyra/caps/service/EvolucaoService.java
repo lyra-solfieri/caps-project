@@ -120,7 +120,7 @@ public class EvolucaoService implements IEvolucaoService {
     public List<EvolucaoDto> listarPorPaciente(Long pacienteId) {
         log.debug("Listando evoluções por pacienteId={}", pacienteId);
         try {
-            List<EvolucaoDto> result = evolucaoRepository.findByPacienteId(pacienteId).stream()
+            List<EvolucaoDto> result = evolucaoRepository.findAll().stream()
                     .map(EvolucaoDto::fromEntity)
                     .toList();
             log.info("Evoluções do paciente {} listadas: total={}", pacienteId, result.size());
