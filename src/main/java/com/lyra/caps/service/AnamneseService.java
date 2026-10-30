@@ -4,6 +4,7 @@ package com.lyra.caps.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,7 @@ public class AnamneseService  implements IAnamneseService {
     private final UserService userService;
 
     @Override
+    @Transactional
     public AnamneseDto save(AnamneseDto anamneseDto) {
 
         try {
@@ -54,6 +56,7 @@ public class AnamneseService  implements IAnamneseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AnamneseDto findById(Long id) {
         try {
             Anamnese anamnese = anamneseRepository.findById(id).get();
@@ -67,6 +70,7 @@ public class AnamneseService  implements IAnamneseService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         try {
             if (id != null) {
@@ -83,6 +87,7 @@ public class AnamneseService  implements IAnamneseService {
     }
 
     @Override
+    @Transactional
     public AnamneseDto update(Long id, AnamneseDto anamneseDto) {
         try {
             Anamnese anamnese = Anamnese.fromDto(anamneseDto);
@@ -100,6 +105,7 @@ public class AnamneseService  implements IAnamneseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AnamneseDto findByPacienteId(Long id) {
         try {
 
@@ -116,6 +122,7 @@ public class AnamneseService  implements IAnamneseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<AnamneseDto> listarAnamneses(Pageable pageable) {
         try {            
             return anamneseRepository.findAll(pageable).map(AnamneseDto::fromEntity);
@@ -126,6 +133,7 @@ public class AnamneseService  implements IAnamneseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Long listarQuantidade() {
         try {
             return anamneseRepository.count();
