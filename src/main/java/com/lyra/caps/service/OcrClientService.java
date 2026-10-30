@@ -35,7 +35,6 @@ public class OcrClientService {
     public OcrClientService() {
         CloseableHttpClient httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(RequestConfig.custom()
-                        .setConnectTimeout(Timeout.ofSeconds(10))
                         .setResponseTimeout(Timeout.ofSeconds(120))
                         .build())
                 .build();
