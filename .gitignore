@@ -61,3 +61,8 @@ build/
 .vscode/
 
 .properties
+
+# Variáveis de ambiente
+.env
+.env.*
+!.env.example

@@ -29,8 +29,11 @@ API REST para **gestão de pacientes** em Centros de Atenção Psicossocial (CAP
 ```bash
 git clone https://codeberg.org/lyrasolfieri/caps-project.git
 cd caps-project
+cp .env.example .env
 ./mvnw spring-boot:run
 ```
+
+> O arquivo `.env` é carregado automaticamente pela aplicação via `spring.config.import`. Ele não é versionado; ajuste os valores conforme seu ambiente.
 
 A API sobe na porta **8080**. Um usuário **ADMIN** é criado automaticamente no primeiro startup (se não existir nenhum).
 
@@ -38,7 +41,7 @@ Com Docker:
 
 ```bash
 docker build -t caps .
-docker run -p 8080:8080 -e DB_HOST=host.docker.internal caps
+docker run --env-file .env -p 8080:8080 -e DB_HOST=host.docker.internal caps
 ```
 
 > O schema é criado/atualizado automaticamente pelo Hibernate (`ddl-auto=update`). Não é preciso criar tabelas manualmente.
@@ -60,9 +63,9 @@ A documentação e a spec são **públicas**; os demais endpoints continuam exig
 1. Suba a aplicação e abra o Swagger UI no navegador.
 2. Em **Auth**, execute `POST /auth/login` (Try it out) com as credenciais do admin:
    ```json
-   { "email": "lyrasolfieri@gmail.com", "password": "12345678#" }
+   { "email": "<ADMIN_EMAIL>", "password": "<ADMIN_PASSWORD>" }
    ```
-   (ajuste conforme `ADMIN_EMAIL` / `ADMIN_PASSWORD`).
+   (valores definidos em `ADMIN_EMAIL` / `ADMIN_PASSWORD` no `.env`).
 3. Copie o `token` retornado e clique em **Authorize** (topo da página).
 4. Cole no formato `Bearer <seu_token>` e confirme.
 5. Execute qualquer endpoint de `/api/pacientes`, `/api/agendamentos`, etc. — devem responder 200.

@@ -26,9 +26,9 @@ public class TokenService {
 
     public String generateToken(User user){
         try {
-
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-
+            
+            Algorithm algorithm = getAlgorithm();
+            
             String token = JWT.create()
                 .withIssuer("auth-api")
                 .withSubject(user.getEmail())
@@ -56,6 +56,16 @@ public class TokenService {
             log.warn("Token JWT invalido ou expirado");
             return null;
         }
+    }
+
+    private Algorithm getAlgorithm() {
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalStateException(
+                "A chave secreta JWT não foi configurada."
+            );
+        }
+
+        return Algorithm.HMAC256(secret);
     }
 
 
