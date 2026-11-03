@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import com.lyra.caps.dto.AnamneseDto;
+import com.lyra.caps.mapper.AnamneseMapper;
 import com.lyra.caps.model.Anamnese;
 import com.lyra.caps.model.Paciente;
 import com.lyra.caps.model.enums.AcaoAuditoria;
@@ -25,6 +26,7 @@ public class AnamneseService  implements IAnamneseService {
    
     private final AnamneseRepository anamneseRepository;
     private final PacienteRepository pacienteRepository;
+    private final AnamneseMapper anamneseMapper;
     private final AuditoriaService auditoriaService;
     private final UserService userService;
 
@@ -90,12 +92,22 @@ public class AnamneseService  implements IAnamneseService {
     @Transactional
     public AnamneseDto update(Long id, AnamneseDto anamneseDto) {
         try {
-            Anamnese anamnese = Anamnese.fromDto(anamneseDto);
-            anamnese.setId(id);
+
+            Anamnese anamnese = anamneseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Anamnese não encontrada"));
+
+            Paciente paciente = pacienteRepository.findById(anamneseDto.getPacienteId())
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
+            anamneseMapper.updateEntityFromDto(anamneseDto, anamnese);
+            anamnese.setPaciente(paciente);
+
             anamnese = anamneseRepository.save(anamnese);
 
-            auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.ATUALIZACAO, "Anamnese", id,
-                    "Anamnese atualizada - ID: " + id, null);
+            auditoriaService.registrar(
+                userService.getCurrentUser().getEmail(),
+                AcaoAuditoria.ATUALIZACAO, "Anamnese", id,
+                "Anamnese atualizada - ID: " + id, null);
 
             return AnamneseDto.fromEntity(anamnese);
         } catch (Exception e) {

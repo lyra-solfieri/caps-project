@@ -164,7 +164,6 @@ public class Anamnese {
 
         Anamnese anamnese = new Anamnese();
         anamnese.setId(anamneseDto.getId());
-        // anamnese.setPaciente(Paciente.fromDto(anamneseDto.getPacienteId()));
         anamnese.setProfissionalResponsavel(anamneseDto.getProfissionalResponsavel());
         anamnese.setQueixaPrincipal(anamneseDto.getQueixaPrincipal());
         anamnese.setHistoriaDoencaAtual(anamneseDto.getHistoriaDoencaAtual());
