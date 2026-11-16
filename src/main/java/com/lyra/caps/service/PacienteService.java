@@ -88,19 +88,27 @@ public class PacienteService implements IPacienteService {
 
     @Override    
     public void atualizarPaciente(Long id, PacienteDto pacienteDto) {
-        
-        try{
-            Paciente paciente = pacienteRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+        Paciente paciente = pacienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente não encontrado"));
+
+        String cpf = pacienteDto.getCpf();
+        if (cpf != null && !cpf.equals(paciente.getCpf()) && pacienteRepository.existsByCpf(cpf)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este CPF já está cadastrado no sistema.");
+        }
+
+        try {
             pacienteMapper.updateEntityFromDto(pacienteDto, paciente);
             pacienteRepository.save(paciente);
 
             auditoriaService.registrar(userService.getCurrentUser().getEmail(), AcaoAuditoria.ATUALIZACAO, "Paciente", id,
                     "Paciente atualizado: " + paciente.getNome(), null);
-        }
-        catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Conflito de dados ao atualizar paciente.");
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
             logPersonalizado.error("Erro ao atualizar paciente", e);
-            throw new RuntimeException("Erro ao atualizar paciente");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar paciente.");
         }
     }
 

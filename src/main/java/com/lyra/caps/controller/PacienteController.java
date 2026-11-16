@@ -92,15 +92,22 @@ public class PacienteController {
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar paciente")
     @ApiResponse(responseCode = "204", description = "Paciente atualizado com sucesso")
+    @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    @ApiResponse(responseCode = "404", description = "Paciente não encontrado")
+    @ApiResponse(responseCode = "409", description = "Conflito de dados")
     @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    public ResponseEntity<Void> atualizarPaciente(@PathVariable Long id, @RequestBody  PacienteDto pacienteDto) {
+    public ResponseEntity<?> atualizarPaciente(@PathVariable Long id, @Valid @RequestBody PacienteDto pacienteDto) {
         try {
             pacienteService.atualizarPaciente(id, pacienteDto);
             return ResponseEntity.noContent().build();
-
+        } catch (ResponseStatusException e) {
+            return ResponseEntity
+                    .status(e.getStatusCode())
+                    .body(Map.of("message", e.getReason()));
         } catch (Exception e) {
             LogPersonalizado.getLogger(this.getClass()).error("Erro ao atualizar paciente", e);
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Ocorreu um erro interno no servidor."));
         }
     }
 
